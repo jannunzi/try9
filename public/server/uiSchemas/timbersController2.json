@@ -1,0 +1,10 @@
+{
+  "Customer" : {
+    "Hopping Presets" : {
+      "ui:options":  {
+        "orderable": false,
+        "addable": false
+      }
+    }
+  }
+}

@@ -12,6 +12,8 @@
 /build
 /dist
 .idea
+*.zcz
+public/server/configurations/INv1540.45.166_Fixtures_400kHz.zcz/*.json
 
 # misc
 .DS_Store
