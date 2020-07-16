@@ -5,16 +5,16 @@ let firmwareStats = {}
 let schemas = []
 module.exports = (app) => {
     const fetchSchemaFileNameArrayForFirmware = (req, res) => {
-        fs.stat(`server/schemas/${req.params.firmware}`, (err, newStats) => {
+        fs.stat(`public/server/schemas/${req.params.firmware}`, (err, newStats) => {
             console.log(newStats)
             // if files in directory have changed, recreate schema array
             const oldStats = firmwareStats[req.params.firmware]
             if(!oldStats || oldStats && oldStats.mtime !== newStats.mtime) {
                 let schemas = []
-                const schemaFiles = fs.readdirSync(`server/schemas/${req.params.firmware}`)
+                const schemaFiles = fs.readdirSync(`public/server/schemas/${req.params.firmware}`)
                   .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined')
                 schemaFiles.forEach(schemaFile => {
-                    const schemaFileContent = fs.readFileSync(`server/schemas/${req.params.firmware}/${schemaFile}`).toString()
+                    const schemaFileContent = fs.readFileSync(`public/server/schemas/${req.params.firmware}/${schemaFile}`).toString()
                     const schemaFileContentJson = JSON.parse(schemaFileContent)
                     // console.log(schemaFileContentJson)
                     const title = schemaFileContentJson.title
@@ -31,21 +31,21 @@ module.exports = (app) => {
             // else {
             //
             // }
-            // res.send(fs.readdirSync(`server/schemas/${req.params.firmware}`)
+            // res.send(fs.readdirSync(`public/server/schemas/${req.params.firmware}`)
             //     .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined'))
         })
     }
     const fetchSchemaFilesWithContent = (req, res) => {
-        fs.stat(`server/schemas/${req.params.firmware}`, (err, newStats) => {
+        fs.stat(`public/server/schemas/${req.params.firmware}`, (err, newStats) => {
             console.log(newStats)
             // if files in directory have changed, recreate schema array
             const oldStats = firmwareStats[req.params.firmware]
             if(!oldStats || oldStats && oldStats.mtime !== newStats.mtime) {
                 let schemas = []
-                const schemaFiles = fs.readdirSync(`server/schemas/${req.params.firmware}`)
+                const schemaFiles = fs.readdirSync(`public/server/schemas/${req.params.firmware}`)
                   .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined')
                 schemaFiles.forEach(schemaFile => {
-                    const schemaFileContent = fs.readFileSync(`server/schemas/${req.params.firmware}/${schemaFile}`).toString()
+                    const schemaFileContent = fs.readFileSync(`public/server/schemas/${req.params.firmware}/${schemaFile}`).toString()
                     const schemaFileContentJson = JSON.parse(schemaFileContent)
                     // console.log(schemaFileContentJson)
                     const title = schemaFileContentJson.title
@@ -63,12 +63,12 @@ module.exports = (app) => {
             // else {
             //
             // }
-            // res.send(fs.readdirSync(`server/schemas/${req.params.firmware}`)
+            // res.send(fs.readdirSync(`public/server/schemas/${req.params.firmware}`)
             //     .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined'))
         })
     }
     const fetchSchemaFileContent = (req, res) =>
-        refParser.dereference(`server/schemas/${req.params.firmware}/${req.params.schema}`)
+        refParser.dereference(`public/server/schemas/${req.params.firmware}/${req.params.schema}`)
             .then(schema => res.status(200).json(schema))
     app.get('/api/firmwares/:firmware/schemas', fetchSchemaFileNameArrayForFirmware)
     app.get('/api/firmwares/:firmware/schemas-with-content', fetchSchemaFilesWithContent)

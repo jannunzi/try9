@@ -20,7 +20,7 @@ module.exports = (app, upload) => {
 
     app.get('/api/firmwares/:firmware/configurations', function (req, res) {
         const firmware = req.params.firmware
-        fs.readdir(`server/configurations/${firmware}`, (err, configurationFiles) => {
+        fs.readdir(`public/server/configurations/${firmware}`, (err, configurationFiles) => {
             res.send(configurationFiles)
         })
     })
@@ -28,13 +28,13 @@ module.exports = (app, upload) => {
     app.get('/api/firmwares/:firmware/configurations-with-content', function (req, res) {
         const firmware = req.params.firmware
         let configurations = []
-        const configurationFiles = fs.readdirSync(`server/configurations/${req.params.firmware}`)
+        const configurationFiles = fs.readdirSync(`public/server/configurations/${req.params.firmware}`)
           .filter(configuration => typeof constants.CONFIGURATION_IGNORE[configuration] === 'undefined')
         configurationFiles.forEach(configurationFile => {
 
-            const stat = fs.statSync(`server/configurations/${req.params.firmware}/${configurationFile}`)
+            const stat = fs.statSync(`public/server/configurations/${req.params.firmware}/${configurationFile}`)
             if(!stat.isDirectory()) {
-                const configurationFileContent = fs.readFileSync(`server/configurations/${req.params.firmware}/${configurationFile}`).toString()
+                const configurationFileContent = fs.readFileSync(`public/server/configurations/${req.params.firmware}/${configurationFile}`).toString()
                 let configurationFileContentJson = {};
                 try {
                     configurationFileContentJson = JSON.parse(configurationFileContent)
@@ -59,7 +59,7 @@ module.exports = (app, upload) => {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
 
-        const configurationFileContent = fs.readFileSync(`server/configurations/${firmware}/${configuration}`).toString()
+        const configurationFileContent = fs.readFileSync(`public/server/configurations/${firmware}/${configuration}`).toString()
 
         res.send(configurationFileContent)
     })
@@ -68,7 +68,7 @@ module.exports = (app, upload) => {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
 
-        const configurationFileContent = fs.readFileSync(`server/configurations/${firmware}/${configuration}`).toString()
+        const configurationFileContent = fs.readFileSync(`public/server/configurations/${firmware}/${configuration}`).toString()
 
         res.send(configurationFileContent)
     })
@@ -82,7 +82,7 @@ module.exports = (app, upload) => {
         console.log(configuration)
         console.log(newConfigurationFileContent)
 
-        fs.writeFileSync(`server/configurations/${firmware}/${configuration}`, newConfigurationFileContent)
+        fs.writeFileSync(`public/server/configurations/${firmware}/${configuration}`, newConfigurationFileContent)
 
         res.send(200)
     })

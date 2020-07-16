@@ -10,7 +10,7 @@ var configStorage = multer.diskStorage({
 
       // console.log(file)
 
-      cb(null, 'server/firmwares')
+      cb(null, 'public/server/firmwares')
    },
    filename: function (req, file, cb) {
       cb(null, file.originalname)

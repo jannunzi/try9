@@ -4,14 +4,14 @@ const utils = require('../common/utils')
 module.exports = (app, upload) => {
 
     app.get('/api/firmwares', function (req, res) {
-        const savedConfigFiles = fs.readdirSync('server/firmwares')
+        const savedConfigFiles = fs.readdirSync(`public/server/firmwares`)
         res.send(savedConfigFiles)
     })
 
     app.delete('/api/firmwares/:firmwareName', function (req, res) {
         const firmwareName = req.params.firmwareName
-        fs.unlinkSync(`server/firmwares/${firmwareName}`)
-        fs.rmdir(`server/configurations/${firmwareName}`, {recursive: true}, (err) => {
+        fs.unlinkSync(`public/server/firmwares/${firmwareName}`)
+        fs.rmdir(`public/server/configurations/${firmwareName}`, {recursive: true}, (err) => {
             console.log(err)
         })
         res.send(200)
@@ -20,19 +20,19 @@ module.exports = (app, upload) => {
     app.post('/api/firmwares/:firmwareName/untar', function (req, res) {
         const firmwareName = req.params.firmwareName
 
-        if (fs.existsSync(`server/configurations/${firmwareName}`)){
+        if (fs.existsSync(`public/server/configurations/${firmwareName}`)){
             res.send(200)
             return
         }
         utils.removeFilesRecursively('server/tmp/*')
-        utils.createDirectory(`server/configurations/${firmwareName}`)
+        utils.createDirectory(`public/server/configurations/${firmwareName}`)
         utils.untar(
-            `server/firmwares/${firmwareName}`,
-            `server/tmp`)
-        fs.readdir("server/tmp", (err, filesInTmp) => {
-            const configTarGz = `server/tmp/${filesInTmp[0]}/Configs.tar.gz`
-            utils.untar(configTarGz, `server/configurations/${firmwareName}`)
-            utils.removeFilesRecursively('server/tmp/*')
+            `public/server/firmwares/${firmwareName}`,
+            `public/server/tmp`)
+        fs.readdir(`public/server/tmp`, (err, filesInTmp) => {
+            const configTarGz = `public/server/tmp/${filesInTmp[0]}/Configs.tar.gz`
+            utils.untar(configTarGz, `public/server/configurations/${firmwareName}`)
+            utils.removeFilesRecursively(`public/server/tmp/*`)
             res.send(configTarGz)
         })
     })

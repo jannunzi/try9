@@ -14,8 +14,8 @@ module.exports = (app) => {
       return
     }
 
-    const file1 = fs.readFileSync(`server/${what}/${firmware1}/${what1}`)
-    const file2 = fs.readFileSync(`server/${what}/${firmware2}/${what2}`)
+    const file1 = fs.readFileSync(`public/server/${what}/${firmware1}/${what1}`)
+    const file2 = fs.readFileSync(`public/server/${what}/${firmware2}/${what2}`)
 
     const json1 = JSON.parse(file1)
     const json2 = JSON.parse(file2)
