@@ -1,0 +1,37 @@
+{
+    "title": "Drive Controller",
+    "description": "This schema defines the requirements and format for the Drive Controller configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": [
+                "Control Coefficients", 
+                "Basic Settings",
+                "Max Drive Level During Gamma Blanking"
+            ],
+            "additionalProperties": false,
+            "properties":{
+                "Basic Settings": { "$ref": "driveController.json#/properties/Product/properties/Basic Settings" },
+
+                "Control Coefficients": {
+                    "description": "Drive controller coefficients. Array is [Proportional Gain, Integrator Gain, Derivative Gain, Derivative Filter Coefficient]. This parameter is required.",
+                    "type":"array", 
+                    "items": {
+                        "type":"number"
+                    },
+                    "maxItems": 4,
+                    "minItems": 4
+                },
+                "Max Drive Level During Gamma Blanking":{
+                    "description":"Maximum Drive Level Allowed During Blank Time",
+                    "type":"integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                }
+            }
+        }
+    }
+}

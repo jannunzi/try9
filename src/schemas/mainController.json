@@ -1,0 +1,122 @@
+{
+    "title": "Main Controller Configuration",
+    "description": "This schema defines the minimum requirements and format for the Main Controller configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product","Customer"],
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": [
+                "Divisor From Cal Rate To Get Control Rate", 
+                "Power Profile",
+                "Power Dissipation",
+                "Gain Scheduler", 
+                "Drive Slew Rate Limit"],
+            "additionalProperties": false,
+            "properties":{
+                "Divisor From Cal Rate To Get Control Rate": {
+                    "description": "Set the power controller input data rate divisor to reduce throughput. 1=no decimation, 2=50%, 4=25%",
+                    "type":"integer",
+                    "maximum": 255,
+                    "minimum": 1
+                },
+                "Power Profile": {
+                    "description": "Array of 17 VSWR Data Points. Each element of the array can be a single number (if power limit is don't care) or a 1x2 array of [VSWR, Setpoint Limit].",
+                    "type":"array", 
+                    "maxItems": 17,
+                    "minItems": 17,
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            }, 
+                            {
+                                "type": "array",
+                                "items": {"type": "number"},
+                                "maxItems": 2,
+                                "minItems": 2
+                            }
+                        ]
+                    }
+                },
+                "Gain Scheduler": { "$ref": "gainScheduler.json#/properties/Product/properties/Gain Scheduler" },
+                "Power Dissipation": {
+                    "description": "Power Dissipation Table (Energy Limiter Method)",
+                    "type": "object",
+                    "required": [
+                      "Iteration Period",
+                      "Filter Weight",
+                      "Bin Parameters"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "Iteration Period": {
+                        "description": "Set the iteration period of dissipation input data",
+                        "type": "number",
+                        "maximum": 1,
+                        "minimum": 1e-3
+                      },
+                      "Filter Weight": {
+                        "description": "Set the dissipation filter weight",
+                        "type": "number",
+                        "maximum": 1.0,
+                        "minimum": 0.0
+                      },
+                      "Bin Parameters": {
+                        "description": "Array of 6 Data Points. Each data point contains 2 values, a disspation level (in watts) and time interval in seconds.",
+                        "type": "array",
+                        "maxItems": 3,
+                        "minItems": 3,
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "maxItems": 2,
+                              "minItems": 2
+                            }
+                          ]
+                        }
+                      }
+                    }
+                },
+                "Drive Slew Rate Limit": {
+                    "description": "Slew Rate Limit for the drive actuator specified as Counts/MicroSecond or null. null means the limit is disabled. This parameter is required.",
+                    "type": ["number", "null"]
+                }
+            }
+        },
+        "Customer":{
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required":[
+                "Edge Ramping", 
+                "Min Setpoint for Load Leveling"],
+            "additionalProperties": false,
+            "properties":{
+                "Edge Ramping":{
+                    "type":"object",
+                    "required":["Value"],
+                    "additionalProperties": false,
+                    "properties":{
+                        "Value":{
+                            "description":"Time (seconds)",
+                            "type":"number"
+                        }
+                    }
+                },
+                "Min Setpoint for Load Leveling":{
+                    "description": "Minimum power setpoint required to allow delivered power leveling to be enabled",
+                    "type":"number",
+                    "minimum": 0
+                }
+            }
+        }
+    }
+}

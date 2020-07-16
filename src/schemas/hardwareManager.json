@@ -1,0 +1,44 @@
+{
+    "title": "Hardware Manager Configuration",
+    "description": "Defines requirements for the Hardware Manager Configs. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "additionalProperties": false,
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": [
+                "Softstart Voltage Threshold", 
+                "PAV RF On Threshold", 
+                "PAV RF Off Threshold",
+                "Minimum Setpoint Threshold"
+            ],
+            "additionalProperties": false,
+            "properties":{
+                "Softstart Voltage Threshold": {
+                    "description": "Bulk Voltage at which the soft start is allowed to close the contactor. This parameter is required.",
+                    "type":"number"
+                },
+
+                "PAV RF On Threshold": {
+                    "description": "Minimum PA Voltage at which the RF is allowed to turn on. This parameter is required.",
+                    "type":"number"
+                },
+
+                "PAV RF Off Threshold": {
+                    "description": "Minimum PA Voltage at which the RF is allowed to turn off. This is to allow the PAs to bleed the power supply down quicker. This parameter is required.",
+                    "type":"number"
+                },
+                "Interlock Deglitch Time": {
+                    "description": "The amount of time (in microseconds) the interlock signal is required to be in a new state before it is latched. This parameter defaults to 0 us.",
+                    "type":"number"
+                },
+                "Minimum Setpoint Threshold":{
+                    "description": "Minimum setpoint (in watts) at which the driver is allowed to be enabled",
+                    "type":"number"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,209 @@
+{
+    "title": "Meter Configuration",
+    "description": "Defines the requirements for the meter readings configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "additionalProperties": false,
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "required": [ "Defined Channels", "Thermistor Types", "Junction Temperature Estimator" ],
+            "additionalProperties": false,
+            "properties": {
+                "Defined Channels": {
+                    "description": "An array of channels objects that define each meter channel",
+                    "type": "array",
+                    "items": {
+                        "type":"object",
+                        "properties": {
+                            "Channel Type": {
+                                "description": "Used by some systems to do things like calculate dissiation or handle softstart. This parameter is not required and defaults to 'None'.",
+                                "type":"string",
+                                "enum":["None","PA Voltage","PA Current","Softstart Voltage","AC Line Voltage","PA Power In"]
+                            },
+
+                            "Meter ID": {
+                                "description": "This is the human readable name of the meter channel",
+                                "type": "string"
+                            },
+                            "Enabled": {
+                                "description": "Meter channel is Enabled (true) or disabled (false). This is useful for temporarily disabling the meter channel. This parameter is not required and defaults to true.",
+                                "type":"boolean"
+                            },
+                            "Mux Address": {
+                                "description": "Physical multiplexer address required to connect the signal to the ADC.",
+                                "type":"integer", 
+                                "maximum": 127
+                            },
+                            "Block Size": {
+                                "description": "Once the multiplexer address is selected and the delay expires, how many samples to take. This number is 'n' in 2^n samples. This parameter is not required and defaults to 10",
+                                "type":"integer",
+                                "maximum": 12
+                            },
+                            "Filter Style": {
+                                "description": "Which filter to use for this meter channel. This parameter not required and is currently not used.",
+                                "type":"integer" 
+                            },
+                            "Fault Bounds": {
+                                "description": "Fault limits specified in array format. When the measured value exceeds these quantities, a fault will occur. Array is [lower limit, upper limit]. This parameter is not required and defaults to [-HUGE_VALF, HUGE_VALF].",
+                                "type":"array", 
+                                "items": {
+                                    "type":"number"
+                                },
+                                "maxItems": 2,
+                                "minItems": 2
+                            },
+                            "Warning Bounds": {
+                                "description": "Warning limits specified in array format. When the measured value exceeds these quantities, a warning will occur. Array is [lower limit, upper limit]. This parameter is not required and defaults to [-HUGE_VALF, HUGE_VALF].",
+                                "type":"array", 
+                                "items": {
+                                    "type":"number"
+                                },
+                                "maxItems": 2,
+                                "minItems": 2
+                            },
+                            
+                            "Use Unfiltered Data for Fault Checking": {
+                                "description": "Unfiltered samples will be checked against the fault limits. This will result in a faster fault response but could be prone to false trips. This parameter is not required and defaults to false.",
+                                "type":"boolean"
+                            },
+                            
+                            "Clamp Value to Zero": {
+                                "description": "Do not let the value go negative.",
+                                "type":"boolean"
+                            },
+                            
+                            "Fault is independent of PSU Status": {
+                                "description": "Checking sampled data against fault limits is a function of Power Supply state (DRVx). When PSU is on, fault limits will be checked. This parameter is not required and defaults to false.",
+                                "type":"boolean"
+                            },
+                            
+                            "Reading is independent of PSU Status": {
+                                "description": "Calculating values is a function of Power Supply state (DRVx). When PSU is on, values are measured and calculated. When PSU is off, reading will be 0. This parameter is not required and defaults to false.",
+                                "type":"boolean"
+                            },
+                            
+                            "Alternate Source": {
+                                "description": "Used to provide the meter structure with analog or contrived quantities that are not sourced by the FPGA meterReader. This parameter is not required and defaults to 0.",
+                                "type":"integer" 
+                            },
+                            
+                            "Thermistor": {
+                                "description": "This device is a thermistor of one of the types specified in 'Thermistor Types'. This parameter is not required and defaults to 0.",
+                                "type":"integer" 
+                            },
+
+                            "Units": {
+                                "description": "String representing measured units. This parameter is not required and defaults to ''.",
+                                "type":"string" 
+                            },
+
+                            "Legacy Meter ID": {
+                                "description": "Allows mapping to SNAC MeterID (See SNAC Configurator) to display this meter channel to an existing HPV address that equates to SNAC MeterID. This parameter is for legacy HPV operation, is not required and defaults to 0.",
+                                "type":"integer"
+                            },
+
+                            "Priority": {
+                                "description": "Only one channel can have priority. This channel will be sampled much more often (every other timeslot). This parameter is not required and defaults to false.",
+                                "type":"boolean"
+                            }
+                        },
+                        "required": [ "Meter ID", "Mux Address" ]
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                
+                "Thermistor Types": {
+                    "description": "An array of thermistor objects that define the necessary information for each thermistor",
+                    "type": "array",
+                    "maxItems": 1,
+                    "minItems": 1,
+                    "items":{
+                        "type":"object",
+                        "properties": {
+                            "Coefficient A": {
+                                "description": "Thermistor 'A' coefficient. See Steinhart-Hart equations.",
+                                "type":"number" 
+                            },
+                            "Coefficient B": {
+                                "description": "Thermistor 'B' coefficient. See Steinhart-Hart equations.",
+                                "type":"number" 
+                            },
+                            "Coefficient C": {
+                                "description": "Thermistor 'C' coefficient. See Steinhart-Hart equations.",
+                                "type":"number" 
+                            },
+                            "Pullup Resistance": {
+                                "description": "Resistance of the Pullup resistor that is the 'hot' leg of the voltage divider. This should be on the schematic.",
+                                "type":"number" 
+                            }
+                        },
+                        "required": [ "Coefficient A", "Coefficient B", "Coefficient C", "Pullup Resistance" ]
+                    }
+                },
+                
+                "Junction Temperature Estimator": {
+                    "description": "Junction Temperature Estimator settings.",
+                    "type":"object",
+                    "properties": {
+                        "Enable": {
+                            "description": "Enable Junction Temperature Estimator and process other JSON properties.",
+                            "type":"boolean" 
+                        },
+                        "Volt Meter Id": {
+                            "description": "ADC input for voltage.",
+                            "type":"string" 
+                        },
+                        "Heatsink Temperature Meter Id": {
+                            "description": "ADC input for heatsink temperature.",
+                            "type":"string" 
+                        },
+                        "Threshold Temperature": {
+                            "description": "Threshold temperature for failure (degrees C).",
+                            "type":"number" 
+                        },
+                        "Coefficient R1": {
+                            "description": "Value of R1 coefficient.",
+                            "type":"number" 
+                        },
+                        "Coefficient R2": {
+                            "description": "Value of R2 coefficient.",
+                            "type":"number" 
+                        },
+                        "Coefficient R3": {
+                            "description": "Value of R3 coefficient.",
+                            "type":"number" 
+                        },
+                        "Coefficient C1": {
+                            "description": "Value of C1 coefficient.",
+                            "type":"number" 
+                        },
+                        "Coefficient C2": {
+                            "description": "Value of C2 coefficient.",
+                            "type":"number" 
+                        },
+                        "Number of PAs": {
+                            "description": "Number of Power Amplifiers.",
+                            "type":"number", 
+                            "minimum": 1
+                        },
+                        "Delivered Power Delay": {
+                            "description": "Delivered Power Delay (x 54 ns).",
+                            "type":"number", 
+                            "minimum": 0,
+                            "maximum": 16383
+                        },
+                        "Statistics Mean Feedback Coefficient": {
+                            "description": "(Optional) Value of feedback coefficient for finding mean (for statistics only, does not affect Estimation functionality).",
+                            "type":"number", 
+                            "minimum": 0.0,
+                            "maximum": 1.0
+                        }
+                    },
+                    "required": [ "Enable" ]
+                }
+            }
+        }
+    }
+}

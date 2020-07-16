@@ -1,0 +1,225 @@
+{
+    "title": "Timbers Configuration",
+    "description": "This schema defines the minimum requirements and format for the Timbers configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product", "Customer"],
+    "properties": {
+        "Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": [
+                "Bias Sync Filtering Ratio",
+                "Probe Amplitude Coefficients",
+                "Max Offset",
+                "Cost Stat",
+                "Learn Rate",
+                "Learn Rate Decay",
+                "Stabilize Time",
+                "RF Measurement Cycles",
+                "Tune Thresholds",
+                "Use Single Nominal Cost",
+                "Cost Function Weights",
+                "Expected Bias Frequency Range",
+                "Sync To RF Delay",
+                "RF To Readback Delay Tuner"
+            ],
+            "additionalProperties": false,
+            "properties":{
+                "Bias Sync Filtering Ratio":{
+                    "description":"Ratio of the sync waveform to use as filtering.",
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 0.8
+                },
+                "Probe Amplitude Coefficients":{
+                    "description":"Probe Amplitude A B C coefficients",
+                    "type":"array", 
+                    "items": {
+                        "type":"number"
+                    },  
+                   "maxItems": 3,
+                   "minItems": 3
+                },
+                "Max Offset":{
+                    "description":"Maximum Frequency Offset",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "Cost Stat":{
+                    "description":"Cost Calculation Method. 0=average 1=max",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "Learn Rate":{
+                    "description":"Learn Rate",
+                    "type": "number",
+                    "minimum": 0.0
+                },
+                "Learn Rate Decay":{
+                    "description":"Learn Rate Decay",
+                    "type": "number",
+                    "minimum": 0.0
+                },
+                "Stabilize Time":{
+                    "description":"Actuator Stabilize Time",
+                    "type": "number",
+                    "minimum": 0.0
+                },
+                "RF Measurement Cycles":{
+                    "description":"Number of RF cycles used for measurement",
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "Tune Thresholds":{
+                    "description":"Tune thresholds to control state machine",
+                    "type": "array",
+                    "items": {
+                        "type":"number",
+                        "minimum": 0.0
+                    },  
+                   "maxItems": 4,
+                   "minItems": 4
+                },
+                "Use Single Nominal Cost":{
+                    "description":"True: Measure tuner feedback once at the beginning of a set of probes.False: Remeasure tuner feedback between each probe.",
+                    "type": "boolean"
+                },
+                "Cost Function Weights":{
+                    "description":"Weights for the cost function[Average/Max, Zero-Crossing, Smoothness]",
+                    "type": "array",
+                    "items": {
+                        "type":"number",
+                        "minimum": 0.0,
+                        "maximum": 1.0
+                    },  
+                   "maxItems": 3,
+                   "minItems": 3
+                },
+                "Expected Bias Frequency Range":{
+                    "description":"Min and Max Frequency allowed on the bias sync input. Specified as [min,max]",
+                    "type": "array",
+                    "items": {
+                        "type":"integer"
+                    },  
+                   "maxItems": 2,
+                   "minItems": 2
+                },
+                "Sync To RF Delay":{
+                    "description":"Delay from Bias Sync to Bin 0 RF Actuator, in Seconds",
+                    "type": "number",
+                    "minimum": -3e-6,
+                    "maximum": 3e-6
+                },
+                "RF To Readback Delay Tuner":{
+                    "description":"RF Actuator to Readback Tuner. One set of data for each pulse state.",
+                    "type":"array",
+                    "items":{
+                        "description": "Delay Tuner",
+                        "type":"object",
+                        "required": [
+                            "Auto Optimization",
+                            "Learning Rate",
+                            "Probe Amplitude",
+                            "Filter Transient Delay",
+                            "Number of Iterations to Average",
+                            "Delay Range",
+                            "Delay Default"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "Auto Optimization":{
+                                "description":"True to Enable the auto optimazation of the delay.",
+                                "type": "boolean"
+                              },
+                              "Learning Rate":{
+                                "description":"Affects how quickly we move towards the solution",
+                                "type": "number"
+                              },
+                              "Probe Amplitude":{
+                                "description":"How large of a 'poke' to the system to decide which direction (bigger/smaller) to move the delay, in seconds",
+                                "type": "number",
+                                "minimum": 5e-9,
+                                "maximum": 100e-9
+                              },
+                              "Filter Transient Delay":{
+                                "description":"How long to wait after applying new delay setting before making measurements of performance",
+                                "type": "integer"
+                              },
+                              "Number of Iterations to Average":{
+                                "description":"How many measurements to average when sampling gradient direction",
+                                "type": "integer"
+                              },
+                              "Delay Range":{
+                                "description":"Allowed Delay Deviation, in seconds: [Min, Max]",
+                                "type":"array", 
+                                "items": {
+                                  "type":"number"
+                                },  
+                              "maxItems": 2,
+                              "minItems": 2
+                              },
+                              "Delay Default":{
+                                "description":"Delay, in seconds, that will be applied until the auto optimizer is enabled",
+                                "type": "number"
+                              }
+                        }
+                    },
+                    "maxItems":4,
+                    "minItems":4
+                }
+            }
+        },
+        "Customer":{
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required": [
+                "Hopper Enabled",
+                "Tuner Enabled",
+                "Match Tap",
+                "Use Alternate Bias Sync Input",
+                "Hopping Presets"
+            ],
+            "additionalProperties": false,
+            "properties":{
+                "Hopper Enabled":{
+                    "description":"Detector is enabled or disabled by default",
+                    "type": "boolean"
+                },
+                "Tuner Enabled":{
+                    "description":"Tuner is enabled or disabled by default",
+                    "type": "boolean"
+                },
+                "Synced Operation":{
+                    "description":"Tuner and Detector are synced to the bias generator by default",
+                    "type": "boolean"
+                },
+                "Match Tap":{
+                    "description":"Default match tap",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "Use Alternate Bias Sync Input":{
+                    "description":"The alternate input is used to compare the novina value to the red pitaya value",
+                    "type": "boolean"
+                },
+                "Hopping Presets":{
+                    "description":"Preset Hopping Patterns",
+                    "type": "array",
+                    "maxItems": 9,
+                    "minItems": 9,
+                     "items": {
+                        "type":"array",
+                       "title": "Preset 0 ... 9",
+                        "items": {
+                          "title": "Bin 0 ... 19",
+                            "type": "integer"
+                        },
+                        "maxItems": 20,
+                        "minItems": 20
+                    }
+                }
+            }
+        }
+    }
+}

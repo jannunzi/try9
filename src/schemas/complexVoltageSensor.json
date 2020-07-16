@@ -1,0 +1,35 @@
+{
+    "title": "Complex Voltage Sensor Schema",
+    "description": "Defines the requirements for the Complex Voltage Sensor Configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product", "Customer"],
+    "additionalProperties": false,
+    "properties": {
+        "Product": {
+            "description":"MKS Only Configs",
+            "required": [ "CIC R", "CIC M"],
+            "additionalProperties": false,
+            "properties": {
+                "CIC R": {
+                    "description": "Set the CIC Filter decimation. This parameter is required.",
+                    "type":"integer", 
+                    "maximum": 128,
+                    "minimum": 8
+                },
+                "CIC M": {
+                    "description": "Set the CIC Filter Differential Delay. Valid values are 1, 2. This parameter is required.",
+                    "type":"integer", 
+                    "enum": [1,2]
+                }
+            }
+        },
+        "Customer": {
+            "description":"Customer Accessible Configs",
+            "required": [ ],
+            "additionalProperties": false,
+            "properties": {
+
+            }
+        }
+    }
+}

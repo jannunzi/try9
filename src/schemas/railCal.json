@@ -1,0 +1,18 @@
+{
+    "title": "Rail Calibration",
+    "description": "Defines the requirements for rail calibration file.",
+    "type": "object",
+
+    "properties": {
+        "Gain": {
+            "description": "Gain of y=mx+b",
+            "type": "number"
+        },
+        "Offset": {
+            "description": "Offset of y=mx+b",
+            "type":"number"
+        }
+    },
+    "required": ["Gain", "Offset"],
+    "additionalProperties": false
+}

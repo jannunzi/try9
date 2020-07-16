@@ -1,0 +1,162 @@
+{
+  "title": "Gain Scheduler Configuration",
+  "description": "This schema defines the requirements and format for the Base Drive Controller configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+  "type": "object",
+  "required": ["Product"],
+  "definitions": {
+    "lut": {
+      "description": "This array defines how the array was contructed",
+      "type": "array",
+      "items": { "type": "number" },
+      "maxItems": 9,
+      "minItems": 9
+    }
+  },
+  "properties": {
+    "Product": {
+      "description": "MKS Only Configs",
+      "type": "object",
+      "required": ["Gain Scheduler"],
+      "properties": {
+        "Gain Scheduler": {
+          "description": "Power Controller Gain Scheduler for RF Drive",
+          "type": "object",
+          "required": [
+            "Rail I Modifier Coefficients",
+            "Rail P Modifier Coefficients",
+            "Coefficients"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "Coefficients": {
+              "description": "Define the actual coefficients here for each scheduler",
+              "type": "object",
+              "required": ["Scheduler Based on"],
+              "additionalProperties": false,
+              "dependencies": {
+                "Scheduler Based on": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "Scheduler Based on": { "enum": ["Gamma"] }
+                      },
+                      "required": ["Gamma"]
+                    },
+                    {
+                      "properties": {
+                        "Scheduler Based on": { "enum": ["Forward Power"] }
+                      },
+                      "required": ["Forward Power"]
+                    }
+                  ]
+                }
+              },
+              "properties": {
+                "Scheduler Based on": {
+                  "description": "Choose what scheduler is based upon",
+                  "type": "string",
+                  "enum": ["Gamma", "Forward Power"]
+                },
+                "Gamma": {
+                  "description": "This is based on Gamma Square ranging from 0-1",
+                  "type": "object",
+                  "required": [
+                    "Proportional Coefficients",
+                    "Integral Coefficients"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "Proportional Coefficients": { "$ref": "#/definitions/lut" },
+                    "Integral Coefficients": { "$ref": "#/definitions/lut" }
+                  }
+                },
+                "Forward Power": {
+                  "description": "This is based on Forward Power ranging from lower end power to max power",
+                  "type": "object",
+                  "required": [
+                    "Proportional Coefficients",
+                    "Integral Coefficients",
+                    "Max Power Threshold"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "Proportional Coefficients": { "$ref": "#/definitions/lut" },
+                    "Integral Coefficients": { "$ref": "#/definitions/lut" },
+                    "Max Power Threshold": {
+                      "description": "In powerbased scheduler, if below threshold, it is specified in the list, above that, same as max power",
+                      "type": "number",
+                      "minimum": 0,
+                      "exclusiveMinimum": true
+                    }
+                  }
+                }
+              }
+            },
+            "Rail P Modifier Coefficients": {
+              "description": "Rail (PA Voltage) based gain of both P Coefficient",
+              "type": "array",
+              "additionalProperties": false,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "A": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "M": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "B": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "N": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "C": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  }
+                },
+                "required": ["A", "M", "B", "N", "C"]
+              }
+            },
+            "Rail I Modifier Coefficients": {
+              "description": "Rail (PA Voltage) based gain of both I Coefficient",
+              "type": "array",
+              "additionalProperties": false,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "A": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "M": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "B": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "N": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  },
+                  "C": {
+                    "description": "Part of `gain = A*rail^M + B*rail^N + C`",
+                    "type": "number"
+                  }
+                },
+                "required": ["A", "M", "B", "N", "C"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

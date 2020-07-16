@@ -1,0 +1,121 @@
+{
+    "title": "PFS Configuration",
+    "description": "This schema defines the minimum requirements and format for the PFS configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product", "Customer"],
+    "properties": {
+        "Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": ["PFS Allowed","Master Allowed"],
+            "additionalProperties": false,
+            "properties":{
+                "PFS Allowed":{
+                    "description":"Allow PFS control on this unit",
+                    "type": "boolean"
+                },
+                "Master Allowed":{
+                    "description":"Allow PFS Master on this unit",
+                    "type": "boolean"
+                },
+                "Phase Tune Threshold":{
+                    "description":"Threshold used to determine if phase is tuned, in degrees",
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 360.0
+                }
+            }
+        },
+        "Customer":{
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required": [
+                "PFS Enabled",
+                "Voltage Control",
+                "Phase Control",
+                "Voltage Setpoints",
+                "Phase Setpoints",
+                "Main V Limit",
+                "Ring V Limit",
+                "Manual Rail Voltage",
+                "Start Delay",
+                "Phase Delta Limit",
+                "Phase Tune Offset",
+                "Lost Time"
+            ],
+            "additionalProperties": false,
+            "properties":{
+                "PFS Enabled":{
+                    "description":"PFS is enabled or disabled by default",
+                    "type": "boolean"
+                },
+                "Voltage Control":{
+                    "description":"Voltage control is enabled or disabled by default",
+                    "type": "boolean"
+                },
+                "Phase Control":{
+                    "description":"Phase control is enabled or disabled by default",
+                    "type": "boolean"
+                },
+                "Voltage Setpoints":{
+                    "description":"Voltage control setpoints",
+                    "type":"array", 
+                    "items": {
+                        "type":"number"
+                    },  
+                   "maxItems": 4,
+                   "minItems": 4,
+                   "minimum": 0.0
+                },
+                "Phase Setpoints":{
+                    "description":"Phase control setpoints",
+                    "type":"array", 
+                    "items": {
+                        "type":"number"
+                    },  
+                   "maxItems": 4,
+                   "minItems": 4,
+                   "minimum": -360.0,
+                   "maximum": 360.0
+                },
+                "Main V Limit":{
+                    "description":"Main voltage limit",
+                    "type": "number",
+                    "minimum": 0.0
+                },
+                "Ring V Limit":{
+                    "description":"Ring voltage limit",
+                    "type": "number",
+                    "minimum": 0.0
+                },
+                "Manual Rail Voltage":{
+                    "description":"Manual rail voltage preset",
+                    "type": "number",
+                    "minimum": 0.0
+                },
+                "Start Delay":{
+                    "description":"Tuner start delay in seconds",
+                    "type": "number",
+                    "minimum": 0.0
+                },
+                "Phase Delta Limit":{
+                    "description":"Delta limit in degrees",
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 360.0
+                },
+                "Phase Tune Offset":{
+                    "description":"Phase delta tune target, in degrees",
+                    "type": "number",
+                    "minimum": -360.0,
+                    "maximum": 360.0
+                },
+                "Lost Time":{
+                    "description":"Tuner lost time in seconds",
+                    "type": "number",
+                    "minimum": 0.0
+                }
+            }
+        }
+    }
+}

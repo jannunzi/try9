@@ -1,0 +1,37 @@
+{
+    "title": "Broadcast Configuration",
+    "description": "This schema defines the minimum requirements and format for the Broadcast configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+
+    "type": "object",
+    "required":["Customer"],
+    "properties": {
+        "Customer":{
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required": ["Broadcast Off On Fault", "Delayed Off Time", "Broadcast Address", "Broadcast Port"],
+            "additionalProperties": false,
+            "properties":{
+                "Broadcast Off On Fault": {
+                    "description": "If true, the device will broadcast OFF when it faults",
+                    "type": "boolean"
+                },
+                "Delayed Off Time": {
+                    "description": "The time (in seconds) from receiving a delayed OFF command until actually turning RF off. (A value of 0 disables the delayed aspect.)",
+                    "type": "number",
+                    "maximum":0.5,
+                    "minimum":0
+                },
+                "Broadcast Address": {
+                    "description": "The broadcast address for the subnet the device is currently on",
+                    "type": "string"
+                },
+                "Broadcast Port": {
+                    "description": "The destination UDP port that the broadcast should target.",
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 16383
+                }
+            }
+        }
+    }
+}

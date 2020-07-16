@@ -1,0 +1,24 @@
+{
+    "title": "Meter Calibration",
+    "description": "Defines the requirements for the Meter Readings calibration file. There can be any number of objects but each object must have a name and must contain a numerical Gain and Offset. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+
+    "properties": { },
+    "patternProperties": {
+        ".+": {
+            "type":"object", 
+            "properties": { 
+                "Gain": {
+                    "description": "Gain of y=mx+b",
+                    "type": "number"
+                },
+                "Offset": {
+                    "description": "Offset of y=mx+b",
+                    "type":"number"
+                }
+            },
+            "required": ["Gain", "Offset"],
+            "additionalProperties": false
+        }
+    }
+}

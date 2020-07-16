@@ -1,0 +1,141 @@
+{
+    "title": "ESC Tuner Configuration",
+    "description": "This section defines all of the confgurations for for frequency tuning operation. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product","Customer"],
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": [
+                "Basic Settings",
+                "IMD Reduction Active", 
+                "Normal Operation", 
+                "Input Rate Divisor"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "Basic Settings": { "$ref": "frequencyController.json#/properties/Product/properties/Basic Settings" },
+                "IMD Reduction Active": {
+                    "type": "object",
+                    "required": [
+                        "Perturbation Frequency",
+                        "Perturbation Amplitude",
+                        "Integrator Gain",
+                        "High Pass Filter Coefficients"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "Perturbation Frequency":{
+                            "description":"Frequency, in Hz, of the modulation",
+                            "type": "integer"
+                        },
+                        "Perturbation Amplitude":{
+                            "description":"Deviation, in Hz, from the nominal frequency",
+                            "type": "integer"
+                        },
+                        "Integrator Gain":{
+                            "description":"Integrator Gain",
+                            "type": "number"
+                        },
+                        "High Pass Filter Coefficients":{
+                            "description":"Pass Filter Coefficients: B0, B1, B2, A1, A2",
+                            "type":"array", 
+                            "items": {
+                                "type":"number"
+                            },  
+                        "maxItems": 5,
+                        "minItems": 5
+                        }
+                  }
+                  
+                },
+                "Normal Operation": {
+                    "type": "object",
+                    "required": [
+                        "Perturbation Frequency",
+                        "Perturbation Amplitude",
+                        "Integrator Gain",
+                        "High Pass Filter Coefficients"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "Perturbation Frequency":{
+                            "description":"Frequency, in Hz, of the modulation",
+                            "type": "integer"
+                        },
+                        "Perturbation Amplitude":{
+                            "description":"Deviation, in Hz, from the nominal frequency",
+                            "type": "integer"
+                        },
+                        "Integrator Gain":{
+                            "description":"Integrator Gain",
+                            "type": "number"
+                        },
+                        "High Pass Filter Coefficients":{
+                            "description":"Pass Filter Coefficients: B0, B1, B2, A1, A2",
+                            "type":"array", 
+                            "items": {
+                                "type":"number"
+                            },  
+                        "maxItems": 5,
+                        "minItems": 5
+                        }
+                    }
+              },
+              "Input Rate Divisor": {
+                    "description": "Set the input data rate divisor to reduce throughput. 1=no decimation, 2=50%, 4=25%",
+                    "type":"integer",
+                    "maximum": 255,
+                    "minimum": 1
+                }
+            }
+        },
+
+        "Customer":{
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required": [
+                "Basic Settings",
+                "Coarse To Fine Threshold",
+                "Fine To Coarse Threshold",
+                "Start Rate",
+                "Convergence Threshold",
+                "Convergence Samples"
+            ],
+            "additionalProperties": false,
+            "properties":{
+                "Basic Settings": { "$ref": "frequencyController.json#/properties/Customer/properties/Basic Settings" },
+                "Coarse To Fine Threshold": {
+                    "description": "|Gamma|^2 Value at which the tuner switches from Coarse Tuning Mode to Fine Tuning Mode. AKA Tune Threshold",
+                    "type":"number",
+                    "maximum": 1.0,
+                    "minimum": 0.0
+                },
+                "Fine To Coarse Threshold": {
+                    "description": "|Gamma|^2 Value at which the tuner switches from Fine Tuning Mode to Coarse Tuning Mode. AKA Loss Threshold",
+                    "type":"number",
+                    "maximum": 1.0,
+                    "minimum": 0.0
+                },
+                "Start Rate": {
+                    "description": "Initial Rate and Direction the tuner will start sweeping the frequency in coarse tune mode.",
+                    "type":"integer",
+                    "maximum": 1000000,
+                    "minimum": -1000000
+                },
+                "Convergence Threshold": {
+                    "description": "Threshold to determine tune convergence in Hz.",
+                    "type":"integer",
+                    "minimum": 0
+                },
+                "Convergence Samples": {
+                    "description": "Number of samples averaged to determine tune convergence.",
+                    "type":"integer",
+                    "minimum": 1
+                }
+            }
+        }
+    }
+}
+

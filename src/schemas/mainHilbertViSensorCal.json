@@ -1,0 +1,32 @@
+{
+    "title": "Power Sensor Calibration",
+    "description": "Defines the requirements for the VI Power Sensor calibration file.",
+    "type": "object",
+    "required": ["ABCD Data"],
+    "properties": {
+        "ABCD Data": {
+            "description": "ABCD Calibration Matrix. This parameter is required.",
+            "type":"array",
+            "maxItems": 2048,
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": { },
+                "patternProperties": {
+                    "[A-D]": {
+                        "type":"array", 
+                        "maxItems": 4,
+                        "minItems": 4,
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "frequency": {
+                      "type":"integer"
+                    }
+                },
+                "required": ["frequency", "A", "B", "C", "D"]
+            }
+        }
+    }
+}

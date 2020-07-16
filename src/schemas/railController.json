@@ -1,0 +1,32 @@
+{
+    "title": "Basic Rail Controller",
+    "description": "This schema defines the requirements and format for the Base Rail Controller configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": ["Basic Settings"],
+            "properties":{
+                "Basic Settings": {
+                    "description":"Basic Settings for any Rail Controller",
+                    "type":"object",
+                    "required": ["Operating Range"],
+                    "additionalProperties": false,
+                    "properties":{
+                        "Operating Range": {
+                            "description": "Allowed range, in volts, of Rail Actuator. Array is [Lower Limit, Upper Limit]. This parameter is required.",
+                            "type":"array", 
+                            "items": {
+                                "type":"number"
+                            },
+                            "maxItems": 2,
+                            "minItems": 2
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "title": "Power Sensor Configuration",
+    "description": "Defines the requirements for the VI Sensor Configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product", "Customer"],
+    "additionalProperties": false,
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "required":[
+                "Calibration Input Rate Divisor", 
+                "Detector Input Rate Divisor", 
+                "Frequency Delay",  
+                "Calibration Readback Blanking Time From Pulse State Change",
+                "Gamma Squelch Threshold"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "Calibration Input Rate Divisor": {
+                    "description": "Set the input rate divisor for the cal module. This reduces the rate between the detector and calibrated values. Valid values are 1-255.",
+                    "type":"integer", 
+                    "maximum": 255,
+                    "minimum": 1
+                },
+                "Detector Input Rate Divisor": {
+                    "description": "Set the input rate divisor on the power detector. This effectively reduces the ADC Sample Rate to fs/Divisor. Valid values are 1-255.",
+                    "type":"integer", 
+                    "maximum": 255,
+                    "minimum": 1
+                },
+                "Frequency Delay": {
+                    "description": "Set the frequency delay (ns).",
+                    "type":"integer", 
+                    "maximum": 5000,
+                    "minimum": 0
+                },
+                "Calibration Readback Blanking Time From Pulse State Change": {
+                    "description": "Set the blanking time for cal readback from pulse state change (s).",
+                    "type":"number", 
+                    "maximum": 50.0,
+                    "minimum": 0.0
+                },
+                "Gamma Squelch Threshold":{
+                    "description": "Minimum Forward Power Level required to calculate gamma. This eliminates odd behavior when there's no power and gamma is noisy.",
+                    "type":"number",
+                    "minimum": 0.0
+                }
+            }
+        },
+        "Customer": {
+            "description":"Customer Accessible Configs",
+            "required": [ "Frequency Filter Coefficient", "Power Filter Coefficient"],
+            "additionalProperties": false,
+            "properties": {
+                "Frequency Filter Coefficient": {
+                    "description": "Frequency Readdback Filter Coefficient. Larger value is more filtering.",
+                    "type":"number", 
+                    "maximum": 1.0,
+                    "minimum": 0.0
+                },
+                "Power Filter Coefficient": {
+                    "description": "Unsynced Power Readdback Filter Coefficient. Larger value is more filtering.",
+                    "type":"number", 
+                    "maximum": 1.0,
+                    "minimum": 0.0
+                },
+                "Synced Filter Coefficient": {
+                    "description": "Synced Power Readdback Filter Coefficient. Larger value is more filtering.",
+                    "type":"number", 
+                    "maximum": 1.0,
+                    "minimum": 0.0
+                }
+            }
+        }
+    }
+}

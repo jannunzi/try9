@@ -1,0 +1,43 @@
+{
+    "title": "Global Configurations",
+    "description": "Defines requirements for the Global Configs, which is configs that are needed throughout the design and don't have a specific owner. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "additionalProperties": false,
+    "properties": {
+      	"Product": {
+            "description": "MKS Only Configs",
+            "type":"object",
+            "required": [ "Output Mux Select" ],
+            "additionalProperties": false,
+            "properties":{
+                "Content Type": {
+                    "description": "Global configuration parameters",
+                    "type":"string",
+                    "enum": ["MKS Only", "Customer Only", "Calibration Only", "Mixed"]
+                },
+
+                "Output Mux Select": {
+                    "description": "Output Multiplexer Selects",
+                    "type":"object",
+                    "additionalProperties": false,
+                    "required":["CEX Select", "Test Vector Select"],
+                    "properties":{
+                        "CEX Select":{
+                            "description":"Selects which signal drives the CEX Output DAC. 0=DDS CEX Out, 1=Bias Sync Unfiltered, 2=Bias Sync Filtered, 3=Bias Sync Half cycle toggle",
+                            "type":"integer",
+                            "maximum":3,
+                            "minimum":0
+                        },
+                        "Test Vector Select":{
+                            "description":"Selects which signals are connected to the Test Vector Output pins, 0=Bank0, 1=bank1, 2=Bank2 ",
+                            "type":"integer",
+                            "maximum":2,
+                            "minimum":0
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

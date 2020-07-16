@@ -1,0 +1,42 @@
+{
+    "title": "TLC Communication Configuration",
+    "description": "Defines requirements for the Tlc Configs, which are configs that are needed by TLC and GIFC. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Customer"],
+    "additionalProperties": false,
+    "properties": {
+      	"Customer": {
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required": [ "Serial Port", "FrqIn10sOfHz"],
+            "additionalProperties": false,
+            "properties":{
+                "Content Type": {
+                    "description": "Describes the type of configs contained in this file. This parameter is not required and defaults to \"MKS Only\"",
+                    "type":"string",
+                    "enum": ["MKS Only", "Customer Only", "Calibration Only", "Mixed"]
+                },
+
+                "Serial Port": {
+                    "description": "Configs for the serial port. This parameter is required.",
+                    "type":"object",
+                    "additionalProperties": false,
+                    "required":["Baud"],
+                    "properties":{
+                        "Baud":{
+                            "description":"Baud Rate for the main customer serial port",
+                            "type":"integer",
+                            "maximum":115200,
+                            "minimum":9600
+                        }
+                    }
+                },
+
+                "FrqIn10sOfHz": {
+                    "description": "If true, divide the requested frequency by 10 before using FRQ and FTU. This parameter is required.",
+                    "type":"boolean"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,94 @@
+{
+    "title": "Rail Controller",
+    "description": "This schema defines the requirements and format for the Rail Controller configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required": [
+        "Product"
+    ],
+    "properties": {
+        "Product": {
+            "description": "MKS Only Configs",
+            "type": "object",
+            "required": [
+                "Control Coefficients",
+                "Basic Settings",
+                "Input Rate Divisor", 
+                "Max Mode", 
+                "Gmag2 Gain", 
+                "Gmag2 Offset", 
+                "Number of Samples", 
+                "Setpoint Gain", 
+                "Setpoint Offset", 
+                "Boost Threshold", 
+                "Rate of Change"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "Basic Settings": {
+                    "$ref": "railController.json#/properties/Product/properties/Basic Settings"
+                },
+                "Control Coefficients": {
+                    "description": "Rail controller coefficients. Array is [Integral Gain, Drive Threshold, Negative Clamp (Creep)]. This parameter is required.",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "maxItems": 3,
+                    "minItems": 3
+                },
+                "Input Rate Divisor": {
+                    "description": "Set the drive controller to rail controller input data rate divisor to reduce throughput. 1=no decimation, 2=50%, 4=25%",
+                    "type": "integer",
+                    "maximum": 255,
+                    "minimum": 1
+                },
+                "Max Mode": {
+                    "description": "Operating mode of rail controller. 0=Average, 1=Max. <Average|Max> power setpoints to use across all states for rail controller iterate",
+                    "type": "boolean"
+                },
+                "Gmag2 Gain": {
+                    "description": "The Gain Term for the GMAG2 P Term Calculation",
+                    "type": "number",
+                    "maximum": 4.0,
+                    "minimum": 0.0
+                },
+                "Gmag2 Offset": {
+                    "description": "The Offset Term for the GMAG2 P Term Calculation",
+                    "type": "number",
+                    "maximum": 32767.0,
+                    "minimum": -32768.0
+                },
+                "Number of Samples": {
+                    "description": "The Number of Samples to collect for the Rail Controller. Like sliding window width",
+                    "type": "integer",
+                    "maximum": 500,
+                    "minimum": 1
+                },
+                "Setpoint Gain": {
+                    "description": "The Gain Term for the Setpoint P Term Calculation",
+                    "type": "number",
+                    "maximum": 4.0,
+                    "minimum": 0.0
+                },
+                "Setpoint Offset": {
+                    "description": "The Offset Term for the Setpoint P Term Calculation",
+                    "type": "number",
+                    "maximum": 8191.0,
+                    "minimum": -8192.0
+                },
+                "Boost Threshold": {
+                    "description": "Defined Boost Threshold (as a Drive value) for the Agile Rail Integrator.",
+                    "type": "integer",
+                    "maximum": 16383,
+                    "minimum": 0
+                },
+                "Rate of Change": {
+                    "description": "The Rate of Change in Volts per Second",
+                    "type": "number",
+                    "maximum": 100000.0,
+                    "minimum": 5.0
+                }
+            }
+        }
+    }
+}

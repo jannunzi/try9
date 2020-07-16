@@ -1,0 +1,122 @@
+{
+    "title": "Pulsing Configuration",
+    "description": "This schema defines the requirements and format for the Pulsing configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product","Customer"],
+    "properties": {
+        "Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": ["Master Sync Out Delay", "Maximum Gamma Blanking Time Per State In ns", "PID Restore"],
+            "additionalProperties": false,
+            "properties":{
+                "Master Sync Out Delay": {
+                    "description": "Set the delay of RF (us) with respect to Sync when pulsing",
+                    "type":"number",
+                    "maximum": 295,
+                    "minimum": 0
+                },
+                "Maximum Gamma Blanking Time Per State In ns": {
+                    "description": "Set the gamma blanking time allowed per state in nanoseconds",
+                    "type":"integer",
+                    "minimum": 0
+                },
+                "PID Restore":{
+                    "type":"object",
+                    "required":["Enable", "Force Restore on 0W"],
+                    "additionalProperties": false,
+                    "properties":{
+                        "Enable":{
+                            "description":"Restore Enable for each pulsing state",
+                            "type":"array",
+                            "minItems": 1,
+                            "maxItems": 8,
+                            "items": {"type": "boolean"}
+                        },
+                        "Force Restore on 0W":{
+                            "description":"Enable Force Retore when Setpoint equal to 0",
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "Customer":{
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required":[
+                "Power Ramping", 
+                "Pulse Edge Delay",
+                "Sync Out Mode",
+                "Sync In Mode",
+                "Sync Pass-Through",
+                "Sync Lost is Fault",
+                "Gamma Blanking In ns"
+            ],
+            "additionalProperties": false,
+            "properties":{
+                "Power Ramping":{
+                    "type":"object",
+                    "required":["Mode","Value"],
+                    "additionalProperties": false,
+                    "properties":{
+                        "Mode":{
+                            "description":"Ramping Mode",
+                            "type":"string",
+                            "enum":["Disabled","Time","Rate"]
+                        },
+                        "Value":{
+                            "description":"Rate (Watts/Second) or Time (seconds) depending on the mode",
+                            "type":"number"
+                        }
+                    }
+                },
+                "Pulse Edge Delay":{
+                    "type":"array",
+                    "minItems": 1,
+                    "maxItems": 8,
+                    "items": {"type": "number"}
+                },
+                "Sync Out Mode":{
+                    "description":"Pulse Sync Out Operating Mode. Dual Edge Sync or Multi-Edge Sync",
+                    "type":"string",
+                    "enum":[
+                        "DES",
+                        "MES"
+                    ]
+                },
+                "Sync In Mode":{
+                    "description":"Pulse Sync In Operating Mode. Single Edge Sync, Dual Edge Sync or Multi-Edge Sync",
+                    "type":"string",
+                    "enum":[
+                        "SES",
+                        "DES",
+                        "MES"
+                    ]
+                },
+                "Sync Pass-Through":{
+                    "description":"Pulse Sync Out is a copy of Pulse Sync In",
+                    "type": "boolean"
+                },
+                "Sync Lost is Fault":{
+                    "description":"Sync loss detected is a fault (True) or Warning (False)",
+                    "type": "boolean"
+                },
+                "Gamma Blanking In ns":{
+                    "type":"object",
+                    "required":["Time"],
+                    "additionalProperties": false,
+                    "properties":{
+                        "Time":{
+                            "description":"Gamma Blanking Times (in nSecs)",
+                            "type":"array",
+                            "minItems": 1,
+                            "maxItems": 8,
+                            "items": {"type": "integer"}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

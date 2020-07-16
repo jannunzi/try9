@@ -1,0 +1,62 @@
+{
+    "title": "Back Porch Port Expander Configuration",
+    "description": "Defines the requirements for the back porch port expander configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "additionalProperties": false,
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "required": [ "Defined Channels" ],
+            "additionalProperties": false,
+            "properties": {
+                "Defined Channels": {
+                    "description": "An array of expansion signals that define each back port expansion",
+                    "type": "array",
+                    "items": {
+                        "type":"object",
+                        "properties": {
+                            "Display Name": {
+                                "description": "This is the human readable name of the port expander channel",
+                                "type": "string"
+                            },
+                            "Enabled": {
+                                "description": "Signal is being used: yes(true) or no(false).",
+                                "type":"boolean",
+                                "default": false
+                            },
+                            "Bit Number": {
+                                "description": "Physical bit number assigned to the signal. Range is 0-15. Schematic may use octal notation.",
+                                "type":"integer", 
+                                "maximum": 15
+                            },
+                            "Active Low": {
+                                "description": "Defines polarity of the signal. Set to true for an active low signal",
+                                "type":"boolean",
+                                "default": false
+                            },
+                            "Defined Name Input": {
+                                "description": "Input signal names. This parameter is not required and defaults to 'None'.",
+                                "type":"string",
+                                "enum":["None","PA Enable", "PA Driver Status", "Water Leak", "Smoke Detected", "Fan Fail 1", "Fan Fail 2", "Blackout", "Power Line Monitor", "Phase Locked", "Thermal Switch"]
+                            },
+                            "Defined Name Output": {
+                                "description": "Output signal names. This parameter is not required and defaults to 'None'.",
+                                "type":"string",
+                                "enum":["None","Fan Enable 1", "Fan Enable 2", "Zombie Mode", "ISO SPI Master", "Relay Control", "Ready", "Swift Mode"]
+                            },
+                            "Output Initial Level": {
+                                "description": "Define initial level of signal as 1 or 0. This parameter is not required and defaults to 0",
+                                "type":"integer",
+                                "enum":[0,1],
+                                "default": 0
+                            }
+
+                        },
+                        "required": [ "Display Name", "Enabled", "Bit Number", "Active Low" ]
+                    }
+                }
+            }
+        }
+    }
+}

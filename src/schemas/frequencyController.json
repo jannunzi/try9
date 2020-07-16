@@ -1,0 +1,121 @@
+{
+    "title": "Frequency Configuration",
+    "description": "This schema defines the requirements and format for the Base Frequency Controller configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": ["Basic Settings"],
+            "properties":{
+                "Basic Settings": {
+                    "description":"Basic Settings for any Frequency Controller",
+                    "type":"object",
+                    "required": ["Absolute Limits", "Backporch Phaseword Shift"],
+                    "additionalProperties": false,
+                    "properties":{
+                        "Absolute Limits": {
+                            "description": "Allowed range, in Hz, of Frequency. Array is [Lower Limit, Upper Limit]. This parameter is required.",
+                            "type":"array", 
+                            "items": {
+                                "type":"number"
+                            },
+                            "maxItems": 2,
+                            "minItems": 2
+                        },
+                        "Backporch Phaseword Shift": {
+                            "description": "RF Frequency is multiplied by 2^n where n is this value. This allows generators to output higher frequency than the DDS is capable of providing. This parameter is required.",
+                            "type":"integer"
+                        }
+                    }
+                }
+            }
+        },
+        "Customer":{
+            "description": "Customer Accessible Configs added to Config ID",
+            "type":"object",
+            "required": ["Basic Settings"],
+            "additionalProperties": false,
+            "properties":{
+                "Basic Settings": {
+                    "description":"Basic Settings for any Frequency Controller",
+                    "type":"object",
+                    "minProperties": 11, 
+                    "additionalProperties": false,
+                    "properties":{
+                        "Operating Range": {
+                            "description": "Tuning range, in Hz. Array is [Lower Limit, Upper Limit]",
+                            "type":"array", 
+                            "items": {
+                                "type":"number"
+                            },
+                            "maxItems": 2,
+                            "minItems": 2
+                        },
+                        "Filter Coefficient": {
+                            "description": "Frequency readback filter coeffiecient",
+                            "type":"number",
+                            "minimum": 0.0,
+                            "maximum": 1.0
+                        },
+                        "Start Frequency":{
+                            "description":"Starting Frequency (Hz)",
+                            "type": "integer"
+                        },
+                        "RF On Delay":{
+                            "description":"Delay, in seconds, from RF Enabled to start of tuning",
+                            "type": "number",
+                            "maximum": 5
+                        },
+                        "Tuning Enabled Power Threshold":{
+                            "description":"Forward Power Threshold for Frequency Tuning Enable (watts)",
+                            "type": "integer"
+                        },
+                        "Ignition Fault Threshold":{
+                            "description":"|Gamma|^2 Threshold Indicating Lack of Ignition",
+                            "type": "number",
+                            "minimum": 0.0,
+                            "maximum": 1.0
+                        },
+                        "Ignition Fault Timeout":{
+                            "description":"Time, in seconds, Above Threshold Indicating Lack of Ignition",
+                            "type": "number",
+                            "maximum": 20
+                        },
+                        "Ignition Fault Enabled":{
+                            "description":"Enable the No-Ignition Fault",
+                            "type": "boolean"
+                        },
+                        "Edge Ramp Time": {
+                            "description": "Edge ramp time per state, in seconds",
+                            "type":"number",
+                            "minimum": 0,
+                            "maximum": 1e-3
+                        },
+                        "Recall Mode": {
+                            "description": "On a Pulse state change, where the frequency transitions to",
+                            "type":"string",
+                            "enum":["Manual", "Start", "Restore", "Carryover"]
+                        },
+                        "Resume Delay": {
+                            "description": "On a Pulse state change, after recall fequency is achieved, how long to delay, in seconds, before the normal control mode starts",
+                            "type":"number",
+                            "minimum": 0,
+                            "maximum": 1e-3
+                        },
+                        "Control Mode": {
+                            "description": "The normal frequency control mode",
+                            "type":"string",
+                            "enum":["Manual", "Auto", "CEX", "Sweep", "Off"]
+                        },
+                        "Offset Frequency":{
+                            "description":"For Restore and Carryover Recall Modes, this frequency, in Hz, is added to the recall frequency",
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

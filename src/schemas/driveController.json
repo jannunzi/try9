@@ -1,0 +1,36 @@
+{
+    "title": "Basic Drive Controller",
+    "description": "This schema defines the requirements and format for the Base Drive Controller configuration file. Each Config File must contain at least one of 'Product', 'Customer' or 'Trivial'",
+    "type": "object",
+    "required":["Product"],
+    "properties": {
+      	"Product": {
+            "description":"MKS Only Configs",
+            "type":"object",
+            "required": ["Basic Settings"],
+            "properties":{
+                "Basic Settings": {
+                    "description":"Basic Settings for any Drive Controller",
+                    "type":"object",
+                    "required": ["Operating Range", "Phase Controlled"],
+                    "additionalProperties": false,
+                    "properties":{
+                        "Operating Range": {
+                            "description": "Allowed range, in DAC Counts, of Drive Actuator. Array is [Lower Limit, Upper Limit]. This parameter is required.",
+                            "type":"array", 
+                            "items": {
+                                "type":"integer"
+                            },
+                            "maxItems": 2,
+                            "minItems": 2
+                        },
+                        "Phase Controlled":{ 
+                            "description": "The primary physical mechanism by which power is controlled is Phase (true) or Amplitude (false). This parameter is required.",
+                            "type":"boolean"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

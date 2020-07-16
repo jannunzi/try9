@@ -1,0 +1,331 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  monospace;
+}
+
+/*@import "~bootstrap/dist/css/bootstrap.min.css";*/
+
+.field-description {
+  display: none;
+}
+
+.form-group.field.field-string,
+.form-group.field.field-number,
+.form-group.field.field-integer {
+  clear: both;
+}
+
+.form-group.field.field-string > .control-label,
+.form-group.field.field-number > .control-label,
+.form-group.field.field-integer > .control-label {
+  float: left;
+  width: 30%;
+}
+
+.form-group.field.field-string > .form-control,
+.form-group.field.field-number > .form-control,
+.form-group.field.field-integer > .form-control {
+  width: 70%;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.top-0px {
+  top: 0px
+}
+
+.bottom-0px {
+  bottom: 0px;
+}
+
+.right-0px {
+  right: 0px;
+}
+
+.left-0px {
+  left: 0px
+}
+
+.top-120px {
+  top: 170px
+}
+
+.left-33pc {
+  left: 33%;
+}
+
+.left-50pc {
+  left: 50%;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.height-100pc, html, body, div#root {
+  height: 100%;
+}
+
+.array-item:nth-child(even) .col-xs-9 {
+  background-color: #eee;
+}
+
+.array-item:nth-child(odd) .col-xs-9 {
+  background-color: #ddd;
+}
+
+/*.array-item-list:nth-child(even) {*/
+/*  background-color: #eee;*/
+/*}*/
+
+/*.array-item-list:nth-child(even) {*/
+/*  background-color: #ddd;*/
+/*}*/
+#a_unique_id-body {
+  font-size: 16px;
+}
+
+
+.width-10px {
+  width: 10%;
+}
+
+.nav-tabs>li>a {
+  overflow: hidden;
+  white-space: nowrap;
+}
+/*.array-item::before {*/
+/*  content: "sdf"*/
+/*}*/
+
+
+.form-group.field {
+  overflow: hidden;
+}
+
+.my-description {
+  background: transparent;
+  position: absolute;
+  right: 2px;
+  color: cornflowerblue;
+  /*top: 0px;*/
+}
+
+.checkbox > .field-description {
+  display: block;
+}
+
+.margin-right-5px {
+  margin-right: 5px;
+}
+
+.margin-left-15px {
+  margin-left: 15px;
+}
+
+.margin-right-15px {
+  margin-right: 15px;
+}
+
+.z-index-1 {
+  z-index: -1;
+}
+
+.bottom-6px {
+  bottom: 6px;
+}
+
+.row.array-item-list .form-group.field {
+  position: relative;
+  top:  7px;
+  left: 7px;
+}
+
+legend {
+  font-family: Oswald;
+}
+
+form > div > fieldset > legend {
+  font-size: 3em;
+}
+
+form > div > fieldset > div > fieldset > legend {
+  font-size: 2em;
+}
+
+.bottom-170px {
+  bottom: 170px;
+}
+/*position: absolute;*/
+/*top: 0px;*/
+
+.top-20px {
+  top: 20px;
+}
+
+.top-85px {
+  top: 85px;
+}
+
+h1, h2, h3, h4, .btn {
+  font-family: Oswald;
+}
+
+.mks-position-fixed {
+  position: fixed;
+}
+
+.mks-top-50px {
+  top: 20px;
+}
+
+.mks-right-50px {
+  right: 85px;
+}
+
+.mks-margin-left-5px {
+  margin-left: 5px;
+}
+
+/*.react-json-view {*/
+/*  float: right;*/
+/*  width: 50%;*/
+/*}*/
+
+.mks-color-green {
+  color: green;
+}
+.mks-color-red {
+  color: red;
+}
+.mks-color-white {
+  color: white;
+}
+.mks-background-color-green {
+  background-color: green;
+}
+.mks-background-color-red {
+  background-color: red;
+}
+.mks-pointer-cursor {
+  cursor: pointer;
+}
+.mks-text-decoration-overline {
+  text-decoration: line-through
+}
+.mks-margin-top-10px {
+  margin-top: 10px;
+}
+.mks-margin-bottom-10px {
+  margin-bottom: 0px;
+}
+ul.list-group > ul.list-group {
+  margin-top: 10px !important;
+}
+.mks-background-color-green-light {
+  background-color: #dff0d8;
+}
+.mks-white-space-nowrap {
+  white-space: nowrap;
+}
+
+
+#root_Product_Power\ Profile
+> .row.array-item-list
+> .array-item
+> .col-xs-9
+> .form-group.field
+> .panel.panel-default.panel-body
+{
+  /* remove option 1, 2 dropdown */
+  > .form-group:nth-child(1)
+  {
+    display: none;
+  }
+  /* style array of numbers */
+  > .form-group.field.field-array
+  > .field.field-array.field-array-of-number
+  > .row.array-item-list
+  > .array-item
+  {
+    background-color: red;
+    width: 30%;
+    float: left;
+    .col-xs-9 {
+      width: 100%;
+      .form-control {
+        width: 100%;
+      }
+    }
+  }
+  /* style single number */
+  > .form-group.field.field-number
+  {
+    background-color: green;
+    width: 30%;
+    float: left;
+    clear: none;
+    .form-control {
+      width: 100%;
+    }
+  }
+  .array-item-toolbox {
+    display: none;
+  }
+}
+
+//#root_Product_Power\ Profile
+//  > .row.array-item-list
+//  > .array-item
+//  > .col-xs-9
+//  > .form-group.field
+//  > .panel.panel-default.panel-body
+//  > .form-group:nth-child(1)
+//  {
+//  display: none;
+//}
+
+//#root_Product_Power\ Profile
+//  > .row.array-item-list
+//  > .array-item
+//  > .col-xs-9
+//  > .form-group.field
+//  > .panel.panel-default.panel-body
+//  > .form-group.field.field-array
+//  > .field.field-array.field-array-of-number
+//  > .row.array-item-list
+//  > .array-item
+//{
+//  background-color: red;
+//  width: 50%;
+//  float: left;
+//}
+
+//#root_Product_Power\ Profile
+//  > .row.array-item-list
+//  > .array-item
+//  > .col-xs-9
+//  > .form-group.field
+//  > .panel.panel-default.panel-body
+//  > .form-group.field.field-number
+//{
+//  background-color: red;
+//  width: 30%;
+//  float: left;
+//  clear: none;
+//}

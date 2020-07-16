@@ -1,0 +1,39 @@
+{
+    "title": "Voltage Sensor Calibration",
+    "description": "Defines the requirements for the Voltage Sensor calibration file.",
+    "type": "object",
+    "required": ["CalData"],
+    "properties": {
+        "CalData": {
+            "description": "Voltage Calibration. Four point frequency calibration. This parameter is required.",
+            "type":"array",
+            "maxItems": 4,
+            "minItems": 4,
+            "items": {
+                "type": "object",
+                "properties": { },
+                "required": ["CalAux1", "CalAux2", "frequency"],
+                "CalAux1": {
+                    "type":"array",
+                    "maxItems": 4,
+                    "minItems": 4,
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "CalAux2": {
+                    "type":"array",
+                    "maxItems": 4,
+                    "minItems": 4,
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "frequency": {
+                    "type":"integer",
+                    "minimum": 0
+                }
+            }
+        }
+    }
+}
