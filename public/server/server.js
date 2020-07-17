@@ -4,13 +4,11 @@ const bodyParser = require('body-parser')
 const multer  = require('multer')
 const path = require('path')
 // const upload = multer({ dest: 'uploads/' })
+const homedir = require('os').homedir();
 
 var configStorage = multer.diskStorage({
    destination: function (req, file, cb) {
-
-      // console.log(file)
-
-      cb(null, 'public/server/firmwares')
+      cb(null, `${homedir}/tmp/mks/configurator/firmwares`)
    },
    filename: function (req, file, cb) {
       cb(null, file.originalname)
@@ -19,10 +17,6 @@ var configStorage = multer.diskStorage({
 var upload = multer({ storage: configStorage }).array('config')
 
 const refParser = require('json-schema-ref-parser')
-// refParser.dereference(configFilePath).then(schema => {
-//    return res.status(200).json(schema)
-// })
-
 
 const session = require('express-session')
 app.use(session({
@@ -50,10 +44,6 @@ app.use(function(req, res, next) {
 require('./controllers/firmwares.controller.server')(app, upload)
 require('./controllers/configurations.controller.server')(app, upload)
 require('./controllers/schemas.controller.server')(app, upload)
-// require('./controllers/generic.controller.server')(app)
-// require('./controllers/users.controller.server')(app)
-// require('./controllers/hello.controller.server')(app)
-// require('./controllers/collection.controller.server')(app)
 require('./controllers/comparison.controller.server')(app)
 
 // app.get('/*', function(req,res) {

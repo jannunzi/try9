@@ -1,18 +1,19 @@
 const fs = require('fs')
 const utils = require('../common/utils')
+const homedir = require('os').homedir();
 
 module.exports = (app, upload) => {
 
     app.get('/api/firmwares', function (req, res) {
-        const savedConfigFiles = fs.readdirSync(`${__dirname}/../firmwares`)
+        // const savedConfigFiles = fs.readdirSync(`${homedir}/tmp/mks/configurator/firmwares`)
+        const savedConfigFiles = fs.readdirSync(`${homedir}/tmp/mks/configurator/firmwares`)
         res.send(savedConfigFiles)
-        // res.json(['qwe', 'wer', 'ert', __dirname])
     })
 
     app.delete('/api/firmwares/:firmwareName', function (req, res) {
         const firmwareName = req.params.firmwareName
-        fs.unlinkSync(`${__dirname}/../firmwares/${firmwareName}`)
-        fs.rmdir(`${__dirname}/../configurations/${firmwareName}`, {recursive: true}, (err) => {
+        fs.unlinkSync(`${homedir}/tmp/mks/configurator/firmwares/${firmwareName}`)
+        fs.rmdir(`${homedir}/tmp/mks/configurator/configurations/${firmwareName}`, {recursive: true}, (err) => {
             console.log(err)
         })
         res.send(200)
@@ -21,19 +22,19 @@ module.exports = (app, upload) => {
     app.post('/api/firmwares/:firmwareName/untar', function (req, res) {
         const firmwareName = req.params.firmwareName
 
-        if (fs.existsSync(`${__dirname}/../configurations/${firmwareName}`)){
+        if (fs.existsSync(`${homedir}/tmp/mks/configurator/configurations/${firmwareName}`)){
             res.send(200)
             return
         }
         utils.removeFilesRecursively('server/tmp/*')
-        utils.createDirectory(`${__dirname}/../configurations/${firmwareName}`)
+        utils.createDirectory(`${homedir}/tmp/mks/configurator/configurations/${firmwareName}`)
         utils.untar(
-            `${__dirname}/../firmwares/${firmwareName}`,
-            `${__dirname}/../tmp`)
-        fs.readdir(`${__dirname}/../tmp`, (err, filesInTmp) => {
-            const configTarGz = `${__dirname}/../tmp/${filesInTmp[0]}/Configs.tar.gz`
-            utils.untar(configTarGz, `${__dirname}/../configurations/${firmwareName}`)
-            utils.removeFilesRecursively(`${__dirname}/../tmp/*`)
+            `${homedir}/tmp/mks/configurator/firmwares/${firmwareName}`,
+            `${homedir}/tmp/mks/configurator/tmp`)
+        fs.readdir(`${homedir}/tmp/mks/configurator/tmp`, (err, filesInTmp) => {
+            const configTarGz = `${homedir}/tmp/mks/configurator/tmp/${filesInTmp[0]}/Configs.tar.gz`
+            utils.untar(configTarGz, `${homedir}/tmp/mks/configurator/configurations/${firmwareName}`)
+            utils.removeFilesRecursively(`${homedir}/tmp/mks/configurator/tmp/*`)
             res.send(configTarGz)
         })
     })
@@ -53,11 +54,6 @@ module.exports = (app, upload) => {
             }
         })
 
-        // req.file is the `avatar` file
-        // req.body will hold the text fields, if there were any
-        // console.log(req.file)
-        // console.log(req.body)
-        // res.redirect('/configurations')
         res.send(200)
     })
 }

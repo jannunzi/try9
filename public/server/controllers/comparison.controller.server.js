@@ -1,5 +1,6 @@
 const fs = require('fs')
 const jsonDiff = require('json-diff')
+const homedir = require('os').homedir();
 
 module.exports = (app) => {
   const compareFirmwares = (req, res) => {
@@ -14,21 +15,13 @@ module.exports = (app) => {
       return
     }
 
-    const file1 = fs.readFileSync(`${__dirname}/../${what}/${firmware1}/${what1}`)
-    const file2 = fs.readFileSync(`${__dirname}/../${what}/${firmware2}/${what2}`)
+    const file1 = fs.readFileSync(`${homedir}/tmp/mks/configurator/${what}/${firmware1}/${what1}`)
+    const file2 = fs.readFileSync(`${homedir}/tmp/mks/configurator/${what}/${firmware2}/${what2}`)
 
     const json1 = JSON.parse(file1)
     const json2 = JSON.parse(file2)
 
-//    const difference = diff(json1, json2)
     const difference = jsonDiff.diff(json1, json2)
-    // const difference2 = jsonDiff.diffString(json1, json2)
-
-    // console.log("===========")
-    // console.log(json1)
-    // console.log(json2)
-    // console.log(difference)
-    // console.log(difference2)
 
     res.json(difference);
   }
