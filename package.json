@@ -41,7 +41,7 @@
     "eject": "react-scripts eject",
     "electron-start": "electron .",
     "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder --win --macos -c.extraMetadata.main=build/main.js",
+    "electron-pack": "electron-builder --linux --win --macos -c.extraMetadata.main=build/main.js",
     "electron-build": "electron-builder"
   },
   "eslintConfig": {

@@ -57,14 +57,14 @@ export default class Firmwares extends React.Component {
                     {
                         this.state.firmwares.map(firmware =>
                             <li key={firmware} className="list-group-item">
-                                {/*<Link to={`/firmwares/${firmware}`}>*/}
+                                <Link to={`/firmwares/${firmware}`}>
                                     {firmware}
-                                {/*</Link>*/}
-                                {/*<button*/}
-                                {/*    onClick={() => this.deleteFirmware(firmware)}*/}
-                                {/*    className="btn btn-danger btn-sm pull-right">*/}
-                                {/*    <i className="fa fa-times"/>*/}
-                                {/*</button>*/}
+                                </Link>
+                                <button
+                                    onClick={() => this.deleteFirmware(firmware)}
+                                    className="btn btn-danger btn-sm pull-right">
+                                    <i className="fa fa-times"/>
+                                </button>
                             </li>
                         )
                     }

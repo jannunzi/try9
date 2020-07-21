@@ -5,6 +5,7 @@ const UNTAR = "tar -xzf SOURCE_FILE -C TARGET_DIRECTORY"
 const RM_RECURSIVE = "rm -rf TARGET"
 const CP_RECURSIVE = "cp -R SOURCE TARGET"
 const jsonDiff = require('json-diff')
+const homedir = require('os').homedir();
 
 const copyFilesRecursively = (source, target) => {
     const cp = CP_RECURSIVE
@@ -17,6 +18,10 @@ const removeFilesRecursively = (target) => {
     const rm = RM_RECURSIVE.replace("TARGET", target)
     exec(rm)
 }
+
+const readDirectoryContent = (directory) =>
+    fs.readdirSync(directory)
+      .filter(filename => filename !== '.DS_Store')
 
 const untar = (soureFile, targetDirectory) => {
     const untar = UNTAR
@@ -60,5 +65,6 @@ module.exports = {
     createDirectory,
     copyFilesRecursively,
     removeFilesRecursively,
-    compareJsonObjects
+    compareJsonObjects,
+    readDirectoryContent
 }

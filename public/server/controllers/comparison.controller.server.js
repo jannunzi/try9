@@ -15,8 +15,8 @@ module.exports = (app) => {
       return
     }
 
-    const file1 = fs.readFileSync(`${homedir}/tmp/mks/configurator/${what}/${firmware1}/${what1}`)
-    const file2 = fs.readFileSync(`${homedir}/tmp/mks/configurator/${what}/${firmware2}/${what2}`)
+    const file1 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware1}/${what1}`)
+    const file2 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware2}/${what2}`)
 
     const json1 = JSON.parse(file1)
     const json2 = JSON.parse(file2)
@@ -29,7 +29,7 @@ module.exports = (app) => {
   const compareJsons = (req, res) => {
     const json1 = req.body.json1
     const json2 = req.body.json2
-    const difference = jsonDiff.diff(json1, json2)
+    const difference = jsonDiff.diff(json1, json2) || []
     res.json(difference)
   }
 

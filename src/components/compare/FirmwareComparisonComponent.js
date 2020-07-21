@@ -282,7 +282,7 @@ export default class FirmwareComparisonComponent extends React.Component {
         <div className="row">
           <div className="col-xs-3">
             <StringArraySelectComponent
-              selectedIndex={1}
+              selectedIndex={0}
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareLeft")}
               array={this.state.firmwares}/>
 
@@ -304,7 +304,7 @@ export default class FirmwareComparisonComponent extends React.Component {
           </div>
           <div className="col-xs-3">
             <StringArraySelectComponent
-              selectedIndex={0}
+              selectedIndex={2}
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareRight")}
               array={this.state.firmwares}/>
 

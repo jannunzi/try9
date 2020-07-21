@@ -5,10 +5,14 @@ const multer  = require('multer')
 const path = require('path')
 // const upload = multer({ dest: 'uploads/' })
 const homedir = require('os').homedir();
+const settingsService = require('./services/settings.service.server')
+
+if(!settingsService.settingsAlreadyExist())
+   settingsService.createConfiguratorFolder()
 
 var configStorage = multer.diskStorage({
    destination: function (req, file, cb) {
-      cb(null, `${homedir}/tmp/mks/configurator/firmwares`)
+      cb(null, `${homedir}/mks/configurator/uploads`)
    },
    filename: function (req, file, cb) {
       cb(null, file.originalname)
@@ -45,6 +49,7 @@ require('./controllers/firmwares.controller.server')(app, upload)
 require('./controllers/configurations.controller.server')(app, upload)
 require('./controllers/schemas.controller.server')(app, upload)
 require('./controllers/comparison.controller.server')(app)
+require('./controllers/settings.controller.server')(app)
 
 // app.get('/*', function(req,res) {
 //    res.sendFile(path.join(__dirname+'/../build/index.html'));

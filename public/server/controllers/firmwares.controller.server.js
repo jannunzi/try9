@@ -1,59 +1,114 @@
 const fs = require('fs')
 const utils = require('../common/utils')
 const homedir = require('os').homedir();
+const firmwareService = require('../services/firmware.service.server')
 
 module.exports = (app, upload) => {
 
-    app.get('/api/firmwares', function (req, res) {
-        // const savedConfigFiles = fs.readdirSync(`${homedir}/tmp/mks/configurator/firmwares`)
-        const savedConfigFiles = fs.readdirSync(`${homedir}/tmp/mks/configurator/firmwares`)
-        res.send(savedConfigFiles)
-    })
+    app.get('/api/firmwares', (req, res) =>
+        res.send(firmwareService.readFirmwareList()))
 
     app.delete('/api/firmwares/:firmwareName', function (req, res) {
+
         const firmwareName = req.params.firmwareName
-        fs.unlinkSync(`${homedir}/tmp/mks/configurator/firmwares/${firmwareName}`)
-        fs.rmdir(`${homedir}/tmp/mks/configurator/configurations/${firmwareName}`, {recursive: true}, (err) => {
-            console.log(err)
-        })
+        fs.unlinkSync(`${homedir}/mks/configurator/firmwares/${firmwareName}`)
+        utils.removeFilesRecursively(`${homedir}/mks/configurator/configurations/${firmwareName}`)
+        utils.removeFilesRecursively(`${homedir}/mks/configurator/schemas/${firmwareName}`)
+
         res.send(200)
     })
 
-    app.post('/api/firmwares/:firmwareName/untar', function (req, res) {
-        const firmwareName = req.params.firmwareName
-
-        if (fs.existsSync(`${homedir}/tmp/mks/configurator/configurations/${firmwareName}`)){
-            res.send(200)
-            return
-        }
-        utils.removeFilesRecursively('server/tmp/*')
-        utils.createDirectory(`${homedir}/tmp/mks/configurator/configurations/${firmwareName}`)
-        utils.untar(
-            `${homedir}/tmp/mks/configurator/firmwares/${firmwareName}`,
-            `${homedir}/tmp/mks/configurator/tmp`)
-        fs.readdir(`${homedir}/tmp/mks/configurator/tmp`, (err, filesInTmp) => {
-            const configTarGz = `${homedir}/tmp/mks/configurator/tmp/${filesInTmp[0]}/Configs.tar.gz`
-            utils.untar(configTarGz, `${homedir}/tmp/mks/configurator/configurations/${firmwareName}`)
-            utils.removeFilesRecursively(`${homedir}/tmp/mks/configurator/tmp/*`)
-            res.send(configTarGz)
-        })
-    })
+    // app.post('/api/firmwares/:firmwareName/untar', function (req, res) {
+    //
+    //     // TODO: make sure folders already exist: configurations, schemas, firmwares ... etc ...
+    //
+    //     console.log('UNTAR')
+    //     const firmwareName = req.params.firmwareName
+    //     console.log(firmwareName)
+    //
+    //     // if (fs.existsSync(`${homedir}/mks/configurator/configurations/${firmwareName}`)){
+    //     //     res.send(200)
+    //     //     return
+    //     // }
+    //     console.log(`Removing files from tmp ${homedir}/mks/configurator/tmp/*`)
+    //     utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
+    //     console.log(`Creating directory: ${homedir}/mks/configurator/configurations/${firmwareName}`)
+    //     // create directories for configurations and schemas
+    //     utils.createDirectory(`${homedir}/mks/configurator/configurations/${firmwareName}`)
+    //     // utils.createDirectory(`${homedir}/mks/configurator/schemas/${firmwareName}`)
+    //
+    //     // untar the zcz file into tmp
+    //     utils.untar(
+    //         `${homedir}/mks/configurator/firmwares/${firmwareName}`,
+    //         `${homedir}/mks/configurator/tmp`)
+    //
+    //     //
+    //     fs.readdirSync(`${homedir}/mks/configurator/tmp`, (err, filesInTmp) => {
+    //         console.error(err)
+    //         console.log(filesInTmp)
+    //         const configTarGz = `${homedir}/mks/configurator/tmp/${filesInTmp[0]}/Configs.tar.gz`
+    //         utils.untar(configTarGz, `${homedir}/mks/configurator/configurations/${firmwareName}`)
+    //
+    //         // const schemaTarGz = `${homedir}/mks/configurator/tmp/${filesInTmp[0]}/Schema.tar.gz`
+    //         // utils.untar(schemaTarGz, `${homedir}/mks/configurator/schemas/${firmwareName}`)
+    //
+    //         // utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
+    //
+    //         res.sendStatus(200)
+    //     })
+    // })
 
     app.post('/api/firmwares', upload, function (req, res, next) {
+        console.log('post firmware')
+        upload(req, res, function (err, ddd) {
 
-        upload(req, res, function (err) {
-            console.log(req.file)
-            console.log(req.body)
+            let firmwareName = 'UNDEFINED'
+
+            const filesInTmp = utils.readDirectoryContent(`${homedir}/mks/configurator/uploads`)
+            firmwareName = filesInTmp[0]
+            utils.copyFilesRecursively(`${homedir}/mks/configurator/uploads/*`, `${homedir}/mks/configurator/firmwares`)
+            utils.removeFilesRecursively(`${homedir}/mks/configurator/uploads/*`)
             //deal with the error(s)
             if (err) {
                 // An error occurred when uploading
                 return res.end(err)
             } else {
 
-                return res.end('File Upload Success');
+                // TODO: make sure folders already exist: configurations, schemas, firmwares ... etc ...
+
+                console.log('UNTAR')
+                console.log(firmwareName)
+
+                // if (fs.existsSync(`${homedir}/mks/configurator/configurations/${firmwareName}`)){
+                //     res.send(200)
+                //     return
+                // }
+                console.log(`Removing files from tmp ${homedir}/mks/configurator/tmp/*`)
+                utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
+                console.log(`Creating directory: ${homedir}/mks/configurator/configurations/${firmwareName}`)
+                // create directories for configurations and schemas
+                utils.createDirectory(`${homedir}/mks/configurator/configurations/${firmwareName}`)
+                utils.createDirectory(`${homedir}/mks/configurator/schemas/${firmwareName}`)
+
+                // untar the zcz file into tmp
+                utils.untar(
+                  `${homedir}/mks/configurator/firmwares/${firmwareName}`,
+                  `${homedir}/mks/configurator/tmp`)
+
+                const filesInTmp = utils.readDirectoryContent(`${homedir}/mks/configurator/tmp`)
+
+                const configTarGz = `${homedir}/mks/configurator/tmp/${filesInTmp[0]}/Configs.tar.gz`
+                utils.untar(configTarGz, `${homedir}/mks/configurator/configurations/${firmwareName}`)
+
+                const schemaTarGz = `${homedir}/mks/configurator/tmp/${filesInTmp[0]}/Schema.tar.gz`
+                if (fs.existsSync(schemaTarGz)){
+                    utils.untar(schemaTarGz, `${homedir}/mks/configurator/schemas/${firmwareName}`)
+                }
+
+                utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
+
+                res.sendStatus(200)
             }
         })
-
-        res.send(200)
     })
 }
