@@ -84,9 +84,9 @@ export default class ConfigurationFormEditor extends React.Component {
                     // ArrayFieldTemplate={this.ArrayFieldTemplate}
                       fields={fields}
                       widgets={widgets}
-                      onChange={console.log("changed")}
+                      onChange={() => {}}
                       onSubmit={this.props.onSubmit}
-                      onError={console.log("errors")} />
+                      onError={() => {}} />
                       <div className="mks-position-fixed mks-top-50px mks-right-50px">
                           <button
                             onClick={this.undo}

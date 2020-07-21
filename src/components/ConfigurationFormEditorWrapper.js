@@ -6,7 +6,7 @@ import ConfigurationFormEditor from "./ConfigurationFormEditor/ConfigurationForm
 import ReactJson from "react-json-view";
 import {Link} from "react-router-dom";
 
-export default class ConfigurationFormEditorTest extends React.Component {
+export default class ConfigurationFormEditorWrapper extends React.Component {
     state = {
         firmwares: [],
         schemas: [],

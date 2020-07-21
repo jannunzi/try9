@@ -4,9 +4,24 @@ import {Link} from "react-router-dom";
 
 export default class Home extends React.Component {
 
-    componentDidMount = () => {
-        console.log(process.env)
-        console.log(API_BASE_URL)
+    state = {
+        path: ''
+    }
+
+    componentDidMount() {
+        console.log(window.location.href.split('/'))
+        this.setState({
+            path: window.location.href.split('/')[3]
+        })
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log(window.location.href.split('/'))
+        if(prevProps !== this.props) {
+            this.setState({
+                path: window.location.href.split('/')[3]
+            })
+        }
     }
 
     render() {
@@ -14,15 +29,15 @@ export default class Home extends React.Component {
             <div>
                 <div className="list-group">
                     <Link to={`/firmwares`}
-                          className="list-group-item list-group-item-action">
+                          className={`list-group-item list-group-item-action ${this.state.path === 'firmwares' ? 'active': ''}`}>
                         Firmwares
                     </Link>
-                    <Link to={`/configuration-editor-form-test`}
-                          className="list-group-item list-group-item-action">
+                    <Link to={`/configurations`}
+                          className={`list-group-item list-group-item-action ${this.state.path === 'configurations' ? 'active': ''}`}>
                         Configurations
                     </Link>
                     <Link to={`/compare/configurations`}
-                          className="list-group-item list-group-item-action">
+                          className={`list-group-item list-group-item-action ${this.state.path === 'compare' ? 'active': ''}`}>
                         Compare
                     </Link>
                 </div>

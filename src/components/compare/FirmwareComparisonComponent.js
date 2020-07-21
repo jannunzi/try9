@@ -21,8 +21,8 @@ export default class FirmwareComparisonComponent extends React.Component {
     selectedLeftFirmwareIndex: 1,
     selectedRightFirmwareIndex: 0,
     firmwares: [],
-    firmwareLeft: {firmware: '', title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
-    firmwareRight: {firmware: '', title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
+    firmwareLeft: {firmware: '', index: 1, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
+    firmwareRight: {firmware: '', index: 0, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
     configurationFilesDiffs: [],
     schemaFilesDiffs: [],
     diff: null
@@ -32,8 +32,8 @@ export default class FirmwareComparisonComponent extends React.Component {
     fetchAllFirmwares()
       .then(firmwares => {
         this.setState({firmwares})
-        this.selectFirmware(firmwares[this.state.selectedLeftFirmwareIndex], "firmwareLeft")
-        this.selectFirmware(firmwares[this.state.selectedRightFirmwareIndex], "firmwareRight")
+        this.selectFirmware(this.state.firmwareLeft.index, "firmwareLeft")
+        this.selectFirmware(this.state.firmwareRight.index, "firmwareRight")
       })
   }
 
@@ -49,9 +49,10 @@ export default class FirmwareComparisonComponent extends React.Component {
   // [5,15,10,20     ] ==> [5,15,10,20, 0, 0]
   // [  10,15,  25,30] ==> [0,15,10, 0,25,30]
 
-  selectFirmware = (firmware, leftOrRight) => {
-    // console.log(firmware)
-    // console.log(leftOrRight)
+  selectFirmware = (firmwareIndex, leftOrRight) => {
+    console.log(firmwareIndex)
+    console.log(leftOrRight)
+    const firmware = this.state.firmwares[firmwareIndex]
     fetchSchemaFilesWithContent(firmware)
       .then(schemaFiles => {
         this.setState(prevState => {
@@ -59,6 +60,7 @@ export default class FirmwareComparisonComponent extends React.Component {
           nextState[leftOrRight].schemaFiles = schemaFiles
           // nextState[leftOrRight].schemaFiles.sort((a, b) => a.file > b.file)
           nextState[leftOrRight].firmware = firmware
+          nextState[leftOrRight].index = firmwareIndex
           return nextState
         })
       })
@@ -68,6 +70,7 @@ export default class FirmwareComparisonComponent extends React.Component {
           let nextState = {...prevState}
           nextState[leftOrRight].configurationFiles = configurationFiles
           nextState[leftOrRight].firmware = firmware
+          nextState[leftOrRight].index = firmwareIndex
           return nextState
         })
       })
@@ -282,7 +285,6 @@ export default class FirmwareComparisonComponent extends React.Component {
         <div className="row">
           <div className="col-xs-3">
             <StringArraySelectComponent
-              selectedIndex={0}
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareLeft")}
               array={this.state.firmwares}/>
 
@@ -304,7 +306,6 @@ export default class FirmwareComparisonComponent extends React.Component {
           </div>
           <div className="col-xs-3">
             <StringArraySelectComponent
-              selectedIndex={2}
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareRight")}
               array={this.state.firmwares}/>
 
