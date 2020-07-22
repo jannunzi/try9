@@ -9,6 +9,7 @@ import Firmwares from "./components/Firmwares";
 import Firmware from "./components/Firmware";
 import ConfigurationFormEditorWrapper from "./components/ConfigurationFormEditorWrapper";
 import FirmwareComparisonComponent from "./components/compare/FirmwareComparisonComponent";
+import './mks.scss'
 
 export default class App extends React.Component {
   render() {
@@ -19,7 +20,7 @@ export default class App extends React.Component {
             <h1>Configurator</h1>
             <div className="row">
               <div className="col-xs-2">
-                <Route path="/" component={() => <Home {...this.props}/>}/>
+                <Home/>
               </div>
               <div className="col-xs-10">
                 <Route

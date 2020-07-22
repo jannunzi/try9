@@ -77,7 +77,7 @@ module.exports = (app, upload) => {
     app.put('/api/firmwares/:firmware/configurations/:configuration', function (req, res) {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
-        const newConfigurationFileContent = JSON.stringify(req.body)
+        const newConfigurationFileContent = JSON.stringify(req.body, null, 2)
 
         console.log(firmware)
         console.log(configuration)

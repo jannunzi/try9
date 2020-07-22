@@ -83,8 +83,6 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
     }
 
     onSubmit = (formData) => {
-      // console.log(formData)
-      debugger
       saveConfigurationFileContent(
         this.state.firmwareFile,
         this.state.configurationFile,

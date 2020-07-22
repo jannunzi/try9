@@ -61,9 +61,15 @@ export default class Firmwares extends React.Component {
                                     {firmware}
                                 </Link>
                                 <button
-                                    onClick={() => this.deleteFirmware(firmware)}
-                                    className="btn btn-danger btn-sm pull-right">
-                                    <i className="fa fa-times"/>
+                                  onClick={() => this.deleteFirmware(firmware)}
+                                  className="btn btn-danger btn-sm pull-right">
+                                    <i className="fa fa-times mks-margin-right-5px"/>
+                                    Delete
+                                </button>
+                                <button
+                                  className="btn btn-success btn-sm pull-right mks-margin-right-5px">
+                                    <i className="fa fa-download mks-margin-right-5px"/>
+                                    Download
                                 </button>
                             </li>
                         )
