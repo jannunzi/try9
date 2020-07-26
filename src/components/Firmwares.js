@@ -1,12 +1,15 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {API_BASE_URL} from "../config";
+import firmwareService from '../services/firmware.service.client'
 
 export default class Firmwares extends React.Component {
 
     state = {
         firmwares: []
     }
+
+    downloadLinks = {}
 
     fileSelectionChanged = (e) => {
         var fd = new FormData();
@@ -41,6 +44,13 @@ export default class Firmwares extends React.Component {
         })
             .then(response => this.fetchFirmwares())
 
+    packageFirmware = (firmwareName) =>
+        firmwareService.packageFirmware(firmwareName)
+            .then((response) => {
+                this.downloadLinks[firmwareName].click()
+                console.log(response)
+            })
+
     render() {
         return(
             <div>
@@ -67,10 +77,16 @@ export default class Firmwares extends React.Component {
                                     Delete
                                 </button>
                                 <button
+                                  onClick={() => this.packageFirmware(firmware)}
                                   className="btn btn-success btn-sm pull-right mks-margin-right-5px">
                                     <i className="fa fa-download mks-margin-right-5px"/>
                                     Download
                                 </button>
+                                <a className="pull-right mks-margin-right-5px mks-invisible"
+                                   ref={link => {this.downloadLinks[firmware] = link}}
+                                   href={`${API_BASE_URL}/api/firmwares/${firmware}`}>
+                                    Download
+                                </a>
                             </li>
                         )
                     }

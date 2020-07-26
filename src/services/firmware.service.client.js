@@ -1,5 +1,5 @@
 import {API_BASE_URL} from "../config";
-
+// import utils from '../'
 export const fetchFirmwares = () =>
   fetch(`${API_BASE_URL}/api/firmwares`)
     .then(response => response.json())
@@ -12,6 +12,9 @@ export const compareFirmwares = (firmwareLeft, firmwareRight, fileLeft, fileRigh
   fetch(`${API_BASE_URL}/api/compare/${what}/${firmwareLeft}/${fileLeft}/with/${firmwareRight}/${fileRight}`)
     .then(response => response.json())
     .catch(e => {})
+
+export const packageFirmware = (firmware) =>
+  fetch(`${API_BASE_URL}/api/firmwares/${firmware}/package`)
 
 export const compareJsons = (json1, json2) =>
   fetch(`${API_BASE_URL}/api/compare/jsons`, {
@@ -27,5 +30,5 @@ export const compareJsons = (json1, json2) =>
     .then(response => response.json())
 
 export default {
-    fetchFirmwares
+    fetchFirmwares, packageFirmware
 }

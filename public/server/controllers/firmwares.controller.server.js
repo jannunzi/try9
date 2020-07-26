@@ -5,6 +5,9 @@ const firmwareService = require('../services/firmware.service.server')
 
 module.exports = (app, upload) => {
 
+    app.get('/api/firmwares/:firmware', (req, res) =>
+      res.sendFile(`${homedir}/mks/configurator/downloads/${req.params.firmware}`))
+
     app.get('/api/firmwares', (req, res) =>
         res.send(firmwareService.readFirmwareList()))
 
@@ -58,6 +61,11 @@ module.exports = (app, upload) => {
     //     })
     // })
 
+    app.get('/api/firmwares/:firmware/package', (req, res) => {
+        firmwareService.downloadFirmware(req.params.firmware)
+        res.sendStatus(200)
+    })
+
     app.post('/api/firmwares', upload, function (req, res, next) {
         console.log('post firmware')
         upload(req, res, function (err, ddd) {
@@ -75,9 +83,6 @@ module.exports = (app, upload) => {
             } else {
 
                 // TODO: make sure folders already exist: configurations, schemas, firmwares ... etc ...
-
-                console.log('UNTAR')
-                console.log(firmwareName)
 
                 // if (fs.existsSync(`${homedir}/mks/configurator/configurations/${firmwareName}`)){
                 //     res.send(200)
