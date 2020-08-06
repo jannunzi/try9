@@ -112,7 +112,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                     </div>
                 </div>
                 <div className="row position-absolute height-100pc left-0px top-85px right-0px bottom-0px">
-                    <div className="col-xs-12 position-absolute top-0px bottom-0px overflow-scroll">
+                    <div className="col-xs-12 position-absolute top-0px bottom-0px">
                         {
                             this.state.configuration && this.state.schema &&
                             <div>

@@ -22,6 +22,9 @@ module.exports = (app) => {
     const json2 = JSON.parse(file2)
 
     const difference = jsonDiff.diff(json1, json2)
+    if(difference) {
+      difference.fileName = what1
+    }
 
     res.json(difference);
   }

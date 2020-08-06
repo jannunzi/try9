@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {fetchAllFirmwares, compareFirmwares, compareJsons} from "../../services/firmware.service.client";
 import {fetchSchemaFileContent, fetchSchemaFilesWithContent} from "../../services/schema.service.client";
 import {fetchConfigurationFiles, fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
@@ -18,10 +18,10 @@ export default class FirmwareComparisonComponent extends React.Component {
 
   state = {
     what: "configurations",
-    selectedLeftFirmwareIndex: 1,
+    selectedLeftFirmwareIndex: 0,
     selectedRightFirmwareIndex: 0,
     firmwares: [],
-    firmwareLeft: {firmware: '', index: 1, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
+    firmwareLeft: {firmware: '', index: 0, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
     firmwareRight: {firmware: '', index: 0, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
     configurationFilesDiffs: [],
     schemaFilesDiffs: [],
@@ -37,8 +37,7 @@ export default class FirmwareComparisonComponent extends React.Component {
       })
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-  }
+  componentDidUpdate(prevProps, prevState, snapshot) {}
 
   // [5,10,15,20]
   // [  10,15   ] ==> [0,10,15,0]
@@ -50,8 +49,8 @@ export default class FirmwareComparisonComponent extends React.Component {
   // [  10,15,  25,30] ==> [0,15,10, 0,25,30]
 
   selectFirmware = (firmwareIndex, leftOrRight) => {
-    console.log(firmwareIndex)
-    console.log(leftOrRight)
+    // console.log(firmwareIndex)
+    // console.log(leftOrRight)
     const firmware = this.state.firmwares[firmwareIndex]
     fetchSchemaFilesWithContent(firmware)
       .then(schemaFiles => {
@@ -93,8 +92,6 @@ export default class FirmwareComparisonComponent extends React.Component {
 
   compareConfigurations = () => {
 
-    // console.log(this.state.firmwareLeft.configurationFiles)
-
     const leftConfigurationFiles = this.state.firmwareLeft.configurationFiles.map(file => file.file)
     const rightConfigurationFiles = this.state.firmwareRight.configurationFiles.map(file => file.file)
 
@@ -127,22 +124,31 @@ export default class FirmwareComparisonComponent extends React.Component {
 
         Promise.all(configurationDiffArray)
           .then(results => {
+            debugger
             this.setState(prevState => {
               let nextState = {...prevState}
 
               results.forEach((diff, index) => {
-                const fileName = nextState.firmwareLeft.configurationFiles[index].file
+                if(diff && diff.fileName) {
+                  const fileName = diff.fileName
+                  delete diff.fileName
 
-                nextState.configurationFilesDiffs =
-                  nextState.configurationFilesDiffs.map(file => {
-                    if(file[1] === fileName && diff && file[0] === " ") {
-                      file[0] = "~"
+                  nextState.configurationFilesDiffs =
+                    nextState.configurationFilesDiffs.map(file => {
+                      const fff = JSON.stringify(diff)
+                      if(file[1] === fileName && diff && fff !== "{}" && file[0] === " ") {
+                        file[0] = "~"
+                      }
+                      return file
+                    })
+
+                  this.state.firmwareLeft.configurationFiles.forEach((configurationLeft, i) => {
+                    if (configurationLeft.file === fileName) {
+                      nextState.firmwareLeft.configurationFiles[i]['diff'] = diff
+                      nextState.firmwareLeft.configurationFiles[i]['selected'] = diff ? true : false
                     }
-                    return file
                   })
-
-                nextState.firmwareLeft.configurationFiles[index]['diff'] = diff
-                nextState.firmwareLeft.configurationFiles[index]['selected'] = diff ? true : false
+                }
               })
               return nextState
             })
@@ -245,7 +251,7 @@ export default class FirmwareComparisonComponent extends React.Component {
 
   onSelectItem = (selected, what) => {
 
-    console.log(selected, what)
+    // console.log(selected, what)
 
     this.state.firmwareLeft[what].forEach(schemaFile => {
       if(schemaFile.file === selected) {
@@ -271,14 +277,14 @@ export default class FirmwareComparisonComponent extends React.Component {
         </button>
         <ul className="nav nav-tabs">
           <li className={`${this.props.match.params.what === 'configurations' ? 'active' : ''}`}>
-            <Link to={`/compare/configurations`}>
+            <NavLink to={`/compare/configurations`}>
               Configurations
-            </Link>
+            </NavLink>
           </li>
           <li className={`${this.props.match.params.what === 'schemas' ? 'active' : ''}`}>
-            <Link to={`/compare/schemas`}>
+            <NavLink to={`/compare/schemas`}>
               Schemas
-            </Link>
+            </NavLink>
           </li>
         </ul>
         <br/>

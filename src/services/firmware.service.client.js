@@ -1,5 +1,10 @@
 import {API_BASE_URL} from "../config";
 // import utils from '../'
+
+export const fetchFirmwareFileDetails = () =>
+  fetch(`${API_BASE_URL}/api/firmwares/details`)
+    .then(response => response.json())
+
 export const fetchFirmwares = () =>
   fetch(`${API_BASE_URL}/api/firmwares`)
     .then(response => response.json())

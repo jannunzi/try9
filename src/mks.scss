@@ -5,3 +5,31 @@
 .mks-invisible {
   visibility: hidden;
 }
+
+.mks-background-color {
+  background-color: rgb(010, 087, 164);
+}
+
+.mks-margin-top-60px {
+  margin-top: 0px;
+}
+
+.nav-sidebar > li > a.active,
+.nav-sidebar > li > a.active:hover,
+.nav-sidebar > li > a.active:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+.navbar-inverse {
+  background-color: #428bca;
+  border-color: #428bca;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: white;
+}
+
+.mks-width-5em {
+  width: 5em;
+}

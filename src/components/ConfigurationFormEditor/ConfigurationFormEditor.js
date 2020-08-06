@@ -87,28 +87,28 @@ export default class ConfigurationFormEditor extends React.Component {
                       onChange={() => {}}
                       onSubmit={this.props.onSubmit}
                       onError={() => {}} />
-                      <div className="mks-position-fixed mks-top-50px mks-right-50px">
-                          <button
-                            onClick={this.undo}
-                            className="btn btn-danger mks-margin-left-5px">
-                              Undo
-                          </button>
-                          <button
-                            onClick={this.clearBinRow}
-                            className="btn btn-danger mks-margin-left-5px">
-                              Clear Bin Row
-                          </button>
-                          <button
-                            onClick={this.clearPresetColumn}
-                            className="btn btn-danger mks-margin-left-5px">
-                              Clear Preset Column
-                          </button>
-                          <button
-                            onClick={this.clearAllPresets}
-                            className="btn btn-danger mks-margin-left-5px">
-                              Clear All Presets {this.state.selectedPresetIndex}
-                          </button>
-                      </div>
+                      {/*<div className="mks-position-fixed mks-top-50px mks-right-50px">*/}
+                      {/*    <button*/}
+                      {/*      onClick={this.undo}*/}
+                      {/*      className="btn btn-danger mks-margin-left-5px">*/}
+                      {/*        Undo*/}
+                      {/*    </button>*/}
+                      {/*    <button*/}
+                      {/*      onClick={this.clearBinRow}*/}
+                      {/*      className="btn btn-danger mks-margin-left-5px">*/}
+                      {/*        Clear Bin Row*/}
+                      {/*    </button>*/}
+                      {/*    <button*/}
+                      {/*      onClick={this.clearPresetColumn}*/}
+                      {/*      className="btn btn-danger mks-margin-left-5px">*/}
+                      {/*        Clear Preset Column*/}
+                      {/*    </button>*/}
+                      {/*    <button*/}
+                      {/*      onClick={this.clearAllPresets}*/}
+                      {/*      className="btn btn-danger mks-margin-left-5px">*/}
+                      {/*        Clear All Presets {this.state.selectedPresetIndex}*/}
+                      {/*    </button>*/}
+                      {/*</div>*/}
             </div>
         )
     }

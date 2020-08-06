@@ -1,6 +1,6 @@
 import React from "react";
 import {API_BASE_URL} from '../config'
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
 export default class Home extends React.Component {
 
@@ -28,18 +28,26 @@ export default class Home extends React.Component {
         return (
             <div>
                 <div className="list-group">
-                    <Link to={`/firmwares`}
-                          className={`list-group-item list-group-item-action ${this.state.path === 'firmwares' ? 'active': ''}`}>
+                    <NavLink to="/dashboard"
+                             activeClassName={`active`}
+                             className={`list-group-item list-group-item-action`}>
+                        Dashboard
+                    </NavLink>
+                    <NavLink to={`/firmwares`}
+                             activeClassName={`active`}
+                          className={`list-group-item list-group-item-action`}>
                         Firmwares
-                    </Link>
-                    <Link to={`/configurations`}
-                          className={`list-group-item list-group-item-action ${this.state.path === 'configurations' ? 'active': ''}`}>
+                    </NavLink>
+                    <NavLink to={`/configurations`}
+                             activeClassName={`active`}
+                          className={`list-group-item list-group-item-action`}>
                         Configurations
-                    </Link>
-                    <Link to={`/compare/configurations`}
-                          className={`list-group-item list-group-item-action ${this.state.path === 'compare' ? 'active': ''}`}>
+                    </NavLink>
+                    <NavLink to={`/compare/configurations`}
+                             activeClassName={`active`}
+                          className={`list-group-item list-group-item-action`}>
                         Compare
-                    </Link>
+                    </NavLink>
                 </div>
             </div>
         );

@@ -5,8 +5,61 @@ const UNTAR = "tar -xzf SOURCE_FILE -C TARGET_DIRECTORY"
 const TAR   = "tar -czf TARGET_FILE -C SOURCE_DIRECTORY ."
 const RM_RECURSIVE = "rm -rf TARGET"
 const CP_RECURSIVE = "cp -R SOURCE TARGET"
+
+const OPENSSL_ENCRYPTION_CMD = `openssl aes-256-cbc -salt -in INPUT_FILE -out OUTPUT_FILE -k n0v1n@`
+const OPENSSL_DECRYPTION_CMD = `openssl aes-256-cbc -d -salt -k n0v1n@ -in INPUT_FILE -out OUTPUT_FILE`
+const UNZIP = `unzip  INPUT_FILE  -d OUTPUT_FILE`
+const ZIP = 'cd INPUT_FOLDER && zip -r OUTPUT_ZIP *'
+
 const jsonDiff = require('json-diff')
 const homedir = require('os').homedir();
+
+const execShellCommand = (cmd)  => {
+    return new Promise((resolve, reject) => {
+        exec(cmd, null, (error, stdout, stderr) => {
+            if (error) {
+                console.warn(error);
+            }
+            resolve(stdout ? stdout : stderr);
+        });
+    });
+}
+
+const openSslEncrypt = (inputFile, outputFile) => {
+    let CMD = OPENSSL_ENCRYPTION_CMD
+      .replace('INPUT_FILE', inputFile)
+      .replace('OUTPUT_FILE', outputFile)
+
+    console.log('openSslEncrypt')
+    console.log(CMD)
+
+    return execShellCommand(CMD)
+}
+
+const openSslDecrypt = (inputFile, outputFile) => {
+    let CMD = OPENSSL_DECRYPTION_CMD
+      .replace('INPUT_FILE', inputFile)
+      .replace('OUTPUT_FILE', outputFile)
+    return execShellCommand(CMD)
+}
+
+const unzip = (inputFile, outputFile) => {
+    let CMD = UNZIP
+      .replace('INPUT_FILE', inputFile)
+      .replace('OUTPUT_FILE', outputFile)
+    return execShellCommand(CMD)
+}
+
+const zip = (inputFolder, outputFile) => {
+    let CMD = ZIP
+      .replace('INPUT_FOLDER', inputFolder)
+      .replace('OUTPUT_ZIP', outputFile)
+
+    console.log('ZIP')
+    console.log(CMD)
+
+    return execShellCommand(CMD)
+}
 
 const copyFilesRecursively = (source, target) => {
     const cp = CP_RECURSIVE
@@ -59,8 +112,12 @@ const compareJsonObjects = (json1, json2) => {
 }
 
 module.exports = {
-    untar,
+    openSslEncrypt,
+    openSslDecrypt,
+    zip,
+    unzip,
     tar,
+    untar,
     createDirectory,
     copyFilesRecursively,
     removeFilesRecursively,
