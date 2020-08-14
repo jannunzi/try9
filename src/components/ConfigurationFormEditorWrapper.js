@@ -1,16 +1,15 @@
 import React from "react";
-import {fetchFirmwares} from "../services/firmware.service.client";
-import {fetchSchemaFileContent, fetchSchemaFiles} from '../services/schema.service.client'
+import firmwareService from '../services/firmware.service.client'
+import schemaService from '../services/schema.service.client'
 import configurationService, {fetchConfigurationFileContent, saveConfigurationFileContent} from '../services/configuration.service.client'
 import ConfigurationFormEditor from "./ConfigurationFormEditor/ConfigurationFormEditor";
 import ReactJson from "react-json-view";
-import {Link} from "react-router-dom";
 
 export default class ConfigurationFormEditorWrapper extends React.Component {
     state = {
         firmwares: [],
         schemas: [],
-        firmwareFile: 'TEST1.zcz',
+        firmwareFile: null,
         schemaFile: 'mainController.json',
         uiSchema: {
           "Customer" : {
@@ -32,14 +31,23 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
 
         let firmwares = []
         let schemas = []
-        fetchFirmwares()
+
+        // fetch firmware files to populate dropdown
+        firmwareService.fetchFirmwares()
             .then(_firmwares => {
                 firmwares = _firmwares
-                return fetchSchemaFiles(firmwares[0])
+                this.setState({
+                  firmwareFile: firmwares[0]
+                })
+
+                // fetch all schema files for the first firmware
+                return schemaService.fetchSchemaFiles(firmwares[0])
             })
             .then(_schemas => {
                 schemas = _schemas
-                return this.fetchSchemaAndConfiguration(this.state.schemaFile)
+
+                // fetch schema and configuration files for first schema file
+                return this.fetchSchemaAndConfiguration(schemas[0].file)
             })
             .then(() => this.setState({
                 firmwares, schemas
@@ -59,20 +67,26 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
     }
 
     fetchSchemasForFirmware = (firmwareFile) =>
-        fetchSchemaFiles(firmwareFile)
+        schemaService.fetchSchemaFiles(firmwareFile)
             .then(schemas => this.setState({firmwareFile, schemas}))
 
-    fetchSchemaAndConfiguration = (schemaFile) =>
-    {
+    fetchSchemaAndConfiguration = (schemaFile) => {
         let schema = {}
-        fetchSchemaFileContent(this.state.firmwareFile, schemaFile)
+
+        // fetch schema file to configure form editor tool
+        schemaService.fetchSchemaFileContent(this.state.firmwareFile, schemaFile)
             .then(_schema => {
                 schema = _schema
+
+                // TODO: confirm configuration file has same name as schema file
+                // assume configuration file has same name as schema file
                 this.setState({
                     schemaFile: schemaFile,
                     configurationFile: schemaFile
                 })
-                return fetchConfigurationFileContent(this.state.firmwareFile, schemaFile)
+
+                // fetch configuration file to populate form editor tool
+                return configurationService.fetchConfigurationFileContent(this.state.firmwareFile, schemaFile)
             })
             .then(_configuration =>
                 this.setState({
@@ -93,8 +107,10 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
     render() {
         return(
             <div className="position-relative height-100pc">
+                <br/>
                 <div className="row">
                     <div className="col-xs-6">
+                        Select firmware
                         <select
                             value={this.state.firmwareFile}
                             onChange={(e) => this.fetchSchemasForFirmware(e.target.value)}
@@ -103,11 +119,15 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                         </select>
                     </div>
                     <div className="col-xs-6">
+                        Select schema for selected firmware
                         <select
                             value={this.state.schemaFile}
                             onChange={(e) => this.fetchSchemaAndConfiguration(e.target.value)}
                             className="form-control">
-                            {this.state.schemas.map(schema => <option key={schema.file} value={schema.file}>{schema.title}</option> )}
+                            {this.state.schemas.filter(schema => !schema.file.endsWith("Cal.json")).map(schema =>
+                              <option key={schema.file} value={schema.file}>
+                                {schema.title} ({schema.file})
+                              </option> )}
                         </select>
                     </div>
                 </div>
@@ -116,13 +136,14 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                         {
                             this.state.configuration && this.state.schema &&
                             <div>
-                                <button
-                                    className="position-relative top-20px btn btn-success pull-right">Save</button>
-                                <ConfigurationFormEditor
-                                  schema={this.state.schema}
-                                  uiSchema={this.state.uiSchema}
-                                  onSubmit={this.onSubmit}
-                                  configuration={this.state.configuration}/>
+                                {
+                                  this.state.configuration !== null && this.state.schema !== null &&
+                                  <ConfigurationFormEditor
+                                    uiSchema={this.state.uiSchema}
+                                    onSubmit={this.onSubmit}
+                                    schema={this.state.schema}
+                                    configuration={this.state.configuration}/>
+                                }
                             </div>
                         }
                     </div>

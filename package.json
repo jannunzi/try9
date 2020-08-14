@@ -1,5 +1,5 @@
 {
-  "name": "configurator",
+  "name": "try9",
   "version": "0.1.0",
   "homepage": "./",
   "main": "public/main.js",
@@ -19,9 +19,10 @@
     "jsoneditor": "^8.6.6",
     "jsoneditor-react": "^3.0.0",
     "lodash": "^4.17.15",
+    "moment": "^2.27.0",
     "multer": "^1.4.2",
+    "ncp": "^2.0.0",
     "nedb": "^1.8.0",
-    "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -31,6 +32,7 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "recursive-copy": "^2.0.10",
     "redux": "^4.0.5",
     "underscore": "^1.10.2"
   },
@@ -41,7 +43,8 @@
     "eject": "react-scripts eject",
     "electron-start": "electron .",
     "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder --linux --win --macos -c.extraMetadata.main=build/main.js",
+    "electron-pack": "electron-builder --win --macos -c.extraMetadata.main=build/main.js",
+    "electron-pack2": "electron-builder --linux --win --macos -c.extraMetadata.main=build/main.js",
     "electron-build": "electron-builder"
   },
   "eslintConfig": {
@@ -61,7 +64,8 @@
   },
   "devDependencies": {
     "electron": "^9.1.0",
-    "electron-builder": "^22.7.0"
+    "electron-builder": "^22.7.0",
+    "node-sass": "^4.14.1"
   },
   "build": {
     "appId": "nonExistentID",

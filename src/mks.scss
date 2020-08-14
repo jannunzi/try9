@@ -33,3 +33,16 @@
 .mks-width-5em {
   width: 5em;
 }
+
+button[type='submit'] {
+  position: absolute;
+  top: 20px;
+  right: 0px;
+  content: 'Save';
+}
+
+#mks-download-firmware-btn {
+  position: relative;
+  top: 20px;
+  right: 123px;
+}

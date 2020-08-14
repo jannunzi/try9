@@ -2,6 +2,7 @@ import React from "react";
 import {Link, NavLink} from "react-router-dom";
 import {API_BASE_URL} from "../config";
 import firmwareService from '../services/firmware.service.client'
+import Moment from 'moment'
 
 export default class Firmwares extends React.Component {
 
@@ -10,6 +11,11 @@ export default class Firmwares extends React.Component {
     }
 
     downloadLinks = {}
+    addFirmwareBtn = null
+    addFirmware = () => {
+
+      this.addFirmwareBtn.click()
+    }
 
     fileSelectionChanged = (e) => {
         var fd = new FormData();
@@ -29,6 +35,7 @@ export default class Firmwares extends React.Component {
 
     componentDidMount() {
         this.fetchFirmwares()
+        Moment.locale('en');
     }
 
     fetchFirmwares = () =>
@@ -55,11 +62,20 @@ export default class Firmwares extends React.Component {
         return(
             <div>
 
+              <button onClick={this.addFirmware}
+                      title="Upload"
+                      className="btn btn-primary pull-right">
+                <i className="fa fa-plus"/>
+                &nbsp;
+                Upload
+              </button>
+
                 <input
-                  className="btn btn-primary pull-right"
+                  className="mks-invisible btn btn-primary pull-right"
                   type="file"
                   title="Add Firmware"
                   multiple
+                  ref={input => {this.addFirmwareBtn = input}}
                   encType="multipart/form-data"
                   onChange={this.fileSelectionChanged}
                 />
@@ -75,35 +91,48 @@ export default class Firmwares extends React.Component {
                 <br/>
 
                 <ul className="list-group">
+                  <li className="list-group-item list-group-item-info">
+                    <div className="row">
+                      <div className="col-xs-5">
+                        Filename
+                      </div>
+                      <div className="col-xs-3">
+                        Uploaded on
+                      </div>
+                      <div className="col-xs-4">
+                      </div>
+                    </div>
+                  </li>
                     {
                         this.state.firmwares.map(firmware =>
                             <li key={firmware.fileName} className="list-group-item">
                                 <div className="row">
-                                    <div className="col-xs-6">
+                                    <div className="col-xs-5">
                                         <Link to={`/firmwares/${firmware}`}>
                                             {firmware.fileName}
                                         </Link>
                                     </div>
                                     <div className="col-xs-3">
-                                        {firmware.atime}<br/>
-                                        {firmware.ctime}<br/>
-                                        {firmware.mtime}<br/>
-                                        {firmware.birthtime}
+                                      {Moment(firmware.birthtime).format('MM/DD/YYYY HH:mm:SS')}
                                     </div>
-                                    <div className="col-xs-3">
+                                    <div className="col-xs-4">
                                         <button
+                                          title="Remove"
                                           onClick={() => this.deleteFirmware(firmware.fileName)}
-                                          className="btn btn-danger btn-sm pull-right">
-                                            <i className="fa fa-times mks-margin-right-5px"/>
-                                            Delete
+                                          className="btn btn-danger btn-sm pull-right mks-margin-left-5px">
+                                            <i className="fa fa-times"/>
+                                            &nbsp;
+                                            Remove
                                         </button>
                                         <button
+                                          title="Download"
                                           onClick={() => this.packageFirmware(firmware.fileName)}
-                                          className="btn btn-success btn-sm pull-right mks-margin-right-5px">
-                                            <i className="fa fa-download mks-margin-right-5px"/>
+                                          className="btn btn-success btn-sm pull-right mks-margin-left-5px">
+                                            <i className="fa fa-download"/>
+                                            &nbsp;
                                             Download
                                         </button>
-                                        <a className="pull-right mks-margin-right-5px mks-invisible"
+                                        <a className="pull-right mks-margin-left-5px mks-invisible"
                                            ref={link => {this.downloadLinks[firmware.fileName] = link}}
                                            href={`${API_BASE_URL}/api/firmwares/${firmware.fileName}`}>
                                             Download

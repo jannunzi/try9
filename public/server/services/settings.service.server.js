@@ -8,6 +8,33 @@ const settingsAlreadyExist = () =>
 const saveDefaultSettings = () =>
   saveSettings(defaultSettings)
 
+const configuratorFolders = [
+  'configurations',
+  'schemas',
+  'firmwares',
+  'server',
+  'tmp',
+  'downloads',
+  'uploads'
+]
+
+const createConfiguratorFolderStructure = () => {
+  try {
+    if(!fs.existsSync(`${homedir}/mks/`))
+      fs.mkdirSync(`${homedir}/mks/`)
+  } catch (e) {
+
+  }
+
+  if(!fs.existsSync(`${homedir}/mks/configurator/`))
+    fs.mkdirSync(`${homedir}/mks/configurator/`)
+
+  configuratorFolders.forEach((folder) => {
+    if(!fs.existsSync(`${homedir}/mks/configurator/${folder}`))
+      fs.mkdirSync(`${homedir}/mks/configurator/${folder}`)
+  })
+}
+
 const createConfiguratorFolder = () =>
   !fs.existsSync(`${homedir}/mks/configurator/`) ?
     fs.mkdirSync(`${homedir}/mks/configurator/`) :
@@ -28,5 +55,6 @@ const saveSettings = (newSettings) =>
 
 module.exports = {
   loadSettings, saveSettings, settingsAlreadyExist,
-  saveDefaultSettings, createConfiguratorFolder
+  saveDefaultSettings,
+  createConfiguratorFolder, createConfiguratorFolderStructure
 }

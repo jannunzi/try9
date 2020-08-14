@@ -52,7 +52,7 @@ const uploadAes = (firmwareName) => {
 }
 
 const downloadAes = (firmwareName) => {
-
+  // TODO: add timestamp
   const FIRMWARE_NAME_ZIP = firmwareName.replace('.aes', '')
   const FIRMWARE_NAME = FIRMWARE_NAME_ZIP.replace('.zip', '')
 
@@ -105,6 +105,7 @@ const uploadFirmware = (firmwareName) => {
 }
 
 const downloadFirmware = (firmware) => {
+  // TODO: add timestamp
   // TODO: handle errors
   // Clean up directories TODO: move this to a function
   // TODO: all this works if Node has file permissions

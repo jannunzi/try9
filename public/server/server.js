@@ -7,8 +7,9 @@ const path = require('path')
 const homedir = require('os').homedir();
 const settingsService = require('./services/settings.service.server')
 
-if(!settingsService.settingsAlreadyExist())
-   settingsService.createConfiguratorFolder()
+if(!settingsService.settingsAlreadyExist()) {
+   settingsService.createConfiguratorFolderStructure()
+}
 
 var configStorage = multer.diskStorage({
    destination: function (req, file, cb) {

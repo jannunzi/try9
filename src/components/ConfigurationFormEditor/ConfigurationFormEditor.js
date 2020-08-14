@@ -26,6 +26,13 @@ export default class ConfigurationFormEditor extends React.Component {
 
         this.arrayItemList = $('#root_Customer > .form-group.field.field-array .row.array-item-list')
 
+        $("button[type='submit']")
+          .text("Save Changes")
+          .removeClass("btn-info")
+          .addClass("btn-success")
+          .prepend("&nbsp;")
+          .prepend("<i class='fa fa-save'/>")
+
         $("[id='root_Customer_Hopping Presets__title']")
           .click(() => {
               console.log('select all')
@@ -57,6 +64,10 @@ export default class ConfigurationFormEditor extends React.Component {
         }
     }
 
+    downloadFirmware = () => {
+        alert('TBD')
+    }
+
     clearBinRow = () => {
         alert('clear bin row')
     }
@@ -76,6 +87,13 @@ export default class ConfigurationFormEditor extends React.Component {
     render() {
         return(
             <div>
+                <button id="mks-download-firmware-btn"
+                        onClick={this.downloadFirmware}
+                        className="btn btn-primary pull-right">
+                    <i className="fa fa-download"/>
+                    &nbsp;
+                    Download
+                </button>
                 <Form className="margin-right-15px"
                       schema={this.state.schema}
                       formData={this.state.configuration}
