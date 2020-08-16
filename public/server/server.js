@@ -13,7 +13,7 @@ if(!settingsService.settingsAlreadyExist()) {
 
 var configStorage = multer.diskStorage({
    destination: function (req, file, cb) {
-      cb(null, `${homedir}/mks/configurator/uploads`)
+      cb(null, `${homedir}/mks/configurator/upload`)
    },
    filename: function (req, file, cb) {
       cb(null, file.originalname)

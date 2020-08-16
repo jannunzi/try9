@@ -248,11 +248,12 @@ const unpackZczFile2 = (configuratorBasePath, zczFileName) => {
     console.log(`Expanding ZCZ File ${configuratorBasePath}/uploads/${zczFileName}`)
     // cleanup, remove old content
     // TODO: make this a reusable function?
-    fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}`)
-    fs.ensureDir(`${configuratorBasePath}/unpacked/${zczFileName}`)
-
     fs.emptyDirSync(`${configuratorBasePath}/downloads`)
     fs.emptyDirSync(`${configuratorBasePath}/tmp`)
+
+    // fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}`)
+    // fs.ensureDir(`${configuratorBasePath}/unpacked/${zczFileName}`)
+
     // gunzip zcz file to a tar file in tmp
     gunzip(
       `${configuratorBasePath}/uploads/${zczFileName}`,

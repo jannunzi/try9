@@ -46,8 +46,13 @@ module.exports = (app, upload) => {
 
             let firmwareName = 'UNDEFINED'
 
-            const filesInTmp = utils.readDirectoryContent(`${homedir}/mks/configurator/uploads`)
+            const filesInTmp = utils.readDirectoryContent(`${homedir}/mks/configurator/upload`)
             firmwareName = filesInTmp[0]
+            fs.moveSync(
+                `${homedir}/mks/configurator/upload/${firmwareName}`,
+                `${homedir}/mks/configurator/uploads/${firmwareName}`)
+
+            fs.removeSync(`${homedir}/mks/configurator/upload/${firmwareName}`)
 
             // utils.copyFilesRecursively(
             //   `${homedir}/mks/configurator/uploads`,

@@ -9,13 +9,11 @@ const saveDefaultSettings = () =>
   saveSettings(defaultSettings)
 
 const configuratorFolders = [
-  'configurations',
-  'schemas',
-  'firmwares',
-  'server',
-  'tmp',
   'downloads',
-  'uploads'
+  'unpacked',
+  'uploads',
+  'upload',
+  'tmp'
 ]
 
 const createConfiguratorFolderStructure = () => {
