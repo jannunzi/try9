@@ -1,21 +1,21 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const homedir = require('os').homedir()
 const utils = require('../common/utils')
 
 const readFirmwareList = () =>
-  fs.readdirSync(`${homedir}/mks/configurator/firmwares`)
+  fs.readdirSync(`${homedir}/mks/configurator/uploads`)
     .filter(firmwareFileName => firmwareFileName !== '.DS_Store')
 
 const readDetailedFirmwareList = (callback) => {
   let details = []
-  fs.readdir(`${homedir}/mks/configurator/firmwares`, function(err, files) {
+  fs.readdir(`${homedir}/mks/configurator/uploads`, function(err, files) {
     if (err) {
       console.log("Error getting directory information.")
     } else {
       files.forEach(function(file) {
         if(file !== '.DS_Store') {
           console.log(file)
-          const stat = fs.statSync(`${homedir}/mks/configurator/firmwares/${file}`)
+          const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${file}`)
           stat.fileName = file
           details.push(stat)
         }
@@ -31,7 +31,7 @@ const decryptAndUnzipAes = (aesFileName) => {
   ZIP_FILE = ZIP_FILE.replace('.zip.aes', '.zip')
   let   UNZIPPED_FILE = ZIP_FILE.replace('.zip', '')
   utils.openSslDecrypt(AES_FILE, ZIP_FILE)
-  utils.unzip(ZIP_FILE, UNZIPPED_FILE)
+  utils.unzipAesFile(ZIP_FILE, UNZIPPED_FILE)
 }
 
 const uploadAes = (firmwareName) => {
@@ -43,12 +43,14 @@ const uploadAes = (firmwareName) => {
   decryptAndUnzipAes(firmwareName)
 
   utils.copyFilesRecursively(
-    `${UNZIPPED_FILE}/Configs/Permanent/*`,
+    `${UNZIPPED_FILE}/Configs/Permanent`,
     `${homedir}/mks/configurator/configurations/${firmwareName}`)
-  utils.copyFilesRecursively(
-    `${UNZIPPED_FILE}/Schemas/*`,
-    `${homedir}/mks/configurator/schemas/${firmwareName}`)
-  utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
+    .then(() => utils.copyFilesRecursively(
+      `${UNZIPPED_FILE}/Schemas`,
+      `${homedir}/mks/configurator/schemas/${firmwareName}`)
+    )
+    .then(() => fs.emptyDirSync(`${homedir}/mks/configurator/tmp`))
+    .catch(e => fs.emptyDirSync(`${homedir}/mks/configurator/tmp`))
 }
 
 const downloadAes = (firmwareName) => {
@@ -60,25 +62,30 @@ const downloadAes = (firmwareName) => {
   ZIP_FILE = ZIP_FILE.replace('.zip.aes', '.zip')
   let UNZIPPED_FILE = ZIP_FILE.replace('.zip', '')
 
+  // jga
   // decrypt AES file and unzip
   decryptAndUnzipAes(firmwareName)
 
   utils.copyFilesRecursively(
-    `${homedir}/mks/configurator/configurations/${firmwareName}/*`,
-    `${UNZIPPED_FILE}/Configs/Permanent/`)
-  utils.copyFilesRecursively(
-    `${homedir}/mks/configurator/schemas/${firmwareName}/*`,
-    `${UNZIPPED_FILE}/Schemas/`)
-
-
-  // const ZIP = 'cd /Users/jannunzi/mks/configurator/tmp/TEST2 && zip -r /Users/jannunzi/mks/configurator/downloads/TEST2.zip *'
-  // const ZIP = 'cd INPUT_FOLDER && zip -r OUTPUT_ZIP *'
-
-  utils.zip(
-    `${homedir}/mks/configurator/tmp/${FIRMWARE_NAME}`,
-    `${homedir}/mks/configurator/downloads/${FIRMWARE_NAME_ZIP}`)
-  utils.openSslEncrypt(`${homedir}/mks/configurator/downloads/${FIRMWARE_NAME_ZIP}`, `${homedir}/mks/configurator/downloads/${firmwareName}`)
-
+    `${homedir}/mks/configurator/configurations/${firmwareName}`,
+    `${UNZIPPED_FILE}/Configs/Permanent`)
+    .then(() => utils.copyFilesRecursively(
+      `${homedir}/mks/configurator/schemas/${firmwareName}`,
+      `${UNZIPPED_FILE}/Schemas`)
+    )
+    .then(() => {
+      // const ZIP = 'cd /Users/jannunzi/mks/configurator/tmp/TEST2 && zip -r /Users/jannunzi/mks/configurator/downloads/TEST2.zip *'
+      // const ZIP = 'cd INPUT_FOLDER && zip -r OUTPUT_ZIP *'
+      // fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
+      utils.zipAesFile(
+        `${homedir}/mks/configurator/tmp/${FIRMWARE_NAME}`,
+        `${homedir}/mks/configurator/downloads/${FIRMWARE_NAME_ZIP}`)
+        .then(() =>
+          utils.openSslEncrypt(
+            `${homedir}/mks/configurator/downloads/${FIRMWARE_NAME_ZIP}`,
+            `${homedir}/mks/configurator/downloads/${firmwareName}`)
+        )
+    })
 }
 
 const uploadFirmware = (firmwareName) => {
@@ -100,7 +107,7 @@ const uploadFirmware = (firmwareName) => {
       utils.untar(schemaTarGz, `${homedir}/mks/configurator/schemas/${firmwareName}`)
     }
 
-    utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
+    fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
 
 }
 
@@ -110,9 +117,9 @@ const downloadFirmware = (firmware) => {
   // Clean up directories TODO: move this to a function
   // TODO: all this works if Node has file permissions
 
-  utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
-  utils.removeFilesRecursively(`${homedir}/mks/configurator/downloads/*`)
-  utils.removeFilesRecursively(`${homedir}/mks/configurator/uploads/*`)
+  fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
+  fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
+  fs.emptyDirSync(`${homedir}/mks/configurator/uploads`)
 
   utils.untar(
     `${homedir}/mks/configurator/firmwares/${firmware}`,
@@ -121,9 +128,9 @@ const downloadFirmware = (firmware) => {
   const filesInTmp = utils.readDirectoryContent(`${homedir}/mks/configurator/tmp`)
   const temporaryFolder = filesInTmp[0]
   // remove old Config
-  utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/${temporaryFolder}/Configs.tar.gz`)
+  fs.removeSync(`${homedir}/mks/configurator/tmp/${temporaryFolder}/Configs.tar.gz`)
   // remove old Schema
-  utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/${temporaryFolder}/Schema.tar.gz`)
+  fs.removeSync(`${homedir}/mks/configurator/tmp/${temporaryFolder}/Schema.tar.gz`)
   // package new Config
   utils.tar(
     `${homedir}/mks/configurator/configurations/${firmware}`,
@@ -140,8 +147,14 @@ const downloadFirmware = (firmware) => {
     `${homedir}/mks/configurator/downloads/${firmware}`
   )
   // clean up tmp folder
-  utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
+  fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
 }
+
+const repackageZczFile = (firmware) =>
+  utils.repackageZczFile(`${homedir}/mks/configurator`, firmware)
+
+const unpackZczFile = (firmware) =>
+  utils.unpackZczFile2(`${homedir}/mks/configurator`, firmware)
 
 module.exports = {
   readDetailedFirmwareList,
@@ -149,5 +162,8 @@ module.exports = {
   downloadFirmware,
   uploadFirmware,
   downloadAes,
-  uploadAes
+  uploadAes,
+
+  unpackZczFile,
+  repackageZczFile
 }

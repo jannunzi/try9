@@ -4,26 +4,28 @@ const homedir = require('os').homedir();
 
 module.exports = (app) => {
   const compareFirmwares = (req, res) => {
-    const what = req.params.what;
+    const configOrSchema = req.params.what;
     const firmware1 = req.params.firmware1
     const firmware2 = req.params.firmware2
-    const what1 = req.params.what1
-    const what2 = req.params.what2
+    const jsonFile1 = req.params.what1
+    const jsonFile2 = req.params.what2
 
-    if(!(what1.endsWith(".json") && what2.endsWith(".json"))) {
+    if(!(jsonFile1.endsWith(".json") && jsonFile2.endsWith(".json"))) {
       res.json({})
       return
     }
 
-    const file1 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware1}/${what1}`)
-    const file2 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware2}/${what2}`)
+    // const file1 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware1}/${what1}`)
+    // const file2 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware2}/${what2}`)
+    const file1 = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware1}/${configOrSchema}/${jsonFile1}`)
+    const file2 = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware2}/${configOrSchema}/${jsonFile2}`)
 
     const json1 = JSON.parse(file1)
     const json2 = JSON.parse(file2)
 
     const difference = jsonDiff.diff(json1, json2)
     if(difference) {
-      difference.fileName = what1
+      difference.fileName = jsonFile1
     }
 
     res.json(difference);

@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const utils = require('../common/utils')
 const homedir = require('os').homedir();
 const firmwareService = require('../services/firmware.service.server')
@@ -20,24 +20,28 @@ module.exports = (app, upload) => {
     app.delete('/api/firmwares/:firmwareName', function (req, res) {
 
         const firmwareName = req.params.firmwareName
-        fs.unlinkSync(`${homedir}/mks/configurator/firmwares/${firmwareName}`)
-        utils.removeFilesRecursively(`${homedir}/mks/configurator/configurations/${firmwareName}`)
-        utils.removeFilesRecursively(`${homedir}/mks/configurator/schemas/${firmwareName}`)
+        fs.removeSync(`${homedir}/mks/configurator/uploads/${firmwareName}`)
+        fs.removeSync(`${homedir}/mks/configurator/unpacked/${firmwareName}`)
 
         res.send(200)
     })
 
     app.get('/api/firmwares/:firmware/package', (req, res) => {
         if(req.params.firmware.endsWith('.zcz')) {
-            firmwareService.downloadFirmware(req.params.firmware)
+            // firmwareService.downloadFirmware(req.params.firmware)
+            firmwareService.repackageZczFile(req.params.firmware)
+              .then(() => res.sendStatus(200))
         } else if(req.params.firmware.endsWith('.zip.aes')) {
             firmwareService.downloadAes(req.params.firmware)
         }
-        res.sendStatus(200)
     })
 
     app.post('/api/firmwares', upload, function (req, res, next) {
         console.log('post firmware')
+
+        fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
+        fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
+
         upload(req, res, function (err, ddd) {
 
             let firmwareName = 'UNDEFINED'
@@ -45,27 +49,30 @@ module.exports = (app, upload) => {
             const filesInTmp = utils.readDirectoryContent(`${homedir}/mks/configurator/uploads`)
             firmwareName = filesInTmp[0]
 
-            utils.copyFilesRecursively(`${homedir}/mks/configurator/uploads/*`, `${homedir}/mks/configurator/firmwares`)
-            utils.removeFilesRecursively(`${homedir}/mks/configurator/uploads/*`)
+            // utils.copyFilesRecursively(
+            //   `${homedir}/mks/configurator/uploads`,
+            //   `${homedir}/mks/configurator/firmwares`)
+            //   .then(() => {
+                  // fs.emptyDirSync(`${homedir}/mks/configurator/uploads`)
 
-            // create directories for configurations and schemas
-            utils.createDirectory(`${homedir}/mks/configurator/configurations/${firmwareName}`)
-            utils.createDirectory(`${homedir}/mks/configurator/schemas/${firmwareName}`)
+                  // create directories for configurations and schemas
+                  // utils.createDirectory(`${homedir}/mks/configurator/configurations/${firmwareName}`)
+                  // utils.createDirectory(`${homedir}/mks/configurator/schemas/${firmwareName}`)
 
-            console.log(`Removing files from tmp ${homedir}/mks/configurator/tmp/*`)
-            utils.removeFilesRecursively(`${homedir}/mks/configurator/tmp/*`)
-
-            if (err) {
-                return res.end(err)
-            } else {
-                if(firmwareName.endsWith('zcz')) {
-                    firmwareService.uploadFirmware(firmwareName);
-                    return res.sendStatus(200)
-                } else if(firmwareName.endsWith('aes')) {
-                    firmwareService.uploadAes(firmwareName)
-                    return res.sendStatus(200)
-                }
-            }
+                  // if (err) {
+                  //     return res.end(err)
+                  // } else {
+                      if(firmwareName.endsWith('zcz')) {
+                          // firmwareService.uploadFirmware(firmwareName);
+                          firmwareService.unpackZczFile(firmwareName)
+                          return res.sendStatus(200)
+                      } else if(firmwareName.endsWith('aes')) {
+                          firmwareService.uploadAes(firmwareName)
+                          return res.sendStatus(200)
+                      }
+                  // }
+              // })
+              // .catch(e => console.log(e))
         })
     })
 }

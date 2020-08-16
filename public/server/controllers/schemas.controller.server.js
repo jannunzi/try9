@@ -7,16 +7,17 @@ const homedir = require('os').homedir();
 
 module.exports = (app) => {
     const fetchSchemaFileNameArrayForFirmware = (req, res) => {
-        fs.stat(`${homedir}/mks/configurator/schemas/${req.params.firmware}`, (err, newStats) => {
+        const firmware = req.params.firmware
+        fs.stat(`${homedir}/mks/configurator/unpacked/${firmware}/Schemas`, (err, newStats) => {
             console.log(newStats)
             // if files in directory have changed, recreate schema array
             const oldStats = firmwareStats[req.params.firmware]
             if(!oldStats || oldStats && oldStats.mtime !== newStats.mtime) {
                 let schemas = []
-                const schemaFiles = fs.readdirSync(`${homedir}/mks/configurator/schemas/${req.params.firmware}`)
+                const schemaFiles = fs.readdirSync(`${homedir}/mks/configurator/unpacked/${firmware}/Schemas`)
                   .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined')
                 schemaFiles.forEach(schemaFile => {
-                    const schemaFileContent = fs.readFileSync(`${homedir}/mks/configurator/schemas/${req.params.firmware}/${schemaFile}`).toString()
+                    const schemaFileContent = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware}/Schemas/${schemaFile}`).toString()
                     const schemaFileContentJson = JSON.parse(schemaFileContent)
                     // console.log(schemaFileContentJson)
                     const title = schemaFileContentJson.title
@@ -33,16 +34,17 @@ module.exports = (app) => {
         })
     }
     const fetchSchemaFilesWithContent = (req, res) => {
-        fs.stat(`${homedir}/mks/configurator/schemas/${req.params.firmware}`, (err, newStats) => {
+        const firmware = req.params.firmware
+        fs.stat(`${homedir}/mks/configurator/unpacked/${firmware}/Schemas`, (err, newStats) => {
             console.log(newStats)
             // if files in directory have changed, recreate schema array
             const oldStats = firmwareStats[req.params.firmware]
             if(!oldStats || oldStats && oldStats.mtime !== newStats.mtime) {
                 let schemas = []
-                const schemaFiles = fs.readdirSync(`${homedir}/mks/configurator/schemas/${req.params.firmware}`)
+                const schemaFiles = fs.readdirSync(`${homedir}/mks/configurator/unpacked/${firmware}/Schemas`)
                   .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined')
                 schemaFiles.forEach(schemaFile => {
-                    const schemaFileContent = fs.readFileSync(`${homedir}/mks/configurator/schemas/${req.params.firmware}/${schemaFile}`).toString()
+                    const schemaFileContent = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware}/Schemas/${schemaFile}`).toString()
                     const schemaFileContentJson = JSON.parse(schemaFileContent)
                     // console.log(schemaFileContentJson)
                     const title = schemaFileContentJson.title
@@ -60,8 +62,9 @@ module.exports = (app) => {
         })
     }
     const fetchSchemaFileContent = (req, res) =>
-        refParser.dereference(`${homedir}/mks/configurator/schemas/${req.params.firmware}/${req.params.schema}`)
+        refParser.dereference(`${homedir}/mks/configurator/unpacked/${req.params.firmware}/Schemas/${req.params.schema}`)
             .then(schema => res.status(200).json(schema))
+    
     app.get('/api/firmwares/:firmware/schemas', fetchSchemaFileNameArrayForFirmware)
     app.get('/api/firmwares/:firmware/schemas-with-content', fetchSchemaFilesWithContent)
     app.get('/api/firmwares/:firmware/schemas/:schema', fetchSchemaFileContent)

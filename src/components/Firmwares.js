@@ -54,9 +54,9 @@ export default class Firmwares extends React.Component {
     packageFirmware = (firmwareName) =>
         firmwareService.packageFirmware(firmwareName)
             .then((response) => {
-                this.downloadLinks[firmwareName].click()
-                console.log(response)
+                setTimeout(() => this.downloadLinks[firmwareName].click(), 3000)
             })
+            .catch(e => console.log(e))
 
     render() {
         return(
