@@ -23,7 +23,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
         },
         configurationFile: 'Broadcast.json',
         schema: null,
-        configuration: null
+        configuration: ''
     }
 
     componentDidMount() {
@@ -68,7 +68,11 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
 
     fetchSchemasForFirmware = (firmwareFile) =>
         schemaService.fetchSchemaFiles(firmwareFile)
-            .then(schemas => this.setState({firmwareFile, schemas}))
+            .then(schemas => {
+              this.setState({firmwareFile, schemas})
+              if(this.state.schemaFile)
+                return this.fetchSchemaAndConfiguration(this.state.schemaFile)
+              })
 
     fetchSchemaAndConfiguration = (schemaFile) => {
         let schema = {}
@@ -124,7 +128,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                             value={this.state.schemaFile}
                             onChange={(e) => this.fetchSchemaAndConfiguration(e.target.value)}
                             className="form-control">
-                            {this.state.schemas.filter(schema => !schema.file.endsWith("Cal.json")).map(schema =>
+                            {this.state.schemas.filter(schema => !schema.file.endsWith("Cal.json") && !schema.file.startsWith('__IGNORE')).map(schema =>
                               <option key={schema.file} value={schema.file}>
                                 {schema.title} ({schema.file})
                               </option> )}

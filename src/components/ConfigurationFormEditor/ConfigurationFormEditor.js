@@ -87,13 +87,13 @@ export default class ConfigurationFormEditor extends React.Component {
     render() {
         return(
             <div>
-                <button id="mks-download-firmware-btn"
-                        onClick={this.downloadFirmware}
-                        className="btn btn-primary pull-right">
-                    <i className="fa fa-download"/>
-                    &nbsp;
-                    Download
-                </button>
+                {/*<button id="mks-download-firmware-btn"*/}
+                {/*        onClick={this.downloadFirmware}*/}
+                {/*        className="btn btn-primary pull-right">*/}
+                {/*    <i className="fa fa-download"/>*/}
+                {/*    &nbsp;*/}
+                {/*    Download*/}
+                {/*</button>*/}
                 <Form className="margin-right-15px"
                       schema={this.state.schema}
                       formData={this.state.configuration}

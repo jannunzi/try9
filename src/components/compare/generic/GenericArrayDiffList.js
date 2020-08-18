@@ -3,6 +3,7 @@ import React from "react";
 export default class GenericArrayDiffList extends React.Component {
   render() {
     return(
+      <div>
       <ul className="list-group">
         {
           this.props.side === "left" &&
@@ -13,11 +14,14 @@ export default class GenericArrayDiffList extends React.Component {
             }}
               className={`
                   list-group-item mks-white-space-nowrap
+                   ${diff[1] === this.props.selectedJsonFile ? "mks-selected" : ""}
                    ${diff[0] === "~" ? "list-group-item-info" : ""}
                    ${diff[0] === "-" ? "list-group-item-success" : ""}
                    ${diff[0] === "+" ? "list-group-item-danger mks-text-decoration-overline" : ""}
                    `}>
-              <i className="fa fa-file-text"/> {diff[1]}
+              <i className="fa fa-file-text"/>
+              &nbsp;
+              {diff[1]}
             </li>
           )
         }
@@ -30,15 +34,19 @@ export default class GenericArrayDiffList extends React.Component {
             }}
                 className={`
                   list-group-item mks-white-space-nowrap
+                   ${diff[1] === this.props.selectedJsonFile ? "mks-selected" : ""}
                    ${diff[0] === "~" ? "list-group-item-info" : ""}
                    ${diff[0] === "+" ? "list-group-item-success" : ""}
                    ${diff[0] === "-" ? "list-group-item-danger mks-text-decoration-overline" : ""}
                    `}>
-              <i className="fa fa-file-text"/> {diff[1]}
+              <i className="fa fa-file-text"/>
+              &nbsp;
+              {diff[1]}
             </li>
           )
         }
       </ul>
+      </div>
     )
   }
 }

@@ -106,8 +106,8 @@ export default class GenericJsonDiffViewer extends React.Component {
                           &nbsp;
                           <b>{item[1]}</b>
                           <span className="pull-right">
-                            <i className="fa fa-copy"/>
-                            <i className="fa fa-edit"/>
+                            {/*<i className="fa fa-copy"/>*/}
+                            {/*<i className="fa fa-edit"/>*/}
                           </span>
                         </li>
                       )
@@ -121,8 +121,8 @@ export default class GenericJsonDiffViewer extends React.Component {
                             <b>{item[1]}</b>
                           </span>
                           <span className="pull-right">
-                            <i className="fa fa-copy"/>
-                            <i className="fa fa-edit"/>
+                            {/*<i className="fa fa-copy"/>*/}
+                            {/*<i className="fa fa-edit"/>*/}
                           </span>
                         </li>
                       )

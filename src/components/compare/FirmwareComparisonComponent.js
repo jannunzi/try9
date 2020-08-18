@@ -25,7 +25,8 @@ export default class FirmwareComparisonComponent extends React.Component {
     firmwareRight: {firmware: '', index: 0, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
     configurationFilesDiffs: [],
     schemaFilesDiffs: [],
-    diff: null
+    diff: null,
+    selectedJsonFile: null
   }
 
   componentDidMount() {
@@ -124,7 +125,6 @@ export default class FirmwareComparisonComponent extends React.Component {
 
         Promise.all(configurationDiffArray)
           .then(results => {
-            debugger
             this.setState(prevState => {
               let nextState = {...prevState}
 
@@ -251,14 +251,29 @@ export default class FirmwareComparisonComponent extends React.Component {
 
   onSelectItem = (selected, what) => {
 
-    // console.log(selected, what)
+    console.log(selected, what)
 
     this.state.firmwareLeft[what].forEach(schemaFile => {
       if(schemaFile.file === selected) {
         if(schemaFile.diff) {
-          this.setState({
-            diff: schemaFile.diff
-          })
+            // this.setState({
+            //   diff: schemaFile.diff
+            // })
+
+          this.setState(prevState => ({
+            diff: schemaFile.diff,
+            selectedJsonFile: selected
+          }))
+          // this.setState(prevState => {
+          //   let nextState = {...prevState}
+          //   nextState = {
+          //     diff: schemaFile.diff.map(d => {
+          //       return d
+          //     })
+          //   }
+          //   return nextState
+          // })
+
         }
       }
     })
@@ -290,6 +305,7 @@ export default class FirmwareComparisonComponent extends React.Component {
         <br/>
         <div className="row">
           <div className="col-xs-3">
+            Select left firmware
             <StringArraySelectComponent
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareLeft")}
               array={this.state.firmwares}/>
@@ -300,6 +316,7 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
                 side="left"
+                selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.configurationFilesDiffs}/>
             }
             {
@@ -307,10 +324,12 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "schemaFiles")}
                 side="left"
+                selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.schemaFilesDiffs}/>
             }
           </div>
           <div className="col-xs-3">
+            Select right firmware
             <StringArraySelectComponent
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareRight")}
               array={this.state.firmwares}/>
@@ -322,6 +341,7 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
                 side="right"
+                selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.configurationFilesDiffs}/>
             }
             {
@@ -329,6 +349,7 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "schemaFiles")}
                 side="right"
+                selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.schemaFilesDiffs}/>
             }
           </div>
@@ -347,9 +368,9 @@ export default class FirmwareComparisonComponent extends React.Component {
             {
               this.state.diff &&
               <div>
-                <button className="btn btn-primary pull-right margin-left-15px">Merge Left</button>
-                <button className="btn btn-primary pull-right margin-left-15px">Merge Right</button>
-                <br/>
+                {/*<button className="btn btn-primary pull-right margin-left-15px">Merge Left</button>*/}
+                {/*<button className="btn btn-primary pull-right margin-left-15px">Merge Right</button>*/}
+                {/*<br/>*/}
                 <GenericJsonDiffViewer diff={this.state.diff}/>
               </div>
             }
