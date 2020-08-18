@@ -6,7 +6,7 @@ export default class GenericArrayDiffList extends React.Component {
       <ul className="list-group">
         {
           this.props.side === "left" &&
-          this.props.arrayDifferences.map(diff =>
+          this.props.arrayDifferences.filter(diff => !diff[1].startsWith('__IGNORE')).map(diff =>
             <li key={diff[1]}
                 onClick={() => {
               if(diff[0] === "~") this.props.onSelectItem(diff[1])
@@ -23,7 +23,7 @@ export default class GenericArrayDiffList extends React.Component {
         }
         {
           this.props.side === "right" &&
-          this.props.arrayDifferences.map(diff =>
+          this.props.arrayDifferences.filter(diff => !diff[1].startsWith('__IGNORE')).map(diff =>
             <li key={diff[1]}
               onClick={() => {
               if(diff[0] === "~") this.props.onSelectItem(diff[1])

@@ -23,7 +23,7 @@ module.exports = (app, upload) => {
         fs.removeSync(`${homedir}/mks/configurator/uploads/${firmwareName}`)
         fs.removeSync(`${homedir}/mks/configurator/unpacked/${firmwareName}`)
 
-        res.send(200)
+        res.sendStatus(200)
     })
 
     app.get('/api/firmwares/:firmware/package', (req, res) => {
@@ -39,8 +39,8 @@ module.exports = (app, upload) => {
     app.post('/api/firmwares', upload, function (req, res, next) {
         console.log('post firmware')
 
-        fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
-        fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
+        // fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
+        // fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
 
         upload(req, res, function (err, ddd) {
 

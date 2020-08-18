@@ -1,6 +1,6 @@
 {
-  "name": "try9",
-  "version": "0.1.0",
+  "name": "Novina-Configurator",
+  "version": "0.1.1",
   "homepage": "./",
   "main": "public/main.js",
   "private": true,
@@ -28,6 +28,7 @@
     "multer": "^1.4.2",
     "ncp": "^2.0.0",
     "nedb": "^1.8.0",
+    "node-sass": "^4.14.1",
     "openssl-nodejs": "^1.0.5",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
@@ -73,8 +74,7 @@
   },
   "devDependencies": {
     "electron": "^9.1.0",
-    "electron-builder": "^22.7.0",
-    "node-sass": "^4.14.1"
+    "electron-builder": "^22.7.0"
   },
   "build": {
     "appId": "nonExistentID",

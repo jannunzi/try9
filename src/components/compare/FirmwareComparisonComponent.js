@@ -182,7 +182,7 @@ export default class FirmwareComparisonComponent extends React.Component {
                   this.state.firmwareRight.firmware,
                   schemaLeft.file,
                   schemaRight.file,
-                  "Schemas"
+                  "Schema"
                 )
               )
             }

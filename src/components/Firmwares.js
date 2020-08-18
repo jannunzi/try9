@@ -24,6 +24,8 @@ export default class Firmwares extends React.Component {
             fd.append("config", e.target.files[x]);
         }
 
+        e.target.value = null;
+
         fetch(`${API_BASE_URL}/api/firmwares`, {
             method: "POST",
             body: fd
@@ -62,16 +64,16 @@ export default class Firmwares extends React.Component {
         return(
             <div>
 
-              <button onClick={this.addFirmware}
-                      title="Upload"
-                      className="btn btn-primary pull-right">
-                <i className="fa fa-plus"/>
-                &nbsp;
-                Upload
-              </button>
+              {/*<button onClick={this.addFirmware}*/}
+              {/*        title="Upload"*/}
+              {/*        className="btn btn-primary pull-right">*/}
+              {/*  <i className="fa fa-plus"/>*/}
+              {/*  &nbsp;*/}
+              {/*  Upload*/}
+              {/*</button>*/}
 
                 <input
-                  className="mks-invisible btn btn-primary pull-right"
+                  className="btn btn-primary pull-right"
                   type="file"
                   title="Add Firmware"
                   multiple

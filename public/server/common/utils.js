@@ -144,9 +144,21 @@ const readDirectoryContent = (directory) =>
 
 const untar2 = (sourceFile, targetDirectory) => {
     fs.ensureDirSync(targetDirectory)
+    // targetDirectoryParts.splice(targetDirectoryParts.length - 1, 1)
+    // const cwdParent = targetDirectoryParts.join('/')
     return tar.extract({
         file: sourceFile,
         cwd: targetDirectory
+    }).then(() => {
+        let targetDirectoryParts = targetDirectory.split('/')
+        const last = targetDirectoryParts[targetDirectoryParts.length - 1]
+        if(fs.existsSync(`${targetDirectory}/${last}`)) {
+            targetDirectoryParts = targetDirectoryParts.slice(0, targetDirectoryParts.length - 1)
+            const parent = targetDirectoryParts.join('/')
+            fs.renameSync(targetDirectory, `${targetDirectory}1`)
+            fs.moveSync(`${targetDirectory}1/${last}`, `${parent}/${last}`)
+            fs.removeSync(`${targetDirectory}1`)
+        }
     })
 }
 
@@ -208,33 +220,33 @@ const unpackZczFile = (configuratorBasePath, zczFileName) => {
       `${configuratorBasePath}/tmp/${zczFileName}.tar`,
       () => {
           // untar zcz file to a directory in tmp
-        untar2(
-          `${configuratorBasePath}/tmp/${zczFileName}.tar`,
-          `${configuratorBasePath}/tmp/${zczFileName}`)
-          .then(() => {
-              // gunzip Configs.tar.gz to Configs.tar
-              gunzip(
-                `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Configs.tar.gz`,
-                `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Configs.tar`,
-                () => {
-                    // gunzip Schema.tar.gz to Schema.tar
-                    gunzip(
-                      `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Schema.tar.gz`,
-                      `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Schema.tar`,
-                      () => {
-                          // untar Configs.tar to configurations directory
-                          untar2(
-                            `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Configs.tar`,
-                            `${configuratorBasePath}/configurations/${zczFileName}`).then(() =>
-                            // untar Schema.tar to schemas directory
+          untar2(
+            `${configuratorBasePath}/tmp/${zczFileName}.tar`,
+            `${configuratorBasePath}/tmp/${zczFileName}`)
+            .then(() => {
+                // gunzip Configs.tar.gz to Configs.tar
+                gunzip(
+                  `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Configs.tar.gz`,
+                  `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Configs.tar`,
+                  () => {
+                      // gunzip Schema.tar.gz to Schema.tar
+                      gunzip(
+                        `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Schema.tar.gz`,
+                        `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Schema.tar`,
+                        () => {
+                            // untar Configs.tar to configurations directory
                             untar2(
-                              `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Schema.tar`,
-                              `${configuratorBasePath}/schemas/${zczFileName}`)).then(() => {
-                              fs.emptyDirSync(`${configuratorBasePath}/tmp`)
-                          })
-                      })
-                })
-          })
+                              `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Configs.tar`,
+                              `${configuratorBasePath}/configurations/${zczFileName}`).then(() =>
+                              // untar Schema.tar to schemas directory
+                              untar2(
+                                `${configuratorBasePath}/tmp/${zczFileName}/image35-2/Schema.tar`,
+                                `${configuratorBasePath}/schemas/${zczFileName}`)).then(() => {
+                                fs.emptyDirSync(`${configuratorBasePath}/tmp`)
+                            })
+                        })
+                  })
+            })
       })
 }
 
@@ -254,50 +266,72 @@ const unpackZczFile2 = (configuratorBasePath, zczFileName) => {
     // fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}`)
     // fs.ensureDir(`${configuratorBasePath}/unpacked/${zczFileName}`)
 
-    // gunzip zcz file to a tar file in tmp
+    /* gunzip uploaded zcz file to a tar file in tmp
+     * uploads/XYZ.zcz --> tmp/XYZ.zcz.tar
+     */
     gunzip(
       `${configuratorBasePath}/uploads/${zczFileName}`,
       `${configuratorBasePath}/tmp/${zczFileName}.tar`,
       () => {
-          // untar zcz file to a directory in tmp
+          /* untar zcz file to a directory in tmp, e.g.,
+           * tmp/XYZ.zcz.tar --> unpacked/image35-2
+           * NOTE: "image35-2" is a token related to the product model
+           */
           untar2(
             `${configuratorBasePath}/tmp/${zczFileName}.tar`,
             `${configuratorBasePath}/unpacked`)
             .then(() => {
-                // rename
+                /* rename unpacked zcz image35-2 to original zcz file name
+                 * unpacked/image35-2 --> unpacked/XYZ.zcz
+                 */
                 fs.renameSync(
                   `${configuratorBasePath}/unpacked/image35-2`,
                   `${configuratorBasePath}/unpacked/${zczFileName}`
                 )
-                // gunzip Configs.tar.gz to Configs.tar
+                /* gunzip Configs.tar.gz to Configs.tar, e.g.,
+                 * unpacked/XYZ.zcz/Configs.tar.gz --> unpacked/XYZ.zcz/Configs.tar
+                 */
                 gunzip(
                   `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar.gz`,
                   `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar`,
                   () => {
-                      // gunzip Schema.tar.gz to Schema.tar
+                      /* gunzip Schema.tar.gz to Schema.tar, e.g.,
+                       * unpacked/XYZ.zcz/Schema.tar.gz --> unpacked/XYZ.zcz/Schema.tar
+                       */
                       gunzip(
                         `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar.gz`,
                         `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`,
                         () => {
-                            // untar Configs.tar to configurations directory
+                            /* untar Configs.tar and Schema.tar to directories, e.g.,
+                             * unpacked/XYZ.zcz/Configs.tar --> unpacked/XYZ.zcz/Configs
+                             * unpacked/XYZ.zcz/Schema.tar --> unpacked/XYZ.zcz/Schemas
+                             * [DONE] TODO: should be Schema (singular)
+                             */
                             untar2(
                               `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar`,
                               `${configuratorBasePath}/unpacked/${zczFileName}/Configs`).then(() =>
                               // untar Schema.tar to schemas directory
                               untar2(
                                 `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`,
-                                `${configuratorBasePath}/unpacked/${zczFileName}/Schemas`)).then(() => {
+                                `${configuratorBasePath}/unpacked/${zczFileName}/Schema`)).then(() => {
+
+                                chmodSyncDir(`${configuratorBasePath}/unpacked/${zczFileName}/Configs`, '777')
+                                chmodSyncDir(`${configuratorBasePath}/unpacked/${zczFileName}/Schema`, '777')
+                                /* remove content in tmp
+                                 * remove unpacked Configs.tar
+                                 * remove unpacked Schema.tar
+                                 * TODO: should I always remove these tar files especially when I repackage?
+                                 */
                                 fs.emptyDirSync(`${configuratorBasePath}/tmp`)
                                 fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar`)
                                 fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`)
-                                // fs.renameSync(
-                                //   `${configuratorBasePath}/unpacked/${zczFileName}/_configurations`,
-                                //   `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar`
-                                // )
-                                // fs.renameSync(
-                                //   `${configuratorBasePath}/unpacked/${zczFileName}/_schemas`,
-                                //   `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`
-                                // )
+                                const now = Date.now()
+                                const timeStampFile = `__IGNORE__${now}.txt`
+
+                                // TODO: dont show these files in client
+
+                                fs.writeFileSync(`${configuratorBasePath}/unpacked/${zczFileName}/Configs/${timeStampFile}`, now)
+                                fs.writeFileSync(`${configuratorBasePath}/unpacked/${zczFileName}/Schema/${timeStampFile}`, now)
                             })
                         })
                   })
@@ -311,28 +345,49 @@ const repackageZczFile = (configuratorBasePath, zczFileName) => {
     fs.emptyDirSync(`${configuratorBasePath}/tmp`)
     fs.emptyDirSync(`${configuratorBasePath}/downloads`)
 
+    /* tar and gzip Configs and Schemas folders in unpacked ZCZ file into *.tar.gz files, e.g.,
+     * unpacked/XYZ.zcz/Configs --> unpacked/Configs.tar.gz
+     * unpacked/XYZ.zcz/Schemas --> unpacked/Schemas.tar.gz
+     * TODO: should be Schema and Schema.tar.gz (singular) [OK]
+     * TODO: request to change it to plural
+     * TODO: fix in unpack as well [OK]
+     */
     return tarNgzip(
       `${configuratorBasePath}/unpacked/${zczFileName}`,
       `Configs`,
       `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar.gz`,)
       .then(() => tarNgzip(
         `${configuratorBasePath}/unpacked/${zczFileName}`,
-        `Schemas`,
-        `${configuratorBasePath}/unpacked/${zczFileName}/Schemas.tar.gz`)
+        `Schema`,
+        `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar.gz`)
       )
       .then(() => {
 
+          /* move Configs and Schemas folders to tmp so unpacked zcz file can be repacked
+           * these folders should not end up in the zcz file. They were created by the tool
+           * unpacked/XYZ.zcz/Configs --> tmp/Configs
+           * unpacked/XYZ.zcz/Schemas --> tmp/Schemas
+           * TODO: should be Schema (singular)
+           * TODO: fix in unpack as well
+           */
           fs.moveSync(
             `${configuratorBasePath}/unpacked/${zczFileName}/Configs`,
             `${configuratorBasePath}/tmp/Configs`)
           fs.moveSync(
-            `${configuratorBasePath}/unpacked/${zczFileName}/Schemas`,
-            `${configuratorBasePath}/tmp/Schemas`)
+            `${configuratorBasePath}/unpacked/${zczFileName}/Schema`,
+            `${configuratorBasePath}/tmp/Schema`)
+
+          /* rename unpacked zcz file to image35-2 since that's what it should unpack as, e.g.,
+           * unpacked/XYZ.zcz --> unpacked/image35-2
+           */
           fs.renameSync(
             `${configuratorBasePath}/unpacked/${zczFileName}`,
             `${configuratorBasePath}/unpacked/image35-2`
           )
 
+          /* tar and zip unpacked zcz file to downloads folder, e.g.,
+           * unpacked/image35-2 --> downloads/XZY.zcz
+           */
           return tarNgzip(
             `${configuratorBasePath}/unpacked`,
             'image35-2',
@@ -340,19 +395,27 @@ const repackageZczFile = (configuratorBasePath, zczFileName) => {
           )
       })
       .then(() => {
+
+          /* rename image35-2 back to unpacked zcz file
+           * unpacked/image35-2 --> unpacked/XZY.zcz
+           */
           fs.renameSync(
             `${configuratorBasePath}/unpacked/image35-2`,
             `${configuratorBasePath}/unpacked/${zczFileName}`
           )
+          /* move Configs and Schemas folders back to the unpacked zcz folder, e.g.,
+           * tmp/Configs --> unpacked/XYZ.zcz/Configs
+           * tmp/Schemas --> unpacked/XYZ.zcz/Schemas
+           */
           fs.moveSync(
             `${configuratorBasePath}/tmp/Configs`,
             `${configuratorBasePath}/unpacked/${zczFileName}/Configs`)
           fs.moveSync(
-            `${configuratorBasePath}/tmp/Schemas`,
-            `${configuratorBasePath}/unpacked/${zczFileName}/Schemas`)
+            `${configuratorBasePath}/tmp/Schema`,
+            `${configuratorBasePath}/unpacked/${zczFileName}/Schema`)
 
           return 0
-    })
+      })
 }
 
 const unpackAesFile1 = (configuratorBasePath, aesFileName) => {
@@ -367,8 +430,8 @@ const unpackAesFile1 = (configuratorBasePath, aesFileName) => {
       `${configuratorBasePath}/uploads/${aesFileName}`,
       `${configuratorBasePath}/tmp/${ZIP_FILE_NAME}`)
     unzip(
-    `${configuratorBasePath}/tmp/${ZIP_FILE_NAME}`,
-    `${configuratorBasePath}/unpacked/${aesFileName}`
+      `${configuratorBasePath}/tmp/${ZIP_FILE_NAME}`,
+      `${configuratorBasePath}/unpacked/${aesFileName}`
     )
 
     // fs.emptyDirSync(`${configuratorBasePath}/tmp`)
@@ -386,6 +449,16 @@ const repackageAesFile = (configuratorBasePath, aesFileName) => {
     )
 
     fs.emptyDirSync(`${configuratorBasePath}/tmp`)
+}
+
+const chmodSyncDir = (dir, mode) => {
+    const files = fs.readdirSync(dir)
+    console.log(files)
+    files.forEach(file => {
+        fs.chmodSync(
+          `${dir}/${file}`,
+          mode)
+    })
 }
 
 // WORK IN PROGRESS
@@ -424,3 +497,23 @@ module.exports = {
 
     tarNgzip
 }
+
+
+// const firmware = '0.zcz'
+// const config = 'BinSyncedReadbacks.json'
+//
+// untar2(
+//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs.tar`,
+//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs`).then(() =>
+//   // untar Schema.tar to schemas directory
+//   untar2(
+//     `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Schema.tar`,
+//     `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Schema`)).then(() => {
+//     })
+
+
+// fs.chmodSync(
+//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs/*`,
+//   '777')
+// chmodSyncDir(
+//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs`)
