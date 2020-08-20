@@ -46,6 +46,10 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
             .then(_schemas => {
                 schemas = _schemas
 
+              if(this.props.history) {
+                this.props.history.push(`/configurations/${firmwares[0]}/${schemas[0].file}`)
+              }
+
                 // fetch schema and configuration files for first schema file
                 return this.fetchSchemaAndConfiguration(schemas[0].file)
             })
@@ -71,7 +75,14 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
             .then(schemas => {
               this.setState({firmwareFile, schemas})
               if(this.state.schemaFile)
+              {
+
+                if(this.props.history) {
+                  this.props.history.push(`/configurations/${firmwareFile}/${this.state.schemaFile}`)
+                }
+
                 return this.fetchSchemaAndConfiguration(this.state.schemaFile)
+              }
               })
 
     fetchSchemaAndConfiguration = (schemaFile) => {

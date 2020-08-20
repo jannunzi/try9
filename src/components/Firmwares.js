@@ -64,16 +64,16 @@ export default class Firmwares extends React.Component {
         return(
             <div>
 
-              {/*<button onClick={this.addFirmware}*/}
-              {/*        title="Upload"*/}
-              {/*        className="btn btn-primary pull-right">*/}
-              {/*  <i className="fa fa-plus"/>*/}
-              {/*  &nbsp;*/}
-              {/*  Upload*/}
-              {/*</button>*/}
+              <button onClick={this.addFirmware}
+                      title="Upload"
+                      className="btn btn-primary pull-right">
+                <i className="fa fa-plus"/>
+                &nbsp;
+                Upload
+              </button>
 
                 <input
-                  className="btn btn-primary pull-right"
+                  className="btn btn-primary pull-right mks-invisible"
                   type="file"
                   title="Add Firmware"
                   multiple

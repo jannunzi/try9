@@ -5,6 +5,7 @@ import FirmwareComparisonComponent from "./compare/FirmwareComparisonComponent";
 import Firmwares from "./Firmwares";
 import logo from "../images/mks-logo.png"
 import ConfigurationFormEditorWrapper from "./ConfigurationFormEditorWrapper";
+import Help from "./Help";
 
 export default class Dashboard extends React.Component {
   render() {
@@ -67,14 +68,23 @@ export default class Dashboard extends React.Component {
                     Compare
                   </NavLink>
                 </li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Help</a></li>
+                <li>
+                  <NavLink to={`/help`} activeClassName={`active`}>
+                    Help
+                  </NavLink>
+                </li>
+                {/*<li><a href="#">Settings</a></li>*/}
+                {/*<li><a href="#">Profile</a></li>*/}
+                {/*<li><a href="#">Help</a></li>*/}
               </ul>
             </div>
             <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main height-100pc">
               <Route path={`/firmwares`} exact={true} component={Firmwares}/>
-              <Route path="/configurations" exact={true} component={ConfigurationFormEditorWrapper}/>
+              <Route path="/configurations" exact={true}
+                     component={ConfigurationFormEditorWrapper}/>
+              <Route path="/configurations/:firmware/:configuration" exact={true}
+                     render={() => <ConfigurationFormEditorWrapper {...this.props}/>}/>
+              <Route path="/help" exact={true} component={Help}/>
               <Route
                 path={["/compare", "/compare/:what", "/compare/:what/:firmware1", "/compare/:what/:firmware1/:firmware2"]}
                 exact={true}
