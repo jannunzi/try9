@@ -22,7 +22,7 @@ const UNZIP = `unzip  INPUT_FILE  -d OUTPUT_FILE`
 const jsonDiff = require('json-diff')
 const homedir = require('os').homedir();
 
-const execShellCommand = (cmd)  => {
+const execShellCommand = (cmd, callback)  => {
     return new Promise((resolve, reject) => {
         exec(cmd, null, (error, stdout, stderr) => {
             if (error) {
@@ -31,6 +31,10 @@ const execShellCommand = (cmd)  => {
             resolve(stdout ? stdout : stderr);
         });
     });
+}
+
+const execShellCommandCallback = (cmd, callback) => {
+    exec(cmd, null, callback)
 }
 
 const openSslEncrypt2 = (inputFile, outputFile, callback) => {
@@ -418,7 +422,7 @@ const repackageZczFile = (configuratorBasePath, zczFileName) => {
       })
 }
 
-const unpackAesFile1 = (configuratorBasePath, aesFileName) => {
+const unpackAesFile = (configuratorBasePath, aesFileName) => {
     console.log(`Unpacking ${configuratorBasePath}/uploads/${aesFileName}`)
 
     fs.emptyDirSync(`${configuratorBasePath}/tmp`)
@@ -461,6 +465,17 @@ const chmodSyncDir = (dir, mode) => {
     })
 }
 
+const configurationsDirectory = firmware =>
+  firmware.endsWith('zcz') ?
+    `${homedir}/mks/configurator/unpacked/${firmware}/Configs` :
+    `${homedir}/mks/configurator/unpacked/${firmware}/Configs/Permanent`
+
+const schemasDir = firmware =>
+  firmware.endsWith('zcz') ?
+    `${homedir}/mks/configurator/unpacked/${firmware}/Schema` :
+    `${homedir}/mks/configurator/unpacked/${firmware}/Schemas`
+
+
 // WORK IN PROGRESS
 // unpackAesFile1(
 //   '/Users/jannunzi/mks/configurator',
@@ -483,6 +498,7 @@ module.exports = {
     unzipAesFile,
     tar,
     untar,
+    untar2,
     createDirectory,
     copyFilesRecursively,
     compareJsonObjects,
@@ -493,27 +509,13 @@ module.exports = {
     repackageZczFile,
 
     repackageAesFile,
-    unpackAesFile1,
+    unpackAesFile,
 
-    tarNgzip
+    tarNgzip,
+
+    execShellCommand,
+    execShellCommandCallback,
+
+    configurationsDirectory,
+    schemasDir
 }
-
-
-// const firmware = '0.zcz'
-// const config = 'BinSyncedReadbacks.json'
-//
-// untar2(
-//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs.tar`,
-//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs`).then(() =>
-//   // untar Schema.tar to schemas directory
-//   untar2(
-//     `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Schema.tar`,
-//     `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Schema`)).then(() => {
-//     })
-
-
-// fs.chmodSync(
-//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs/*`,
-//   '777')
-// chmodSyncDir(
-//   `/Users/jannunzi/mks/configurator/unpacked/${firmware}/Configs`)
