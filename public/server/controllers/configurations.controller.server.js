@@ -21,21 +21,22 @@ module.exports = (app, upload) => {
 
     app.get('/api/firmwares/:firmware/configurations', function (req, res) {
         const firmware = req.params.firmware
-        fs.readdir(`${homedir}/mks/configurator/unpacked/${firmware}/Configs`, (err, configurationFiles) => {
+        fs.readdir(utils.configurationsDirectory(firmware), (err, configurationFiles) => {
             res.send(configurationFiles)
         })
     })
 
     app.get('/api/firmwares/:firmware/configurations-with-content', function (req, res) {
         const firmware = req.params.firmware
+        const path = utils.configurationsDirectory(firmware)
         let configurations = []
-        const configurationFiles = fs.readdirSync(`${homedir}/mks/configurator/unpacked/${firmware}/Configs`)
+        const configurationFiles = fs.readdirSync(path)
           .filter(configuration => typeof constants.CONFIGURATION_IGNORE[configuration] === 'undefined')
         configurationFiles.forEach(configurationFile => {
 
-            const stat = fs.statSync(`${homedir}/mks/configurator/unpacked/${firmware}/Configs/${configurationFile}`)
+            const stat = fs.statSync(`${path}/${configurationFile}`)
             if(!stat.isDirectory()) {
-                const configurationFileContent = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware}/Configs/${configurationFile}`).toString()
+                const configurationFileContent = fs.readFileSync(`${path}/${configurationFile}`).toString()
                 let configurationFileContentJson = {};
                 try {
                     configurationFileContentJson = JSON.parse(configurationFileContent)
@@ -59,8 +60,14 @@ module.exports = (app, upload) => {
     app.get('/api/firmwares/:firmware/configurations/:configuration', function (req, res) {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
+        const path = utils.configurationsDirectory(firmware)
 
-        const configurationFileContent = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware}/Configs/${configuration}`).toString()
+        let configurationFileContent = {}
+        try {
+            configurationFileContent = fs.readFileSync(`${path}/${configuration}`).toString()
+        } catch (e) {
+          // ignore
+        }
 
         res.send(configurationFileContent)
     })
@@ -69,7 +76,7 @@ module.exports = (app, upload) => {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
 
-        const configurationFileContent = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware}/Configs/${configuration}`).toString()
+        const configurationFileContent = fs.readFileSync(`${utils.configurationsDirectory(firmware)}/${configuration}`).toString()
 
         res.send(configurationFileContent)
     })
@@ -83,7 +90,7 @@ module.exports = (app, upload) => {
         console.log(configuration)
         console.log(newConfigurationFileContent)
 
-        fs.writeFileSync(`${homedir}/mks/configurator/unpacked/${firmware}/Configs/${configuration}`, newConfigurationFileContent)
+        fs.writeFileSync(`${utils.configurationsDirectory(firmware)}/${configuration}`, newConfigurationFileContent)
 
         res.send(200)
     })

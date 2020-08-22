@@ -2,6 +2,18 @@ const fs = require('fs')
 const jsonDiff = require('json-diff')
 const homedir = require('os').homedir();
 
+const comparisonFilePath = (firmwareFileName, configOrSchema, jsonFileName) => {
+  if(firmwareFileName.endsWith('aes')) {
+    if(configOrSchema === 'Schema') {
+      configOrSchema = 'Schemas'
+    }
+    if(configOrSchema === 'Configs') {
+      configOrSchema = 'Configs/Permanent'
+    }
+  }
+  return `${homedir}/mks/configurator/unpacked/${firmwareFileName}/${configOrSchema}/${jsonFileName}`
+}
+
 module.exports = (app) => {
   const compareFirmwares = (req, res) => {
     const configOrSchema = req.params.what;
@@ -17,8 +29,18 @@ module.exports = (app) => {
 
     // const file1 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware1}/${what1}`)
     // const file2 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware2}/${what2}`)
-    const file1 = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware1}/${configOrSchema}/${jsonFile1}`)
-    const file2 = fs.readFileSync(`${homedir}/mks/configurator/unpacked/${firmware2}/${configOrSchema}/${jsonFile2}`)
+    let file1 = '{}'
+    let file2 = '{}'
+
+    try {
+      const path1 = comparisonFilePath(firmware1, configOrSchema, jsonFile1)
+      const path2 = comparisonFilePath(firmware2, configOrSchema, jsonFile1)
+      file1 = fs.readFileSync(path1)
+      file2 = fs.readFileSync(path2)
+    }
+    catch (e) {
+      // ignore
+    }
 
     const json1 = JSON.parse(file1)
     const json2 = JSON.parse(file2)

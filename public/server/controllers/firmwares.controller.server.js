@@ -31,8 +31,10 @@ module.exports = (app, upload) => {
             // firmwareService.downloadFirmware(req.params.firmware)
             firmwareService.repackageZczFile(req.params.firmware)
               .then(() => res.sendStatus(200))
-        } else if(req.params.firmware.endsWith('.zip.aes')) {
-            firmwareService.downloadAes(req.params.firmware)
+        } else if(req.params.firmware.endsWith('.aes')) {
+            firmwareService.downloadAes2(req.params.firmware, () => {
+                res.sendStatus(200)
+            })
         }
     })
 
@@ -53,31 +55,14 @@ module.exports = (app, upload) => {
                 `${homedir}/mks/configurator/uploads/${firmwareName}`)
 
             fs.removeSync(`${homedir}/mks/configurator/upload/${firmwareName}`)
-
-            // utils.copyFilesRecursively(
-            //   `${homedir}/mks/configurator/uploads`,
-            //   `${homedir}/mks/configurator/firmwares`)
-            //   .then(() => {
-                  // fs.emptyDirSync(`${homedir}/mks/configurator/uploads`)
-
-                  // create directories for configurations and schemas
-                  // utils.createDirectory(`${homedir}/mks/configurator/configurations/${firmwareName}`)
-                  // utils.createDirectory(`${homedir}/mks/configurator/schemas/${firmwareName}`)
-
-                  // if (err) {
-                  //     return res.end(err)
-                  // } else {
-                      if(firmwareName.endsWith('zcz')) {
-                          // firmwareService.uploadFirmware(firmwareName);
-                          firmwareService.unpackZczFile(firmwareName)
-                          return res.sendStatus(200)
-                      } else if(firmwareName.endsWith('aes')) {
-                          firmwareService.uploadAes(firmwareName)
-                          return res.sendStatus(200)
-                      }
-                  // }
-              // })
-              // .catch(e => console.log(e))
+                if(firmwareName.endsWith('zcz')) {
+                    // firmwareService.uploadFirmware(firmwareName);
+                    firmwareService.unpackZczFile(firmwareName)
+                    return res.sendStatus(200)
+                } else if(firmwareName.endsWith('aes')) {
+                    firmwareService.unpackAesFile(firmwareName)
+                    return res.sendStatus(200)
+                }
         })
     })
 }
