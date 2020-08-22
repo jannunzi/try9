@@ -75,7 +75,6 @@ export default class GenericJsonDiffViewer extends React.Component {
                   } else {
                     return (
                       <li key={key} className="list-group-item">
-                        <DeletedAddedChangedLabels/>
                         <div onClick={() => this.toggle(key)}
                              className="mks-pointer-cursor mks-margin-bottom-10px">
                           <b>{key}</b>:
