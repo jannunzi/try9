@@ -13,6 +13,7 @@ import diff from './diff'
 import test from './test'
 import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
+import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
 
 export default class FirmwareComparisonComponent extends React.Component {
 
@@ -371,6 +372,8 @@ export default class FirmwareComparisonComponent extends React.Component {
                 {/*<button className="btn btn-primary pull-right margin-left-15px">Merge Left</button>*/}
                 {/*<button className="btn btn-primary pull-right margin-left-15px">Merge Right</button>*/}
                 {/*<br/>*/}
+                <DeletedAddedChangedLabels/>
+
                 <GenericJsonDiffViewer diff={this.state.diff}/>
               </div>
             }
