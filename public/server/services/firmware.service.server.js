@@ -1,10 +1,11 @@
 const fs = require('fs-extra')
 const homedir = require('os').homedir()
 const utils = require('../common/utils')
+const aesService = require('../services/aes.service.server')
 
 const readFirmwareList = () =>
   fs.readdirSync(`${homedir}/mks/configurator/uploads`)
-    .filter(firmwareFileName => firmwareFileName !== '.DS_Store')
+    .filter(file => file.endsWith('.zcz') || file.endsWith('.aes'))
 
 const readDetailedFirmwareList = (callback) => {
   let details = []
@@ -13,7 +14,7 @@ const readDetailedFirmwareList = (callback) => {
       console.log("Error getting directory information.")
     } else {
       files.forEach(function(file) {
-        if(file !== '.DS_Store') {
+        if(file.endsWith('.zcz') || file.endsWith('.aes')) {
           console.log(file)
           const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${file}`)
           stat.fileName = file
@@ -53,6 +54,28 @@ const uploadAes = (firmwareName) => {
     .catch(e => fs.emptyDirSync(`${homedir}/mks/configurator/tmp`))
 }
 
+const downloadAes2 = (firmwareName, callback) => {
+  fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
+  fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
+
+  const aesSourceFolder = firmwareName.replace('.tar.gz.aes', '')
+  // copy aes folder to downloads
+  fs.copySync(
+    `${homedir}/mks/configurator/unpacked/${firmwareName}`,
+    `${homedir}/mks/configurator/downloads/${aesSourceFolder}`)
+  // copy configurations from Permanent to Temporary
+  fs.copySync(
+    `${homedir}/mks/configurator/downloads/${aesSourceFolder}/Configs/Permanent`,
+    `${homedir}/mks/configurator/downloads/${aesSourceFolder}/Configs/Temporary`)
+  aesService.packageAes(`${homedir}/mks/configurator/downloads/${aesSourceFolder}`,
+    () => {
+      fs.removeSync(`${homedir}/mks/configurator/downloads/${aesSourceFolder}.tar.gz`)
+      fs.removeSync(`${homedir}/mks/configurator/downloads/${aesSourceFolder}`)
+      if(typeof callback === 'function')
+        callback()
+    })
+}
+
 const downloadAes = (firmwareName) => {
   // TODO: add timestamp
   const FIRMWARE_NAME_ZIP = firmwareName.replace('.aes', '')
@@ -62,7 +85,6 @@ const downloadAes = (firmwareName) => {
   ZIP_FILE = ZIP_FILE.replace('.zip.aes', '.zip')
   let UNZIPPED_FILE = ZIP_FILE.replace('.zip', '')
 
-  // jga
   // decrypt AES file and unzip
   decryptAndUnzipAes(firmwareName)
 
@@ -119,7 +141,7 @@ const downloadFirmware = (firmware) => {
 
   fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
   fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
-  fs.emptyDirSync(`${homedir}/mks/configurator/uploads`)
+  // fs.emptyDirSync(`${homedir}/mks/configurator/uploads`)
 
   utils.untar(
     `${homedir}/mks/configurator/firmwares/${firmware}`,
@@ -156,14 +178,24 @@ const repackageZczFile = (firmware) =>
 const unpackZczFile = (firmware) =>
   utils.unpackZczFile2(`${homedir}/mks/configurator`, firmware)
 
+const unpackAesFile = (firmwareFileName) => {
+  aesService.unpackAes(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
+}
+
+const packAesFile = () => {}
+
 module.exports = {
   readDetailedFirmwareList,
   readFirmwareList,
   downloadFirmware,
   uploadFirmware,
+  downloadAes2,
   downloadAes,
   uploadAes,
 
   unpackZczFile,
-  repackageZczFile
+  repackageZczFile,
+
+  unpackAesFile,
+  packAesFile,
 }
