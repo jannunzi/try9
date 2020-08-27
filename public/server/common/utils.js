@@ -163,7 +163,7 @@ const untar2 = (sourceFile, targetDirectory) => {
             fs.moveSync(`${targetDirectory}1/${last}`, `${parent}/${last}`)
             fs.removeSync(`${targetDirectory}1`)
         }
-    })
+    }).catch(e => {})
 }
 
 const tarNgzip = (workingFolder, folderToTar, targetTarFile) => {
@@ -254,6 +254,13 @@ const unpackZczFile = (configuratorBasePath, zczFileName) => {
       })
 }
 
+const myGunzip = (source, destination, callback) => {
+    if(fs.existsSync(source) && fs.existsSync(destination))
+        gunzip(source, destination, callback)
+    else
+        callback()
+}
+
 // DO NOT USE
 // unpackZczFile(
 //   '/Users/jannunzi/mks/configurator',
@@ -302,7 +309,9 @@ const unpackZczFile2 = (configuratorBasePath, zczFileName) => {
                       /* gunzip Schema.tar.gz to Schema.tar, e.g.,
                        * unpacked/XYZ.zcz/Schema.tar.gz --> unpacked/XYZ.zcz/Schema.tar
                        */
-                      gunzip(
+
+                      // jga
+                      myGunzip(
                         `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar.gz`,
                         `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`,
                         () => {

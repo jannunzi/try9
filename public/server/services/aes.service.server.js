@@ -18,8 +18,6 @@ const openSslDecrypt = (inputFile, outputFile, callback) => {
 }
 
 const packageAes = (sourceFolderPath, callback) => {
-  fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
-  fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
 
   const sourceParentDirectory = sourceFolderPath.split('/').slice(0, -1).join('/')
   const sourceFolderName = sourceFolderPath.split('/').slice(-1)[0]
@@ -67,6 +65,13 @@ const unpackAes = (sourceAesFilePath) => {
         fs.renameSync(
           `${homedir}/mks/configurator/unpacked/${targetFolder}`,
           `${homedir}/mks/configurator/unpacked/${sourceFileName}`)
+
+        const now = Date.now()
+        const timeStampFile = `__IGNORE__${now}.txt`
+
+        fs.writeFileSync(`${homedir}/mks/configurator/unpacked/${sourceFileName}/Configs/Permanent/${timeStampFile}`, now)
+        fs.writeFileSync(`${homedir}/mks/configurator/unpacked/${sourceFileName}/Schemas/${timeStampFile}`, now)
+
       })
   )
 }

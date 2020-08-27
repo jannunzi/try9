@@ -109,7 +109,9 @@ const Help = () =>
 
     <h2>Editing Firmware Configurations</h2>
 
-    To edit firmware files from Novina Configurator follow these steps:
+    <p>
+      To edit firmware files from Novina Configurator follow these steps:
+    </p>
 
     <ol>
       <li>
@@ -121,9 +123,108 @@ const Help = () =>
         &nbsp;
         link on the left.
       </li>
+      <li>
+        Select a firmware from the dropdown on the top left.
+        The dropdown on the top right updates with the schemas
+        in the selected firmware.
+      </li>
+      <li>
+        Select a schema from the dropdown on the top right.
+        The configurations related to the selected firmware
+        and schema is loaded and a form is rendered below the dropdowns.
+      </li>
+      <li>
+        In the form below the dropdowns, update the configurations.
+        Click on the Save Changes button to make the changes permanent.
+      </li>
     </ol>
 
     <h2>Comparing Firmware Configurations and Schemas</h2>
+
+    <p>
+      To compare firmwares from Novina Configurator follow these steps:
+    </p>
+
+    <ol>
+      <li>
+        Navigate to
+        &nbsp;
+        <NavLink to={`/compare/configurations`} activeClassName={`active`}>
+          Compare
+        </NavLink>
+        &nbsp;
+        link on the left.
+      </li>
+      <li>
+        Select whether you want to compare Configurations or Schemas
+        by selecting the corresponding tab
+      </li>
+      <li>
+        Select two firmwares to compare from the top left and right dropdowns
+      </li>
+      <li>
+        Click on the Compare button on the top right.
+        A list of configuration or schemas files are listed below the
+        selected firmwares.
+      </li>
+      <li>
+        Files that are present in one of the firmwares, but missing in the
+        other firmware, are highlighted as green and red. Green for present
+        and red for missing.
+      </li>
+      <li>
+        Files that are different between the selected firmwares are
+        highlighted as blue. Select the highlighted file to display the differences
+      </li>
+      <li>
+        Differences between selected files are shown on the right of the screen.
+        Values that been removed are highlighted red.
+        New values are highlighted green.
+        Values that have changed are highlighted blue.
+      </li>
+    </ol>
+
+    <h2>OpenSSL</h2>
+
+    <p>
+      Novina Configurator needs OpenSSL installed on your computer.
+      Use the steps below for your corresponding operating system.
+    </p>
+
+    <h3>Installing OpenSSL on Windows</h3>
+
+    On windows, download the &nbsp;
+
+    <a href="/windows/Win64OpenSSL_Light-1_1_1g.msi">
+      Win64 OpenSSL v1.1.1g
+    </a>
+
+    &nbsp; OpenSSL Windows installer.
+    Run the installer following the instructions
+
+    <h3>Installing OpenSSL on MacOS</h3>
+
+    On MacOS, follow the steps below to install OpenSSL
+
+    <ol>
+      <li>
+        Press <code>Command+Space</code> and type <code>Terminal</code> and press enter/return key.
+      </li>
+      <li>
+        Run in Terminal app:
+        <pre>
+          ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &lt; /dev/null 2&gt; /dev/null
+            </pre>
+        and press enter/return key. Enter your password if the screen prompts for a password.
+        Wait for the command to finish.
+      </li>
+      <li>
+        Run:
+        <pre>
+          brew install openssl
+        </pre>
+      </li>
+    </ol>
   </div>
 
 export default Help

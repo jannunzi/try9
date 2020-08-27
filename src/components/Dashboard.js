@@ -6,6 +6,7 @@ import Firmwares from "./Firmwares";
 import logo from "../images/mks-logo.png"
 import ConfigurationFormEditorWrapper from "./ConfigurationFormEditorWrapper";
 import Help from "./Help";
+import SchemaManager from "./schemas/SchemaManager";
 
 export default class Dashboard extends React.Component {
   render() {
@@ -60,7 +61,7 @@ export default class Dashboard extends React.Component {
                 </li>
                 <li>
                   <NavLink to={`/configurations`} activeClassName={`active`}>
-                    Configurations
+                    Configuration
                   </NavLink>
                 </li>
                 <li>
@@ -79,9 +80,13 @@ export default class Dashboard extends React.Component {
               </ul>
             </div>
             <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main height-100pc">
-              <Route path={`/firmwares`} exact={true} component={Firmwares}/>
+              <Route path={[`/firmwares`, `/firmwares/:fileName`]}
+                     exact={true}
+                     component={Firmwares}/>
               <Route path="/configurations" exact={true}
                      component={ConfigurationFormEditorWrapper}/>
+              <Route path="/schemas" exact={true}
+                     component={SchemaManager}/>
               <Route path="/configurations/:firmware/:configuration" exact={true}
                      render={() => <ConfigurationFormEditorWrapper {...this.props}/>}/>
               <Route path="/help" exact={true} component={Help}/>

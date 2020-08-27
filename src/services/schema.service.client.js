@@ -12,6 +12,11 @@ export const fetchSchemaFileContent = (firmware, schemaFile) =>
     fetch(`${API_BASE_URL}/api/firmwares/${firmware}/schemas/${schemaFile}`)
         .then(response => response.json())
 
+export const deleteSchemaFile = (firmware, schema) =>
+  fetch(`${API_BASE_URL}/api/firmwares/${firmware}/schemas/${schema}`, {
+      method: 'DELETE'
+  })
+
 export default {
-    fetchSchemaFiles, fetchSchemaFileContent
+    deleteSchemaFile, fetchSchemaFiles, fetchSchemaFileContent
 }

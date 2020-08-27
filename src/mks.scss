@@ -52,3 +52,58 @@ button[type='submit'] {
   border-color: #51a0f7;
   color: white;
 }
+
+.mks-position-relative-bottom-5px {
+  position: relative;
+  bottom: 5px;
+}
+
+.mks-position-relative-bottom-3px {
+  position: relative;
+  bottom: 3px;
+}
+
+.mks-position-absolute-right-15px {
+  position: absolute;
+  right: 15px;
+}
+
+.mks-bottom-5px {
+  bottom: 5px;
+}
+
+.mks-cursor-pointer {
+  cursor: pointer;
+}
+
+.mks-padding-bottom-2px {
+  padding-bottom: 2px;
+}
+
+.list-group-item.active,
+.list-group-item.active:focus,
+.list-group-item.active:hover,
+a.list-group-item-info.active,
+a.list-group-item-info.active:focus,
+a.list-group-item-info.active:hover,
+button.list-group-item-info.active,
+button.list-group-item-info.active:focus,
+button.list-group-item-info.active:hover {
+  color: black;
+  background-color: lightblue;
+  border-color: lightblue;
+}
+
+.list-group-item.mks-active,
+.list-group-item.mks-active:focus,
+.list-group-item.mks-active:hover,
+a.list-group-item-info.mks-active,
+a.list-group-item-info.mks-active:focus,
+a.list-group-item-info.mks-active:hover,
+button.list-group-item-info.mks-active,
+button.list-group-item-info.mks-active:focus,
+button.list-group-item-info.mks-active:hover {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #428bca;
+}

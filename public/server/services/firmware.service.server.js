@@ -2,6 +2,14 @@ const fs = require('fs-extra')
 const homedir = require('os').homedir()
 const utils = require('../common/utils')
 const aesService = require('../services/aes.service.server')
+const jsonDiff = require('json-diff')
+
+const {
+  CONFIGURATOR_PATH,
+  UNPACKED_PATH,
+  FIRMWARE_PATH,
+  CONFIGS_PATH,
+  SCHEMAS_PATH} = require('../common/paths')
 
 const readFirmwareList = () =>
   fs.readdirSync(`${homedir}/mks/configurator/uploads`)
@@ -9,15 +17,32 @@ const readFirmwareList = () =>
 
 const readDetailedFirmwareList = (callback) => {
   let details = []
-  fs.readdir(`${homedir}/mks/configurator/uploads`, function(err, files) {
+  fs.readdir(`${homedir}/mks/configurator/uploads`, function(err, firmwareFileNames) {
     if (err) {
       console.log("Error getting directory information.")
     } else {
-      files.forEach(function(file) {
-        if(file.endsWith('.zcz') || file.endsWith('.aes')) {
-          console.log(file)
-          const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${file}`)
-          stat.fileName = file
+      firmwareFileNames.forEach(function(firmwareFileName) {
+        if(firmwareFileName.endsWith('.zcz') || firmwareFileName.endsWith('.aes')) {
+          const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
+          stat.fileName = firmwareFileName
+          let configurationFileNames = [], schemaFileNames = []
+          try {
+            configurationFileNames = fs.readdirSync(CONFIGS_PATH(firmwareFileName))
+              .filter(configurationFileName => configurationFileName.endsWith('.json'))
+              .sort((a, b) => a > b)
+          } catch (e) {
+            // ignore
+          }
+          try {
+            schemaFileNames = fs.readdirSync(SCHEMAS_PATH(firmwareFileName))
+              .filter(schemaFileName => schemaFileName.endsWith('.json'))
+              .sort((a, b) => a > b)
+          } catch (e) {
+            // ignore
+          }
+          stat.configurations = configurationFileNames
+          stat.schemas = schemaFileNames
+          stat.differences = jsonDiff.diff(configurationFileNames, schemaFileNames)
           details.push(stat)
         }
       })

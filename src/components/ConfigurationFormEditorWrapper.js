@@ -44,7 +44,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                 return schemaService.fetchSchemaFiles(firmwares[0])
             })
             .then(_schemas => {
-                schemas = _schemas
+              schemas = _schemas
 
               if(this.props.history) {
                 this.props.history.push(`/configurations/${firmwares[0]}/${schemas[0].file}`)
@@ -152,13 +152,21 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                             this.state.configuration && this.state.schema &&
                             <div>
                                 {
-                                  this.state.configuration !== null && this.state.schema !== null &&
+                                  this.state.schemas && this.state.schemas.length > 0 && this.state.configuration !== null && this.state.schema !== null &&
                                   <ConfigurationFormEditor
                                     uiSchema={this.state.uiSchema}
                                     onSubmit={this.onSubmit}
                                     schema={this.state.schema}
                                     configuration={this.state.configuration}/>
                                 }
+                              {
+                                this.state.schemas.length === 0 &&
+                                  <div className="alert alert-danger">
+                                    This firmware does not have any schemas associated.
+                                    Upload schema files to edit configuration files.
+                                    NOTE: Configuration files are assumed
+                                  </div>
+                              }
                             </div>
                         }
                     </div>
