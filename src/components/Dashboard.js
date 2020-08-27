@@ -61,7 +61,7 @@ export default class Dashboard extends React.Component {
                 </li>
                 <li>
                   <NavLink to={`/configurations`} activeClassName={`active`}>
-                    Configuration
+                    Edit Configurations
                   </NavLink>
                 </li>
                 <li>
