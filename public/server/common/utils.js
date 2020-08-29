@@ -9,6 +9,7 @@ var unzipper = require('unzipper')
 const gunzip = require('gunzip-file')
 const tar = require('tar')
 const openssl = require('openssl-nodejs')
+const glob = require("glob")
 
 const UNTAR = "tar -xzf SOURCE_FILE -C TARGET_DIRECTORY"
 const TAR   = "tar -czf TARGET_FILE -C SOURCE_DIRECTORY ."
@@ -21,6 +22,14 @@ const UNZIP = `unzip  INPUT_FILE  -d OUTPUT_FILE`
 
 const jsonDiff = require('json-diff')
 const homedir = require('os').homedir();
+
+const {TMP_PATH, DOWNLOADS_PATH, UPLOAD_PATH} = require('./paths');
+
+const cleanFolders = () => {
+    fs.emptyDirSync(TMP_PATH);
+    fs.emptyDirSync(DOWNLOADS_PATH);
+    fs.emptyDirSync(UPLOAD_PATH);
+}
 
 const execShellCommand = (cmd, callback)  => {
     return new Promise((resolve, reject) => {
@@ -123,22 +132,6 @@ const zipAesFile = (inputFolder, outputZipFile) => {
       .then(content => fs.writeFileSync(outputZipFile, content))
 }
 
-// const zip = (inputFolder, outputFile) => {
-    // return jszip
-    //   .folder(inputFolder).generateAsync({type: "nodebuffer"})
-    //   .then(content => fs.writeFileSync(outputFile, content))
-    //
-    //
-    // let CMD = ZIP
-    //   .replace('INPUT_FOLDER', inputFolder)
-    //   .replace('OUTPUT_ZIP', outputFile)
-    //
-    // console.log('ZIP')
-    // console.log(CMD)
-    //
-    // return execShellCommand(CMD)
-// }
-
 const copyFilesRecursively = (source, target) =>
   copy(source, target, {overwrite: true})
 
@@ -180,22 +173,6 @@ const untar = (sourceFile, targetDirectory) => {
     return fs.createReadStream(sourceFile)
           .pipe(tarFs.extract(targetDirectory))
 }
-
-// const tar = (sourceDirectory, targetFile) => {
-//     // console.log('TAR')
-//     // console.log(sourceDirectory)
-//     // console.log(targetFile)
-//     // const tar = TAR
-//     //   .replace("SOURCE_DIRECTORY", sourceDirectory)
-//     //   .replace("TARGET_FILE", targetFile)
-//     // console.log(tar)
-//     // console.log('===============')
-//     // exec(tar)
-//
-//     tarFs
-//       .pack(sourceDirectory)
-//       .pipe(fs.createWriteStream(targetFile))
-// }
 
 const createDirectory = (dir) => {
     if (!fs.existsSync(dir)){
@@ -268,14 +245,10 @@ const myGunzip = (source, destination, callback) => {
 
 // USE THIS INSTEAD - unpacks to unpackaed/Configs, Schemas
 const unpackZczFile2 = (configuratorBasePath, zczFileName) => {
-    console.log(`Expanding ZCZ File ${configuratorBasePath}/uploads/${zczFileName}`)
     // cleanup, remove old content
     // TODO: make this a reusable function?
     fs.emptyDirSync(`${configuratorBasePath}/downloads`)
     fs.emptyDirSync(`${configuratorBasePath}/tmp`)
-
-    // fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}`)
-    // fs.ensureDir(`${configuratorBasePath}/unpacked/${zczFileName}`)
 
     /* gunzip uploaded zcz file to a tar file in tmp
      * uploads/XYZ.zcz --> tmp/XYZ.zcz.tar
@@ -484,22 +457,34 @@ const schemasDir = firmware =>
     `${homedir}/mks/configurator/unpacked/${firmware}/Schema` :
     `${homedir}/mks/configurator/unpacked/${firmware}/Schemas`
 
+const writeTimestampFile = (folder, baseFileName) => {
+    const now = Date.now()
+    const timeStampFile = `${baseFileName}${now}.txt`
 
-// WORK IN PROGRESS
-// unpackAesFile1(
-//   '/Users/jannunzi/mks/configurator',
-//   'EDGE-50R40Z-E13_0348765_20200813_074435_UploadFiles.aes'
-// )
+    try {
+        fs.writeFileSync(`${folder}/${timeStampFile}`, now)
+    } catch (e) {
+        // ignore
+    }
+}
 
-// unpackZczFile2(
-//   '/Users/jannunzi/mks/configurator',
-//   'INv1692.90.1473_Fixtures_400kHz.zcz')
-
-// repackageZczFile(
-//   '/Users/jannunzi/mks/configurator',
-//   'INv1692.90.1473_Fixtures_400kHz.zcz')
+const removeTimestampFiles = (folder) => {
+    try {
+        glob(`${folder}/__IGNORE__*`, (er, files) => {
+            files.forEach(file => {
+                fs.removeSync(file)
+            })
+        })
+    } catch (e) {
+        // ignore
+    }
+}
 
 module.exports = {
+    removeTimestampFiles,
+    writeTimestampFile,
+    cleanFolders,
+
     openSslEncrypt,
     openSslDecrypt,
     // zip,

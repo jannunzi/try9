@@ -6,6 +6,7 @@ const path = require('path')
 // const upload = multer({ dest: 'uploads/' })
 const homedir = require('os').homedir();
 const settingsService = require('./services/settings.service.server')
+const util = require('./common/utils');
 
 if(!settingsService.settingsAlreadyExist()) {
    settingsService.createConfiguratorFolderStructure()

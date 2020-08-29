@@ -45,31 +45,44 @@ module.exports = (app, upload) => {
     const fetchSchemaFilesWithContent = (req, res) => {
         const firmware = req.params.firmware
         const path = utils.schemasDir(firmware)
-        fs.stat(`${path}`, (err, newStats) => {
-            console.log(newStats)
-            // if files in directory have changed, recreate schema array
-            const oldStats = firmwareStats[req.params.firmware]
-            if(!oldStats || oldStats && oldStats.mtime !== newStats.mtime) {
-                let schemas = []
-                const schemaFiles = fs.readdirSync(`${path}`)
-                  .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined')
-                schemaFiles.forEach(schemaFile => {
-                    const schemaFileContent = fs.readFileSync(`${path}/${schemaFile}`).toString()
-                    const schemaFileContentJson = JSON.parse(schemaFileContent)
-                    // console.log(schemaFileContentJson)
-                    const title = schemaFileContentJson.title
-                    const schema = {
-                        title: title,
-                        file: schemaFile,
-                        firmware: req.params.firmware,
-                        content: schemaFileContentJson
+        if(fs.existsSync(path)) {
+            fs.stat(`${path}`, (err, newStats) => {
+                // if files in directory have changed, recreate schema array
+                const oldStats = firmwareStats[req.params.firmware]
+                if(!oldStats || oldStats && oldStats.mtime !== newStats.mtime) {
+                    let schemas = []
+                    let schemaFiles = []
+                    try {
+                        schemaFiles = fs.readdirSync(`${path}`)
+                          .filter(schema =>
+                            typeof constants.SCHEMA_IGNORE[schema] === 'undefined' && schema !== '.DS_Store')
+                        schemaFiles.forEach(schemaFile => {
+                            const schemaFileContent = fs.readFileSync(`${path}/${schemaFile}`).toString()
+                            let schemaFileContentJson = {}
+                            try {
+                                schemaFileContentJson = JSON.parse(schemaFileContent)
+                            } catch (e) {
+
+                            }
+                            const title = schemaFileContentJson.title
+                            const schema = {
+                                title: title,
+                                file: schemaFile,
+                                firmware: req.params.firmware,
+                                content: schemaFileContentJson
+                            }
+                            schemas.push(schema)
+                        })
+                    } catch (e) {
+
                     }
-                    schemas.push(schema)
-                })
-                firmwareStats[req.params.firmware] = schemas
-            }
-            res.send(firmwareStats[req.params.firmware])
-        })
+                    firmwareStats[req.params.firmware] = schemas
+                }
+                res.send(firmwareStats[req.params.firmware])
+            })
+        } else {
+            res.json([])
+        }
     }
     const fetchSchemaFileContent = (req, res) =>
         refParser.dereference(`${utils.schemasDir(req.params.firmware)}/${req.params.schema}`)
@@ -86,6 +99,11 @@ module.exports = (app, upload) => {
                   `${UPLOAD_PATH}/${schemaFileName}`,
                   `${SCHEMAS_PATH(firmware)}/${schemaFileName}`)
             })
+            utils.cleanFolders()
+
+            utils.removeTimestampFiles(`${SCHEMAS_PATH(req.params.firmware)}`)
+            utils.writeTimestampFile(`${SCHEMAS_PATH(req.params.firmware)}`, '__IGNORE__')
+
             res.sendStatus(200)
         })
     }

@@ -111,47 +111,15 @@ export default class Firmwares extends React.Component {
   packageFirmware = (firmwareName) =>
     firmwareService.packageFirmware(firmwareName)
       .then((response) => {
-        setTimeout(() => this.downloadLinks[firmwareName].click(), 3000)
+        setTimeout(() => {
+          this.downloadLinks[firmwareName].click()
+        }, 3000)
       })
       .catch(e => console.log(e))
 
   render() {
     return (
       <div>
-        <input
-          className="btn btn-primary pull-right mks-invisible"
-          type="file"
-          title="Add Firmware"
-          multiple
-          ref={input => {
-            this.addFirmwareBtn = input
-          }}
-          encType="multipart/form-data"
-          onChange={this.uploadFirmwareFile}
-        />
-
-        <input
-          className="btn btn-primary pull-right mks-invisible"
-          type="file"
-          title="Add Schema"
-          multiple
-          ref={input => {
-            this.addSchemaBtn = input
-          }}
-          encType="multipart/form-data"
-          onChange={this.uploadSchemaFile}
-        />
-
-        <ul className="nav nav-tabs">
-          <li className={`active`}>
-            <NavLink to={`/compare/configurations`}>
-              Firmwares
-            </NavLink>
-          </li>
-        </ul>
-
-        <br/>
-
         <div className="row">
           <div className="col-xs-6">
             <div className="list-group">
@@ -162,27 +130,32 @@ export default class Firmwares extends React.Component {
               </a>
               {this.state.firmwares &&
               this.state.firmwares.map(firmware =>
-
-                <NavLink to={`/firmwares/${firmware.fileName}`}
-                         key={firmware.fileName}
-                         className={`list-group-item
-                          ${firmware.fileName === this.state.selectedFirmware.fileName ?
-                           'list-group-item-info' : ''}`}>
-                  <div className="row">
-                    <div className="col-xs-7">
-                      {firmware.fileName}
+                <span key={firmware.fileName}>
+                  <NavLink to={`/firmwares/${firmware.fileName}`}
+                           className={`list-group-item
+                            ${firmware.fileName === this.state.selectedFirmware.fileName ?
+                             'list-group-item-info' : ''}`}>
+                    <div className="row">
+                      <div className="col-xs-7">
+                        {firmware.fileName}
+                      </div>
+                      <div className="col-xs-3">
+                        {Moment(firmware.birthtime).format('MM/DD/YYYY HH:mm:SS')}
+                      </div>
+                      <div className="col-xs-2">
+                        <i onClick={() => this.deleteFirmware(firmware.fileName)}
+                           className="mks-cursor-pointer fa fa-trash pull-right mks-color-red"/>
+                        <i onClick={() => this.packageFirmware(firmware.fileName)}
+                           className="mks-cursor-pointer fa fa-download pull-right mks-color-green"/>
+                      </div>
                     </div>
-                    <div className="col-xs-3">
-                      {Moment(firmware.birthtime).format('MM/DD/YYYY HH:mm:SS')}
-                    </div>
-                    <div className="col-xs-2">
-                      <i onClick={() => this.deleteFirmware(firmware.fileName)}
-                         className="mks-cursor-pointer fa fa-trash pull-right mks-color-red"/>
-                      <i onClick={() => this.packageFirmware(firmware.fileName)}
-                         className="mks-cursor-pointer fa fa-download pull-right mks-color-green"/>
-                    </div>
-                  </div>
-                </NavLink>
+                  </NavLink>
+                  <a className="pull-right mks-margin-left-5px mks-invisible"
+                     ref={link => {this.downloadLinks[firmware.fileName] = link}}
+                     href={`${API_BASE_URL}/api/firmwares/${firmware.fileName}`}>
+                    Download
+                  </a>
+                </span>
               )
               }
             </div>
@@ -227,6 +200,30 @@ export default class Firmwares extends React.Component {
             </ul>
           </div>
         </div>
+        <input
+          className="btn btn-primary pull-right mks-invisible"
+          type="file"
+          title="Add Firmware"
+          multiple
+          ref={input => {
+            this.addFirmwareBtn = input
+          }}
+          encType="multipart/form-data"
+          onChange={this.uploadFirmwareFile}
+        />
+
+        <input
+          className="btn btn-primary pull-right mks-invisible"
+          type="file"
+          title="Add Schema"
+          multiple
+          ref={input => {
+            this.addSchemaBtn = input
+          }}
+          encType="multipart/form-data"
+          onChange={this.uploadSchemaFile}
+        />
+
       </div>
     )
   }

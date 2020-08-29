@@ -2,6 +2,9 @@ const fs = require('fs-extra')
 const homedir = require('os').homedir()
 const utils = require('../common/utils')
 const gunzip = require('gunzip-file')
+const openSslService = require('./openssl.service.server')
+const zipService = require('./zip.service.server')
+const {TMP_PATH, CONFIGS_PATH, SCHEMAS_PATH, PERMANENT_PATH} = require('../common/paths')
 
 // TODO: move all constants to a single file
 const openSslEncryptionCmd = (inputFile, outputFile) => `openssl aes-256-cbc    -salt -md md5 -k n0v1n@ -in ${inputFile} -out ${outputFile}`
@@ -76,6 +79,36 @@ const unpackAes = (sourceAesFilePath) => {
   )
 }
 
+const unpackAes2 = (inputFilePath, outputFolder) => {
+  const inputFilePathParts = inputFilePath.split('/')
+  const inputFileName = inputFilePathParts[inputFilePathParts.length - 1]
+  openSslService.openSslDecrypt(
+    inputFilePath, `${TMP_PATH}/__tmp.zip`)
+  zipService.unzip(
+    `${TMP_PATH}/__tmp.zip`,
+    outputFolder,
+    () => {
+
+      const permanent = `${CONFIGS_PATH(inputFileName)}`
+      utils.removeTimestampFiles(permanent)
+      utils.removeTimestampFiles(`${SCHEMAS_PATH(inputFileName)}`)
+
+      utils.writeTimestampFile(`${CONFIGS_PATH(inputFileName)}`, '__IGNORE__')
+      utils.writeTimestampFile(`${SCHEMAS_PATH(inputFileName)}`, '__IGNORE__')
+
+      fs.removeSync(`${TMP_PATH}/__tmp.zip`)
+    })
+}
+
+const packAes2 = (inputFolder, outputFile) => {
+  zipService.zip(inputFolder, `${homedir}/mks/configurator/tmp/__tmp.zip`)
+    .then(() => {
+      openSslService.openSslEncrypt(`${homedir}/mks/configurator/tmp/__tmp.zip`, outputFile)
+      fs.removeSync(`${homedir}/mks/configurator/tmp/__tmp.zip`)
+    })
+}
+
 module.exports = {
-  unpackAes, packageAes
+  unpackAes, packageAes,
+  unpackAes2, packAes2
 }

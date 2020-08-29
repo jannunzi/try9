@@ -83,22 +83,19 @@ const downloadAes2 = (firmwareName, callback) => {
   fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
   fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
 
-  const aesSourceFolder = firmwareName.replace('.tar.gz.aes', '')
   // copy aes folder to downloads
   fs.copySync(
     `${homedir}/mks/configurator/unpacked/${firmwareName}`,
-    `${homedir}/mks/configurator/downloads/${aesSourceFolder}`)
+    `${homedir}/mks/configurator/tmp/${firmwareName}`)
   // copy configurations from Permanent to Temporary
   fs.copySync(
-    `${homedir}/mks/configurator/downloads/${aesSourceFolder}/Configs/Permanent`,
-    `${homedir}/mks/configurator/downloads/${aesSourceFolder}/Configs/Temporary`)
-  aesService.packageAes(`${homedir}/mks/configurator/downloads/${aesSourceFolder}`,
-    () => {
-      fs.removeSync(`${homedir}/mks/configurator/downloads/${aesSourceFolder}.tar.gz`)
-      fs.removeSync(`${homedir}/mks/configurator/downloads/${aesSourceFolder}`)
-      if(typeof callback === 'function')
-        callback()
-    })
+    `${homedir}/mks/configurator/tmp/${firmwareName}/Configs/Permanent`,
+    `${homedir}/mks/configurator/tmp/${firmwareName}/Configs/Temporary`)
+  aesService.packAes2(
+    `${homedir}/mks/configurator/tmp/${firmwareName}`,
+    `${homedir}/mks/configurator/downloads/${firmwareName}`)
+  if(typeof callback === 'function')
+    callback()
 }
 
 const downloadAes = (firmwareName) => {
@@ -204,10 +201,15 @@ const unpackZczFile = (firmware) =>
   utils.unpackZczFile2(`${homedir}/mks/configurator`, firmware)
 
 const unpackAesFile = (firmwareFileName) => {
-  aesService.unpackAes(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
+  aesService.unpackAes2(
+    `${homedir}/mks/configurator/uploads/${firmwareFileName}`,
+    `${homedir}/mks/configurator/unpacked/${firmwareFileName}`)
 }
 
-const packAesFile = () => {}
+const packAesFile = (firmwareFileName) => {
+  aesService.packAes2(`${homedir}/mks/configurator/unpacked/${firmwareFileName}`,
+    `${homedir}/mks/configurator/downloads/${firmwareFileName}`)
+}
 
 module.exports = {
   readDetailedFirmwareList,

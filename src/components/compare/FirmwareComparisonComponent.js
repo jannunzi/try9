@@ -302,6 +302,11 @@ export default class FirmwareComparisonComponent extends React.Component {
               Schemas
             </NavLink>
           </li>
+          {/*<li className={`${this.props.match.params.what === 'schemas' ? 'active' : ''}`}>*/}
+          {/*  <NavLink to={`/compare/folders`}>*/}
+          {/*    Folders*/}
+          {/*  </NavLink>*/}
+          {/*</li>*/}
         </ul>
         <br/>
         <div className="row">

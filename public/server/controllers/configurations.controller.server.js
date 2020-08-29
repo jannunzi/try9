@@ -86,10 +86,6 @@ module.exports = (app, upload) => {
         const configuration = req.params.configuration
         const newConfigurationFileContent = JSON.stringify(req.body, null, 2)
 
-        console.log(firmware)
-        console.log(configuration)
-        console.log(newConfigurationFileContent)
-
         fs.writeFileSync(`${utils.configurationsDirectory(firmware)}/${configuration}`, newConfigurationFileContent)
 
         res.send(200)
