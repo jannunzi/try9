@@ -54,8 +54,8 @@ module.exports = (app) => {
   }
 
   const compareJsons = (req, res) => {
-    const json1 = req.body.json1
-    const json2 = req.body.json2
+    const json1 = req.body.json1.filter(json => json != ".DS_Store")
+    const json2 = req.body.json2.filter(json => json != ".DS_Store")
     const difference = jsonDiff.diff(json1, json2) || []
     res.json(difference)
   }

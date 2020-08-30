@@ -107,3 +107,37 @@ button.list-group-item-info.mks-active:hover {
   background-color: #428bca;
   border-color: #428bca;
 }
+
+.mks-position-absolute-top-right-15px {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+
+/* color blind */
+
+.list-group-item-success {
+  color: black;
+  background-color: #1aff1a;
+}
+
+.list-group-item-danger {
+  color: white;
+  background-color: #dc3220;
+}
+
+.list-group-item-info {
+  color: white;
+  background-color: #1a85ff;
+}
+
+
+.list-group-item-info.mks-selected {
+  color: white;
+  background-color: #005ab5;
+}
+
+.mks-color-black {
+  color: black;
+}

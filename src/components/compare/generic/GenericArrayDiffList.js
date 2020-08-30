@@ -22,6 +22,18 @@ export default class GenericArrayDiffList extends React.Component {
               <i className="fa fa-file-text"/>
               &nbsp;
               {diff[1]}
+              {
+                diff[0] === "~" &&
+                <i className="fa fa-binoculars mks-position-absolute-top-right-15px"/>
+              }
+              {
+                diff[0] === "+" &&
+                <i className="fa fa-remove mks-position-absolute-top-right-15px"/>
+              }
+              {
+                diff[0] === "-" &&
+                <i className="fa fa-check mks-position-absolute-top-right-15px"/>
+              }
             </li>
           )
         }
@@ -42,6 +54,18 @@ export default class GenericArrayDiffList extends React.Component {
               <i className="fa fa-file-text"/>
               &nbsp;
               {diff[1]}
+              {
+                diff[0] === "~" &&
+                <i className="fa fa-binoculars mks-position-absolute-top-right-15px"/>
+              }
+              {
+                diff[0] === "+" &&
+                <i className="fa fa-check mks-position-absolute-top-right-15px"/>
+              }
+              {
+                diff[0] === "-" &&
+                <i className="fa fa-remove mks-position-absolute-top-right-15px"/>
+              }
             </li>
           )
         }

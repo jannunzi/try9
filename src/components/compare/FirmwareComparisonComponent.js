@@ -1,16 +1,10 @@
 import React from "react";
-import {Link, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import {fetchAllFirmwares, compareFirmwares, compareJsons} from "../../services/firmware.service.client";
-import {fetchSchemaFileContent, fetchSchemaFilesWithContent} from "../../services/schema.service.client";
-import {fetchConfigurationFiles, fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
+import {fetchSchemaFilesWithContent} from "../../services/schema.service.client";
+import {fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
 import StringArraySelectComponent from "../StringArraySelectComponent";
-import StringArrayDivListGroupComponent from "../StringArrayDivListGroupComponent";
-import _ from "underscore"
-import JsonDiffViewer from "./JsonDiffViewer";
-import ReactJson from "react-json-view";
-// import GenericJsonDiffViewer from "./GenericJsonDiffViewer";
 import diff from './diff'
-import test from './test'
 import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
 import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
@@ -62,6 +56,12 @@ export default class FirmwareComparisonComponent extends React.Component {
           // nextState[leftOrRight].schemaFiles.sort((a, b) => a.file > b.file)
           nextState[leftOrRight].firmware = firmware
           nextState[leftOrRight].index = firmwareIndex
+          nextState.configurationFilesDiffs = []
+          nextState.schemaFilesDiffs = []
+          nextState.diff = null
+          nextState.selectedJsonFile = null
+          // jga
+
           return nextState
         })
       })
@@ -85,7 +85,6 @@ export default class FirmwareComparisonComponent extends React.Component {
   //
   //[2,4,6,8] ==> [0,2,0,4,0,6,8]
   //[1,3,5]   ==> [1,0,3,0,5,0,0]
-
 
   compare = () => {
     this.compareSchemas()
@@ -251,9 +250,7 @@ export default class FirmwareComparisonComponent extends React.Component {
   // }
 
   onSelectItem = (selected, what) => {
-
-    console.log(selected, what)
-
+    // jga
     this.state.firmwareLeft[what].forEach(schemaFile => {
       if(schemaFile.file === selected) {
         if(schemaFile.diff) {
@@ -383,6 +380,44 @@ export default class FirmwareComparisonComponent extends React.Component {
               </div>
             }
           </div>
+          {
+            this.state.configurationFilesDiffs &&
+            this.state.configurationFilesDiffs.length > 0 &&
+            this.state.selectedJsonFile === null &&
+            <div className="col-xs-6">
+              <div className="alert alert-info">
+                Select files labeled <i className="fa fa-binoculars"/> on the left to compare them
+              </div>
+            </div>
+          }
+          {
+            this.state.firmwareLeft.index == this.state.firmwareRight.index &&
+            <div className="col-xs-12">
+              <div className="alert alert-info">
+                Please choose two different choices from the dropdowns above
+              </div>
+            </div>
+          }
+          {/*{this.state.firmwareLeft.index}*/}
+          {/*{this.state.firmwareRight.index}*/}
+          {/*{this.state.configurationFilesDiffs.length}*/}
+          {
+            this.state.firmwareLeft.index != this.state.firmwareRight.index &&
+            this.state.configurationFilesDiffs.length === 0 &&
+            <div className="col-xs-12">
+              <div className="alert alert-info">
+                Click on
+                &nbsp;
+                <button
+                  onClick={this.compare}
+                  className="btn btn-primary btn-sm">
+                  Compare
+                </button>
+                &nbsp;
+                to compare
+              </div>
+            </div>
+          }
         </div>
       </div>
     )

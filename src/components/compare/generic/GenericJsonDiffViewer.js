@@ -1,5 +1,4 @@
 import React from "react";
-import DeletedAddedChangedLabels from "../DeletedAddedChangedLabels";
 
 export default class GenericJsonDiffViewer extends React.Component {
   state = {
@@ -25,7 +24,8 @@ export default class GenericJsonDiffViewer extends React.Component {
   render() {
     return(
       <div>
-        {
+        {/*{typeof this.props.diff}*/}
+        { /* jga */
           this.props.diff && this.typeOf(this.props.diff) === "object" &&
           <div>
             {"{"}
@@ -57,14 +57,14 @@ export default class GenericJsonDiffViewer extends React.Component {
                           <div className="col-xs-4">
                             <b>{key}</b>:
                           </div>
-                          <div className="col-xs-4 mks-color-red">
+                          <div className="col-xs-4 mks-color-white">
                             <i className="fa fa-remove"/>
                             &nbsp;
                             <span className="mks-text-decoration-overline">
                             { this.props.diff[key]["__old"].toString()}
                             </span>
                           </div>
-                          <div className="col-xs-4 mks-color-green">
+                          <div className="col-xs-4 mks-color-white">
                             <i className="fa fa-plus"/>
                             &nbsp;
                             {this.props.diff[key]["__new"].toString()}
@@ -76,12 +76,18 @@ export default class GenericJsonDiffViewer extends React.Component {
                     return (
                       <li key={key} className="list-group-item">
                         <div onClick={() => this.toggle(key)}
-                             className="mks-pointer-cursor mks-margin-bottom-10px">
-                          <b>{key}</b>:
+                             className="mks-pointer-cursor mks-margin-bottom-10px mks-color-black">
+                          <b>{key}</b>: &nbsp;
+                          {
+                            (this.typeOf(this.props.diff[key]) === "boolean" || this.typeOf(this.props.diff[key]) === "string" || this.typeOf(this.props.diff[key]) === "number") &&
+                            <span>{JSON.stringify(this.props.diff[key])}</span>
+                          }
                         </div>
                         {
-                          (typeof this.state.show[key] === "undefined" || this.state.show[key] === true) &&
+                          (this.typeOf(this.props.diff[key]) !== "boolean" && this.typeOf(this.props.diff[key]) !== "string" && this.typeOf(this.props.diff[key]) !== "number") &&
+                            <span>
                           <GenericJsonDiffViewer diff={this.props.diff[key]}/>
+                          </span>
                         }
                       </li>)
                   }
@@ -101,28 +107,38 @@ export default class GenericJsonDiffViewer extends React.Component {
                     if(item[0] === "+") {
                       return (
                         <li key={index} className="list-group-item list-group-item-success">
-                          <i className="fa fa-plus"/>
-                          &nbsp;
-                          <b>{item[1]}</b>
-                          <span className="pull-right">
-                            {/*<i className="fa fa-copy"/>*/}
-                            {/*<i className="fa fa-edit"/>*/}
-                          </span>
+                          {
+                            typeof item[1] === "object" &&
+                            <GenericJsonDiffViewer diff={item[1]}/>
+                          }
+                          {
+                            typeof item[1] !== "object" &&
+                            <span>
+                            <i className="fa fa-plus"/>
+                                &nbsp;
+                                <b>{item[1]}</b>
+                            </span>
+                          }
                         </li>
                       )
                     }
                     if(item[0] === "-") {
                       return (
-                        <li key={index} className="list-group-item list-group-item-danger">
-                          <i className="fa fa-remove"/>
-                          &nbsp;
-                          <span className="mks-text-decoration-overline">
-                            <b>{item[1]}</b>
-                          </span>
-                          <span className="pull-right">
-                            {/*<i className="fa fa-copy"/>*/}
-                            {/*<i className="fa fa-edit"/>*/}
-                          </span>
+                        <li key={index} className="list-group-item list-group-item-danger mks-color-white">
+                          {
+                            typeof item[1] === "object" &&
+                            <GenericJsonDiffViewer diff={item[1]}/>
+                          }
+                          {
+                            typeof item[1] !== "object" &&
+                            <span>
+                              <i className="fa fa-remove"/>
+                              &nbsp;
+                              <span className="mks-text-decoration-overline">
+                                <b>{typeof item[1]}</b>
+                              </span>
+                            </span>
+                          }
                         </li>
                       )
                     }
