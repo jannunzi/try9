@@ -125,7 +125,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                 <br/>
                 <div className="row">
                     <div className="col-xs-6">
-                        Select firmware
+                        Select file
                         <select
                             value={this.state.firmwareFile}
                             onChange={(e) => this.fetchSchemasForFirmware(e.target.value)}
@@ -134,7 +134,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                         </select>
                     </div>
                     <div className="col-xs-6">
-                        Select configuration for selected firmware
+                        Select configuration for selected file
                         <select
                             value={this.state.schemaFile}
                             onChange={(e) => this.fetchSchemaAndConfiguration(e.target.value)}

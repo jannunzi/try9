@@ -96,9 +96,13 @@ module.exports = (app, upload) => {
             {
                 const firmware = req.params.firmware
                 const schemaPath = SCHEMAS_PATH(firmware)
-                fs.moveSync(
-                  `${UPLOAD_PATH}/${schemaFileName}`,
-                  `${SCHEMAS_PATH(firmware)}/${schemaFileName}`)
+                try {
+                    fs.moveSync(
+                      `${UPLOAD_PATH}/${schemaFileName}`,
+                      `${SCHEMAS_PATH(firmware)}/${schemaFileName}`)
+                } catch (e) {
+                    // ignore
+                }
             })
             utils.cleanFolders()
 

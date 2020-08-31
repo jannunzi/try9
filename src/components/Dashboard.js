@@ -26,11 +26,11 @@ export default class Dashboard extends React.Component {
                 <img alt="" src={logo} className="mks-width-5em"/>
               </a>
             </div>
-            <div id="navbar" className="navbar-collapse collapse">
+            <div id="navbar" className="navbar-collapse collapse mks-invisible">
               <ul className="nav navbar-nav navbar-right">
                 <li>
                   <NavLink to={`/firmwares`} activeClassName={`active`}>
-                    Firmwares
+                    Add Configurations
                   </NavLink>
                 </li>
                 <li>
@@ -56,7 +56,7 @@ export default class Dashboard extends React.Component {
               <ul className="nav nav-sidebar">
                 <li>
                   <NavLink to={`/firmwares`} activeClassName={`active`}>
-                    Firmwares
+                    Add Configurations
                   </NavLink>
                 </li>
                 <li>
@@ -66,7 +66,7 @@ export default class Dashboard extends React.Component {
                 </li>
                 <li>
                   <NavLink to={`/compare/configurations`} activeClassName={`active`}>
-                    Compare
+                    Compare Configurations
                   </NavLink>
                 </li>
                 <li>

@@ -200,7 +200,8 @@ const Help = () =>
     </a>
 
     &nbsp; OpenSSL Windows installer.
-    Run the installer following the instructions
+    Run the installer following the instructions.
+    Add OpenSSL to your <code>PATH</code> environment variable.
 
     <h3>Installing OpenSSL on MacOS</h3>
 
