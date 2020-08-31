@@ -7,7 +7,6 @@ export default class StringArraySelectComponent extends React.Component {
   render() {
     return(
       <select
-        className="form-control"
         value={this.state.selectedIndex}
         onChange={(e) => {
           this.props.onChange(e)

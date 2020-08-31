@@ -142,6 +142,7 @@ export default class GenericJsonDiffViewer extends React.Component {
                         </li>
                       )
                     }
+                    return null
                 })
               }
             </ul>

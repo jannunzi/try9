@@ -1,6 +1,6 @@
 import React from "react";
 import '../styling/dashboard.css'
-import {BrowserRouter as Router, NavLink, Route} from "react-router-dom";
+import {NavLink, Route} from "react-router-dom";
 import FirmwareComparisonComponent from "./compare/FirmwareComparisonComponent";
 import Firmwares from "./Firmwares";
 import logo from "../images/mks-logo.png"
@@ -22,8 +22,8 @@ export default class Dashboard extends React.Component {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-brand" href="#">
-                <img src={logo} className="mks-width-5em"/>
+              <a className="navbar-brand" href="/">
+                <img alt="" src={logo} className="mks-width-5em"/>
               </a>
             </div>
             <div id="navbar" className="navbar-collapse collapse">

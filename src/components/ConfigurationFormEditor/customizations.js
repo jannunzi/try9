@@ -36,7 +36,7 @@ export const CustomDescriptionField = ({id, description}) => {
 };
 
 export const CustomFieldTemplate = (props) => {
-    const {id, classNames, label, help, required, description, errors, children} = props;
+    const {classNames, help, description, errors, children} = props;
     return (
         <div className={classNames}>
             {/*<label htmlFor={id}>{label}{required ? "*" : null}</label>*/}

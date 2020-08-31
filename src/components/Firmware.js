@@ -171,8 +171,8 @@ export default class Firmware extends React.Component {
                                     className="btn btn-success pull-right">Save
                                 </button>
                                 <ul className="nav nav-tabs">
-                                    <li className="active"><a href="#">JSON</a></li>
-                                    <li><a href="#">Form</a></li>
+                                    <li className="active"><a href="/">JSON</a></li>
+                                    <li><a href="/">Form</a></li>
                                 </ul>
                                 <br/>
                                 <JSONInput

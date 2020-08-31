@@ -87,6 +87,7 @@ module.exports = (app, upload) => {
     const fetchSchemaFileContent = (req, res) =>
         refParser.dereference(`${utils.schemasDir(req.params.firmware)}/${req.params.schema}`)
             .then(schema => res.status(200).json(schema))
+          // .catch((e) => res.json({}))
 
     const uploadSchema = (req, res) => {
         upload(req, res, function (err, ddd) {

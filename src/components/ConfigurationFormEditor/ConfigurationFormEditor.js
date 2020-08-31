@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "react-jsonschema-form";
 import $ from 'jquery'
-import {fields, widgets, ArrayFieldTemplate} from "./customizations";
+import {fields, widgets} from "./customizations";
 import './styles.css'
 import timbersController from "../../jQuery/timbersController";
 

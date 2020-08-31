@@ -4,7 +4,7 @@ import {fetchAllFirmwares, compareFirmwares, compareJsons} from "../../services/
 import {fetchSchemaFilesWithContent} from "../../services/schema.service.client";
 import {fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
 import StringArraySelectComponent from "../StringArraySelectComponent";
-import diff from './diff'
+// import diff from './diff'
 import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
 import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";

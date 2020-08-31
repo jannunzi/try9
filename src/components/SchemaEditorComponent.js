@@ -1,6 +1,4 @@
 import React from "react";
-import $ from 'jquery';
-import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './SchemaEditorComponent.css';
 import {API_BASE_URL} from "../config";
@@ -167,8 +165,12 @@ export default class Schema extends React.Component {
                 <div className="input-group mb-3">
                     <input value={this.state.newSchema.name}
                            onChange={(e) => {
-                               this.state.newSchema.name = e.target.value
-                               this.updateNewSchema(this.state.newSchema)
+                             this.setState({
+                               newSchema: {
+                                 name: e.target.value
+                               }
+                             })
+                             this.updateNewSchema(this.state.newSchema)
                            }}
                            placeholder="Name"
                            className="form-control"/>
