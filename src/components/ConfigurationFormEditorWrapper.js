@@ -4,6 +4,7 @@ import schemaService from '../services/schema.service.client'
 import configurationService, {fetchConfigurationFileContent, saveConfigurationFileContent} from '../services/configuration.service.client'
 import ConfigurationFormEditor from "./ConfigurationFormEditor/ConfigurationFormEditor";
 import ReactJson from "react-json-view";
+import {NavLink} from "react-router-dom";
 
 export default class ConfigurationFormEditorWrapper extends React.Component {
     state = {
@@ -84,7 +85,6 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                 return this.fetchSchemaAndConfiguration(this.state.schemaFile)
               }
               })
-
     fetchSchemaAndConfiguration = (schemaFile) => {
         let schema = {}
 
@@ -92,6 +92,12 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
         schemaService.fetchSchemaFileContent(this.state.firmwareFile, schemaFile)
             .then(_schema => {
                 schema = _schema
+
+              if(schema === null) {
+                schema = this.state.schemas.find(schema => !schema.title.startsWith('__IGNORE'))
+                this.fetchSchemaAndConfiguration(schema.file)
+                return Promise.reject('null schema')
+              }
 
                 // TODO: confirm configuration file has same name as schema file
                 // assume configuration file has same name as schema file
@@ -118,6 +124,9 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
         formData.formData
       )
     }
+    onLoadConfiguration = () => {
+      this.fetchSchemaAndConfiguration(this.state.schemaFile)
+    }
 
     render() {
         return(
@@ -125,7 +134,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                 <br/>
                 <div className="row">
                     <div className="col-xs-6">
-                        Select file
+                        Select file or folder
                         <select
                             value={this.state.firmwareFile}
                             onChange={(e) => this.fetchSchemasForFirmware(e.target.value)}
@@ -134,7 +143,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                         </select>
                     </div>
                     <div className="col-xs-6">
-                        Select configuration for selected file
+                        Select configuration for selected file or folder
                         <select
                             value={this.state.schemaFile}
                             onChange={(e) => this.fetchSchemaAndConfiguration(e.target.value)}
@@ -145,7 +154,11 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                               </option> )}
                         </select>
                     </div>
-                </div>
+                    {/*<div className="col-xs-2">*/}
+                    {/*  &nbsp;*/}
+                    {/*  <button onClick={this.onLoadConfiguration} className="btn btn-primary btn-block">Load Configuration</button>*/}
+                    {/*</div>*/}
+                  </div>
                 <div className="row position-absolute height-100pc left-0px top-85px right-0px bottom-0px">
                     <div className="col-xs-12 position-absolute top-0px bottom-0px">
                         {
@@ -162,9 +175,16 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                               {
                                 this.state.schemas.length === 0 &&
                                   <div className="alert alert-danger">
-                                    This firmware does not have any schemas associated.
-                                    Upload schema files to edit configuration files.
-                                    NOTE: Configuration files are assumed
+                                    This configuration file or folder does not have
+                                    schemas associated.
+                                    Please upload schema files to edit configuration files.
+                                    NOTE: Configuration files are assumed to have the same
+                                    name as their corresponding schema files
+                                    <br/>
+                                    <br/>
+                                    <NavLink className="btn btn-primary" to={`/firmwares/${this.state.firmwareFile}`}>
+                                      Upload Schema Files
+                                    </NavLink>
                                   </div>
                               }
                             </div>
