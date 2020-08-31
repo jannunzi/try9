@@ -1,5 +1,5 @@
 import React from "react";
-import {Link, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import {API_BASE_URL} from "../config";
 import firmwareService from '../services/firmware.service.client'
 import schemService from '../services/schema.service.client'
@@ -123,7 +123,7 @@ export default class Firmwares extends React.Component {
         <div className="row">
           <div className="col-xs-6">
             <div className="list-group">
-              <a className="list-group-item mks-active">
+              <a href="/firmwares" className="list-group-item mks-active">
                 Firmware
                 <i onClick={this.addFirmware}
                    className="mks-cursor-pointer fa fa-plus pull-right fa-2x mks-position-relative-bottom-3px"/>
@@ -156,8 +156,7 @@ export default class Firmwares extends React.Component {
                     Download
                   </a>
                 </span>
-              )
-              }
+              )}
             </div>
           </div>
           <div className="col-xs-6">
@@ -184,6 +183,8 @@ export default class Firmwares extends React.Component {
                       <div className="col-xs-6">
                         {difference[0] === " " && <span>{difference[1]}</span>}
                         {difference[0] === "-" && <span>{difference[1]}</span>}
+                        {difference[0] !== " " && difference[0] !== "-" &&
+                        <span className="mks-bold"><i className="fa fa-warning"/> NO CONFIGURATION</span>}
                       </div>
                       <div className="col-xs-6">
                         {difference[0] === " " && <span>{difference[1]}</span>}
@@ -193,6 +194,9 @@ export default class Firmwares extends React.Component {
                           <i onClick={() => this.deleteSchemaFile(this.state.selectedFirmware.fileName,
                             difference[1])} className="fa fa-trash mks-color-red pull-right mks-cursor-pointer"/>
                         }
+                        {difference[0] !== " " && difference[0] !== "+" &&
+                        <span className="mks-bold"><i className="fa fa-warning"/> NO SCHEMA</span>}
+
                       </div>
                     </div>
                   </li>)
