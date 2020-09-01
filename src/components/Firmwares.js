@@ -149,8 +149,9 @@ export default class Firmwares extends React.Component {
             <div className="list-group">
               <a className="list-group-item mks-active">
                 Configuration Files
-                <i onClick={this.addFirmware}
-                   className="mks-cursor-pointer fa fa-plus pull-right fa-2x mks-position-relative-bottom-3px"/>
+                <button className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
+                  Add Configuration
+                </button>
               </a>
               {this.state.firmwares &&
               this.state.firmwares.map(firmware =>
@@ -202,8 +203,9 @@ export default class Firmwares extends React.Component {
                   </div>
                   <div className="col-xs-6">
                     Schemas
-                    <i onClick={this.addSchema}
-                       className="mks-cursor-pointer fa fa-plus pull-right fa-2x mks-position-relative-bottom-3px"/>
+                    <button className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
+                      Add Schema
+                    </button>
                   </div>
                 </div>
               </li>

@@ -4,7 +4,6 @@ import {fetchAllFirmwares, compareFirmwares, compareJsons} from "../../services/
 import {fetchSchemaFilesWithContent} from "../../services/schema.service.client";
 import {fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
 import StringArraySelectComponent from "../StringArraySelectComponent";
-// import diff from './diff'
 import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
 import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
@@ -21,7 +20,8 @@ export default class FirmwareComparisonComponent extends React.Component {
     configurationFilesDiffs: [],
     schemaFilesDiffs: [],
     diff: null,
-    selectedJsonFile: null
+    selectedJsonFile: null,
+    contrast: this.props.contrast
   }
 
   componentDidMount() {
@@ -33,7 +33,13 @@ export default class FirmwareComparisonComponent extends React.Component {
       })
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {}
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(prevProps.contrast !== this.props.contrast) {
+      this.setState({
+        contrast: this.props.contrast
+      })
+    }
+  }
 
   // [5,10,15,20]
   // [  10,15   ] ==> [0,10,15,0]
@@ -45,22 +51,18 @@ export default class FirmwareComparisonComponent extends React.Component {
   // [  10,15,  25,30] ==> [0,15,10, 0,25,30]
 
   selectFirmware = (firmwareIndex, leftOrRight) => {
-    // console.log(firmwareIndex)
-    // console.log(leftOrRight)
     const firmware = this.state.firmwares[firmwareIndex]
     fetchSchemaFilesWithContent(firmware)
       .then(schemaFiles => {
         this.setState(prevState => {
           let nextState = {...prevState}
           nextState[leftOrRight].schemaFiles = schemaFiles
-          // nextState[leftOrRight].schemaFiles.sort((a, b) => a.file > b.file)
           nextState[leftOrRight].firmware = firmware
           nextState[leftOrRight].index = firmwareIndex
           nextState.configurationFilesDiffs = []
           nextState.schemaFilesDiffs = []
           nextState.diff = null
           nextState.selectedJsonFile = null
-          // jga
 
           return nextState
         })
@@ -93,7 +95,7 @@ export default class FirmwareComparisonComponent extends React.Component {
 
   compareConfigurations = () => {
 
-    const leftConfigurationFiles = this.state.firmwareLeft.configurationFiles.map(file => file.file)
+    const leftConfigurationFiles  = this.state.firmwareLeft.configurationFiles.map(file => file.file)
     const rightConfigurationFiles = this.state.firmwareRight.configurationFiles.map(file => file.file)
 
     compareJsons(
@@ -159,7 +161,7 @@ export default class FirmwareComparisonComponent extends React.Component {
 
   compareSchemas = () => {
 
-    const leftSchemaFiles = this.state.firmwareLeft.schemaFiles.map(file => file.file)
+    const leftSchemaFiles  = this.state.firmwareLeft.schemaFiles.map(file => file.file)
     const rightSchemaFiles = this.state.firmwareRight.schemaFiles.map(file => file.file)
 
     compareJsons(
@@ -211,67 +213,17 @@ export default class FirmwareComparisonComponent extends React.Component {
               return nextState
             })
           })
-
       })
   }
 
-  // compareSchemas = () => {
-  //
-  //   let schemaDiffArray = []
-  //   this.state.firmwareLeft.schemaFiles.forEach(schemaLeft => {
-  //     this.state.firmwareRight.schemaFiles.forEach(schemaRight => {
-  //       if (schemaLeft.file === schemaRight.file) {
-  //         schemaDiffArray.push(
-  //           compareFirmwares(
-  //             this.state.firmwareLeft.firmware,
-  //             this.state.firmwareRight.firmware,
-  //             schemaLeft.file,
-  //             schemaRight.file,
-  //             "schemas"
-  //           )
-  //         )
-  //       }
-  //     })
-  //   })
-  //
-  //   Promise.all(schemaDiffArray)
-  //     .then(results => {
-  //       this.setState(prevState => {
-  //         let nextState = {...prevState}
-  //
-  //         results.forEach((diff, index) => {
-  //           nextState.firmwareLeft.schemaFiles[index]['diff'] = diff
-  //           // debugger
-  //           nextState.firmwareLeft.schemaFiles[index]['selected'] = diff ? true : false
-  //         })
-  //         return nextState
-  //       })
-  //     })
-  // }
-
   onSelectItem = (selected, what) => {
-    // jga
     this.state.firmwareLeft[what].forEach(schemaFile => {
       if(schemaFile.file === selected) {
         if(schemaFile.diff) {
-            // this.setState({
-            //   diff: schemaFile.diff
-            // })
-
           this.setState(prevState => ({
             diff: schemaFile.diff,
             selectedJsonFile: selected
           }))
-          // this.setState(prevState => {
-          //   let nextState = {...prevState}
-          //   nextState = {
-          //     diff: schemaFile.diff.map(d => {
-          //       return d
-          //     })
-          //   }
-          //   return nextState
-          // })
-
         }
       }
     })
@@ -319,6 +271,7 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
                 side="left"
+                contrast={this.state.contrast}
                 selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.configurationFilesDiffs}/>
             }
@@ -327,6 +280,7 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "schemaFiles")}
                 side="left"
+                contrast={this.state.contrast}
                 selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.schemaFilesDiffs}/>
             }
@@ -344,6 +298,7 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
                 side="right"
+                contrast={this.state.contrast}
                 selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.configurationFilesDiffs}/>
             }
@@ -352,6 +307,7 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "schemaFiles")}
                 side="right"
+                contrast={this.state.contrast}
                 selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.schemaFilesDiffs}/>
             }
@@ -376,7 +332,9 @@ export default class FirmwareComparisonComponent extends React.Component {
                 {/*<br/>*/}
                 <DeletedAddedChangedLabels/>
 
-                <GenericJsonDiffViewer diff={this.state.diff}/>
+                <GenericJsonDiffViewer
+                  contrast={this.state.contrast}
+                  diff={this.state.diff}/>
               </div>
             }
           </div>

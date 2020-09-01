@@ -9,8 +9,18 @@ import Help from "./Help";
 import SchemaManager from "./schemas/SchemaManager";
 
 export default class Dashboard extends React.Component {
+  state = {
+    contrast: false
+  }
+
+  toggleContrast = () => {
+    this.setState(prevState => ({
+      contrast: !prevState.contrast
+    }))
+  }
+
   render() {
-    return(
+    return (
       <div className="height-100pc">
         <nav className="navbar navbar-inverse navbar-fixed-top">
           <div className="container-fluid">
@@ -74,26 +84,40 @@ export default class Dashboard extends React.Component {
                     Help
                   </NavLink>
                 </li>
-                {/*<li><a href="#">Settings</a></li>*/}
-                {/*<li><a href="#">Profile</a></li>*/}
-                {/*<li><a href="#">Help</a></li>*/}
+                <li>
+                  <a href="#">
+                    <span className="mks-position-relative-bottom-3px">
+                      <span className="mks-position-relative-bottom-10px">High Contrast</span>
+                      {
+                        this.state.contrast &&
+                        <i className="fa fa-toggle-on fa-3x mks-cursor-pointer mks-margin-left-5px"
+                           onClick={this.toggleContrast}/>
+                      }
+                      {
+                        !this.state.contrast &&
+                        <i className="fa fa-toggle-off fa-3x mks-cursor-pointer mks-margin-left-5px"
+                           onClick={this.toggleContrast}/>
+                      }
+                    </span>
+                  </a>
+                </li>
               </ul>
             </div>
             <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main height-100pc">
               <Route path={[`/firmwares`, `/firmwares/:fileName`]}
                      exact={true}
-                     component={Firmwares}/>
+                     render={(props) => <Firmwares contrast={this.state.contrast} {...props} contrast={this.state.contrast}/>}/>
               <Route path="/configurations" exact={true}
                      component={ConfigurationFormEditorWrapper}/>
               <Route path="/schemas" exact={true}
                      component={SchemaManager}/>
               <Route path="/configurations/:firmware/:configuration" exact={true}
-                     render={() => <ConfigurationFormEditorWrapper {...this.props}/>}/>
+                     render={(props) => <ConfigurationFormEditorWrapper {...props}/>}/>
               <Route path="/help" exact={true} component={Help}/>
               <Route
                 path={["/compare", "/compare/:what", "/compare/:what/:firmware1", "/compare/:what/:firmware1/:firmware2"]}
                 exact={true}
-                component={FirmwareComparisonComponent}/>
+                render={(props) => <FirmwareComparisonComponent {...props} contrast={this.state.contrast}/> }/>
             </div>
           </div>
         </div>

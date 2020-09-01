@@ -14,6 +14,7 @@ export default class GenericArrayDiffList extends React.Component {
             }}
               className={`
                   list-group-item mks-white-space-nowrap
+                   ${this.props.contrast ? "mks-color-blind" : ""}
                    ${diff[1] === this.props.selectedJsonFile ? "mks-selected" : ""}
                    ${diff[0] === "~" ? "list-group-item-info" : ""}
                    ${diff[0] === "-" ? "list-group-item-success" : ""}
@@ -46,6 +47,7 @@ export default class GenericArrayDiffList extends React.Component {
             }}
                 className={`
                   list-group-item mks-white-space-nowrap
+                   ${this.props.contrast ? "mks-color-blind" : ""}
                    ${diff[1] === this.props.selectedJsonFile ? "mks-selected" : ""}
                    ${diff[0] === "~" ? "list-group-item-info" : ""}
                    ${diff[0] === "+" ? "list-group-item-success" : ""}

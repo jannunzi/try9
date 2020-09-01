@@ -20,7 +20,9 @@ module.exports = (app, upload) => {
                 let schemaFiles = []
                 try {
                     schemaFiles = fs.readdirSync(`${path}`)
-                      .filter(schema => typeof constants.SCHEMA_IGNORE[schema] === 'undefined')
+                      .filter(schema => {
+                          return typeof constants.SCHEMA_IGNORE[schema] === 'undefined' && schema.endsWith('.json')
+                      })
                 } catch (e) {
                     res.json([])
                     return
