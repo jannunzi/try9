@@ -57,33 +57,20 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
             .then(() => this.setState({
                 firmwares, schemas
             }))
-
-        // fetchSchemaFileContent(this.state.firmwareFile, this.state.schemaFile)
-        //     .then(_schema => {
-        //         schema = _schema
-        //         return fetchConfigurationFileContent(this.state.firmwareFile, this.state.configurationFile)
-        //     })
-        //     .then(_configuration =>
-        //         this.setState({
-        //             schema: schema,
-        //             configuration: _configuration
-        //         })
-        //     )
     }
 
     fetchSchemasForFirmware = (firmwareFile) =>
         schemaService.fetchSchemaFiles(firmwareFile)
             .then(schemas => {
-              this.setState({firmwareFile, schemas})
-              if(this.state.schemaFile)
-              {
+                this.setState({firmwareFile, schemas})
+                if(schemas && schemas.length > 0 && this.state.schemaFile)
+                {
+                  if(this.props.history) {
+                    this.props.history.push(`/configurations/${firmwareFile}/${this.state.schemaFile}`)
+                  }
 
-                if(this.props.history) {
-                  this.props.history.push(`/configurations/${firmwareFile}/${this.state.schemaFile}`)
+                  return this.fetchSchemaAndConfiguration(this.state.schemaFile)
                 }
-
-                return this.fetchSchemaAndConfiguration(this.state.schemaFile)
-              }
               })
     fetchSchemaAndConfiguration = (schemaFile) => {
         let schema = {}

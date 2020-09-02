@@ -10,9 +10,13 @@ const {UPLOAD_PATH, FIRMWARE_PATH, SCHEMAS_PATH} = require('../common/paths')
 module.exports = (app, upload) => {
     const fetchSchemaFileNameArrayForFirmware = (req, res) => {
         const firmware = req.params.firmware
-        const path = utils.schemasDir(firmware)
+        const path = SCHEMAS_PATH(firmware)
         fs.stat(`${path}`, (err, newStats) => {
             console.log(newStats)
+            if(!newStats) {
+                res.json([])
+                return
+            }
             // if files in directory have changed, recreate schema array
             const oldStats = firmwareStats[req.params.firmware]
             if(!oldStats || oldStats && oldStats.mtime !== newStats.mtime) {

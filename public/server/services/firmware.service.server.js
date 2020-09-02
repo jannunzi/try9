@@ -2,6 +2,7 @@ const fs = require('fs-extra')
 const homedir = require('os').homedir()
 const utils = require('../common/utils')
 const aesService = require('../services/aes.service.server')
+const settingsService = require('../services/settings.service.server')
 const jsonDiff = require('json-diff')
 
 const {
@@ -16,12 +17,17 @@ const readFirmwareList = () =>
     .filter(file => file.endsWith('.zcz') || file.endsWith('.aes'))
 
 const readDetailedFirmwareList = (callback) => {
+  const settings = settingsService.loadSettings()
   let details = []
   fs.readdir(`${homedir}/mks/configurator/uploads`, function(err, firmwareFileNames) {
     if (err) {
       console.log("Error getting directory information.")
     } else {
       firmwareFileNames.forEach(function(firmwareFileName) {
+        const allowSchemaUpload =
+          (settings.firmwares[firmwareFileName] &&
+          settings.firmwares[firmwareFileName].allowSchemaUpload === true) ||
+          false
         if(firmwareFileName.endsWith('.zcz') || firmwareFileName.endsWith('.aes')) {
           const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
           stat.fileName = firmwareFileName
@@ -43,9 +49,17 @@ const readDetailedFirmwareList = (callback) => {
           stat.configurations = configurationFileNames
           stat.schemas = schemaFileNames
           stat.differences = jsonDiff.diff(configurationFileNames, schemaFileNames)
+          stat.allowSchemaUpload = allowSchemaUpload
+
+          if(stat.schemas.length === 0) {
+            settings.firmwares[firmwareFileName] = {}
+            settings.firmwares[firmwareFileName].allowSchemaUpload = true
+            stat.allowSchemaUpload = true
+          }
           details.push(stat)
         }
       })
+      settingsService.saveSettings(settings)
       callback(details)
     }
   })

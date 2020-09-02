@@ -7,6 +7,7 @@ import StringArraySelectComponent from "../StringArraySelectComponent";
 import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
 import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
+import ToggleSwitch from "../widgets/ToggleSwitch";
 
 export default class FirmwareComparisonComponent extends React.Component {
 
@@ -237,9 +238,14 @@ export default class FirmwareComparisonComponent extends React.Component {
       <div>
         <button
           onClick={this.compare}
-          className="btn btn-primary pull-right">
+          className="btn btn-primary pull-right mks-margin-left-15px">
           Compare
         </button>
+        <span className="pull-right">
+        <ToggleSwitch leftLabel="High Contrast" callback={(contrast) => this.setState({
+          contrast: contrast
+        })}/>
+        </span>
         <ul className="nav nav-tabs">
           <li className={`${this.props.match.params.what === 'configurations' ? 'active' : ''}`}>
             <NavLink to={`/compare/configurations`}>
@@ -344,7 +350,7 @@ export default class FirmwareComparisonComponent extends React.Component {
             this.state.selectedJsonFile === null &&
             <div className="col-xs-6">
               <div className="alert alert-info">
-                Select files labeled <i className="fa fa-binoculars"/> on the left to compare them
+                Select files labeled <i className="fa fa-eye"/> on the left to compare them
               </div>
             </div>
           }

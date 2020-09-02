@@ -12,7 +12,8 @@ export default class Firmwares extends React.Component {
     selectedFirmware: {
       fileName: ""
     },
-    uploadingSchemaFileName: ""
+    uploadingSchemaFileName: "",
+    uploads: []
   }
 
   downloadLinks = {}
@@ -63,9 +64,16 @@ export default class Firmwares extends React.Component {
     var fd = new FormData();
 
     const files = [...e.target.files]
+    const filesJson = JSON.stringify(files)
 
+    let ff = {}
     for (var x = 0; x < e.target.files.length; x++) {
       fd.append("config", files[x]);
+      const f = files[x]
+
+      for (let attribute in f) {
+        ff[attribute] = f[attribute];
+      }
     }
 
     this.setState(prevStatus => {
@@ -81,7 +89,8 @@ export default class Firmwares extends React.Component {
           fileName: ""
         },
         configurations: [],
-        schemas: []
+        schemas: [],
+        uploads: [ff]
       }
     })
 
@@ -145,11 +154,12 @@ export default class Firmwares extends React.Component {
     return (
       <div>
         <div className="row">
-          <div className="col-xs-6">
+          <div className="col-xs-8">
             <div className="list-group">
               <a className="list-group-item mks-active">
                 Configuration Files
-                <button className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
+                <button onClick={this.addFirmware}
+                        className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
                   Add Configuration
                 </button>
               </a>
@@ -194,18 +204,17 @@ export default class Firmwares extends React.Component {
               )}
             </div>
           </div>
-          <div className="col-xs-6">
+          <div className="col-xs-4">
             <ul className="list-group">
               <li className="list-group-item mks-active mks-padding-bottom-2px">
                 <div className="row">
-                  <div className="col-xs-6">
+                  <div className="col-xs-12">
                     Configurations
-                  </div>
-                  <div className="col-xs-6">
-                    Schemas
-                    <button className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
-                      Add Schema
-                    </button>
+                      <button onClick={this.addSchema}
+                              className={`${this.state.selectedFirmware.allowSchemaUpload !== true ? 'mks-invisible':''}
+                               btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px`}>
+                        Add Schema
+                      </button>
                   </div>
                 </div>
               </li>
@@ -217,36 +226,24 @@ export default class Firmwares extends React.Component {
                 </li>
               }
               {
-                this.state.selectedFirmware && this.state.selectedFirmware.differences &&
-                this.state.selectedFirmware.differences.map(difference =>
-                  <li key={difference[1]}
-                      className={`list-group-item ${difference[0] === "-" || difference[0] === "+" ?
-                        "list-group-item-info" : ""}`}>
-                    <div className="row">
-                      <div className="col-xs-6">
-                        {difference[0] === " " && <span>{difference[1]}</span>}
-                        {difference[0] === "-" && <span>{difference[1]}</span>}
-                        {difference[0] !== " " && difference[0] !== "-" &&
-                        <span className="mks-bold"><i className="fa fa-warning"/> NO CONFIGURATION</span>}
-                      </div>
-                      <div className="col-xs-6">
-                        {difference[0] === " " && <span>{difference[1]}</span>}
-                        {difference[0] === "+" && <span>{difference[1]}</span>}
-                        {
-                          (difference[0] === "+" || difference[0] === " ") &&
-                          <i onClick={() => this.deleteSchemaFile(this.state.selectedFirmware.fileName,
-                            difference[1])} className="fa fa-trash mks-color-red pull-right mks-cursor-pointer"/>
-                        }
-                        {difference[0] !== " " && difference[0] !== "+" &&
-                        <span className="mks-bold"><i className="fa fa-warning"/> NO SCHEMA</span>}
-
-                      </div>
-                    </div>
+                this.state.selectedFirmware.differences &&
+                this.state.selectedFirmware.differences.map((difference, index) =>
+                  (difference[0] !== "+" && <li className="list-group-item" key={index}>
+                    {
+                      difference[0] !== "+" &&
+                      <span>
+                        {difference[1]}
+                        {difference[0] !== "-" && this.state.selectedFirmware.allowSchemaUpload &&
+                        <i className="fa fa-check pull-right" onClick={this.addSchema}/>}
+                      </span>
+                    }
                   </li>)
+                )
               }
             </ul>
           </div>
         </div>
+
         <input
           className="btn btn-primary pull-right mks-invisible"
           type="file"

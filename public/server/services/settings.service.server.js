@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const homedir = require('os').homedir();
 const defaultSettings = require('./defaultSettings')
 
@@ -26,6 +26,11 @@ const createConfiguratorFolderStructure = () => {
 
   if(!fs.existsSync(`${homedir}/mks/configurator/`))
     fs.mkdirSync(`${homedir}/mks/configurator/`)
+
+  if(!fs.existsSync(`${homedir}/mks/configurator/settings.json`))
+    fs.writeFileSync(`${homedir}/mks/configurator/settings.json`, `{
+      "firmwares": {}
+    }`)
 
   configuratorFolders.forEach((folder) => {
     if(!fs.existsSync(`${homedir}/mks/configurator/${folder}`))

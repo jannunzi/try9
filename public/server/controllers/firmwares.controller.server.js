@@ -4,6 +4,7 @@ const fs = require('fs-extra')
 const utils = require('../common/utils')
 const homedir = require('os').homedir();
 const firmwareService = require('../services/firmware.service.server')
+const settingsService = require('../services/settings.service.server')
 
 module.exports = (app, upload) => {
 
@@ -28,6 +29,9 @@ module.exports = (app, upload) => {
         fs.removeSync(`${homedir}/mks/configurator/uploads/${firmwareName}`)
         fs.removeSync(`${homedir}/mks/configurator/unpacked/${firmwareName}`)
         utils.cleanFolders()
+        const settings = settingsService.loadSettings()
+        delete settings.firmwares[firmwareName]
+        settingsService.saveSettings(settings)
 
         res.sendStatus(200)
     })

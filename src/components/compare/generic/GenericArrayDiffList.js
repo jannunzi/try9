@@ -25,7 +25,7 @@ export default class GenericArrayDiffList extends React.Component {
               {diff[1]}
               {
                 diff[0] === "~" &&
-                <i className="fa fa-binoculars mks-position-absolute-top-right-15px"/>
+                <i className="fa fa-eye mks-position-absolute-top-right-15px"/>
               }
               {
                 diff[0] === "+" &&
@@ -58,7 +58,7 @@ export default class GenericArrayDiffList extends React.Component {
               {diff[1]}
               {
                 diff[0] === "~" &&
-                <i className="fa fa-binoculars mks-position-absolute-top-right-15px"/>
+                <i className="fa fa-eye mks-position-absolute-top-right-15px"/>
               }
               {
                 diff[0] === "+" &&
