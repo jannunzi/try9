@@ -48,7 +48,12 @@ module.exports = (app, upload) => {
         }
     })
 
-    app.post('/api/firmwares', upload, function (req, res, next) {
+    app.post('/api/folders', (req, res) => {
+        console.log(req.params.path)
+        res.send(req.params.path)
+    })
+
+    app.post('/api/firmwares', upload, (req, res, next) => {
         console.log('post firmware')
 
         // fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)

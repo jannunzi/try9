@@ -13,7 +13,8 @@ export default class Firmwares extends React.Component {
       fileName: ""
     },
     uploadingSchemaFileName: "",
-    uploads: []
+    uploads: [],
+    downloading: {}
   }
 
   downloadLinks = {}
@@ -141,14 +142,25 @@ export default class Firmwares extends React.Component {
         })
       })
 
-  packageFirmware = (firmwareName) =>
+  packageFirmware = (firmwareName) => {
+    this.setState(prevState => {
+      let nextState = {...prevState}
+      nextState.downloading[firmwareName] = true
+      return nextState
+    })
     firmwareService.packageFirmware(firmwareName)
       .then((response) => {
         setTimeout(() => {
+          this.setState(prevState => {
+            let nextState = {...prevState}
+            nextState.downloading[firmwareName] = false
+            return nextState
+          })
           this.downloadLinks[firmwareName].click()
         }, 3000)
       })
       .catch(e => console.log(e))
+  }
 
   render() {
     return (
@@ -159,8 +171,11 @@ export default class Firmwares extends React.Component {
               <a className="list-group-item mks-active">
                 Configuration Files
                 <button onClick={this.addFirmware}
-                        className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
-                  Add Configuration
+                        className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px mks-margin-left-5px">
+                  Add File
+                </button>
+                <button className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
+                  Add Folder
                 </button>
               </a>
               {this.state.firmwares &&
@@ -173,7 +188,7 @@ export default class Firmwares extends React.Component {
                              'list-group-item-info' : ''}`}>
                     <div className="row">
                       <div className="col-xs-7">
-                        {firmware.fileName}
+                        {firmware.fileName.replace(/:/g, '/')}
                       </div>
                       <div className="col-xs-3">
                         {Moment(firmware.birthtime).format('MM/DD/YYYY HH:mm:SS')}
@@ -186,6 +201,10 @@ export default class Firmwares extends React.Component {
                                className="mks-cursor-pointer fa fa-trash pull-right mks-color-red"/>
                             <i onClick={() => this.packageFirmware(firmware.fileName)}
                                className="mks-cursor-pointer fa fa-download pull-right mks-color-green"/>
+                            {
+                              this.state.downloading[firmware.fileName] &&
+                              <i className="fa fa-spin fa-spinner pull-right"/>
+                            }
                           </span>
                         }
                         {

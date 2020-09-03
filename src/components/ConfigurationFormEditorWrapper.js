@@ -126,7 +126,10 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                             value={this.state.firmwareFile}
                             onChange={(e) => this.fetchSchemasForFirmware(e.target.value)}
                             className="form-control">
-                            {this.state.firmwares.map(firmware => <option key={firmware}>{firmware}</option> )}
+                            {this.state.firmwares.map(firmware =>
+                              <option key={firmware} value={firmware}>
+                                {firmware.replace(/:/g, '/')}
+                              </option> )}
                         </select>
                     </div>
                     <div className="col-xs-6">

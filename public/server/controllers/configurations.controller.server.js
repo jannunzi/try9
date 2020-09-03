@@ -1,7 +1,7 @@
 const fs = require('fs')
-const utils = require('../common/utils')
 const constants = require('../common/constants')
 const homedir = require('os').homedir();
+const {CONFIGS_PATH, SCHEMAS_PATH} = require('../common/paths')
 
 const SCHEMA2CONFIG = {
     'driveControllerGenesis.json': 'Drive Controller',
@@ -21,14 +21,15 @@ module.exports = (app, upload) => {
 
     app.get('/api/firmwares/:firmware/configurations', function (req, res) {
         const firmware = req.params.firmware
-        fs.readdir(utils.configurationsDirectory(firmware), (err, configurationFiles) => {
+        const path = CONFIGS_PATH(firmware)
+        fs.readdir(path, (err, configurationFiles) => {
             res.send(configurationFiles)
         })
     })
 
     app.get('/api/firmwares/:firmware/configurations-with-content', function (req, res) {
         const firmware = req.params.firmware
-        const path = utils.configurationsDirectory(firmware)
+        const path = CONFIGS_PATH(firmware)
         let configurations = []
         const configurationFiles = fs.readdirSync(path)
           .filter(configuration => typeof constants.CONFIGURATION_IGNORE[configuration] === 'undefined')
@@ -60,7 +61,7 @@ module.exports = (app, upload) => {
     app.get('/api/firmwares/:firmware/configurations/:configuration', function (req, res) {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
-        const path = utils.configurationsDirectory(firmware)
+        const path = CONFIGS_PATH(firmware)
 
         let configurationFileContent = {}
         try {
@@ -75,8 +76,9 @@ module.exports = (app, upload) => {
     app.get('/api/firmwares/:firmware/schemas/:schema/configuration', function (req, res) {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
+        const path = CONFIGS_PATH(firmware)
 
-        const configurationFileContent = fs.readFileSync(`${utils.configurationsDirectory(firmware)}/${configuration}`).toString()
+        const configurationFileContent = fs.readFileSync(`${path}/${configuration}`).toString()
 
         res.send(configurationFileContent)
     })
@@ -85,8 +87,9 @@ module.exports = (app, upload) => {
         const firmware = req.params.firmware
         const configuration = req.params.configuration
         const newConfigurationFileContent = JSON.stringify(req.body, null, 2)
+        const path = CONFIGS_PATH(firmware)
 
-        fs.writeFileSync(`${utils.configurationsDirectory(firmware)}/${configuration}`, newConfigurationFileContent)
+        fs.writeFileSync(`${path}/${configuration}`, newConfigurationFileContent)
 
         res.send(200)
     })

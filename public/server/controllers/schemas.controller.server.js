@@ -50,7 +50,7 @@ module.exports = (app, upload) => {
     }
     const fetchSchemaFilesWithContent = (req, res) => {
         const firmware = req.params.firmware
-        const path = utils.schemasDir(firmware)
+        const path = SCHEMAS_PATH(firmware)
         if(fs.existsSync(path)) {
             fs.stat(`${path}`, (err, newStats) => {
                 // if files in directory have changed, recreate schema array
@@ -91,8 +91,10 @@ module.exports = (app, upload) => {
         }
     }
     const fetchSchemaFileContent = (req, res) => {
-        if(fs.existsSync(`${utils.schemasDir(req.params.firmware)}/${req.params.schema}`)) {
-            refParser.dereference(`${utils.schemasDir(req.params.firmware)}/${req.params.schema}`)
+        const path = SCHEMAS_PATH(req.params.firmware)
+
+        if(fs.existsSync(`${path}/${req.params.schema}`)) {
+            refParser.dereference(`${path}/${req.params.schema}`)
               .then(schema => res.status(200).json(schema))
         } else {
             res.json(null)

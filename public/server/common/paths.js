@@ -7,8 +7,24 @@ const UPLOAD_PATH = `${CONFIGURATOR_PATH}/upload`
 const UPLOADS_PATH = `${CONFIGURATOR_PATH}/uploads`
 const DOWNLOADS_PATH = `${CONFIGURATOR_PATH}/downloads`
 const FIRMWARE_PATH = (firmwareName) => `${UNPACKED_PATH}/${firmwareName}`
-const CONFIGS_PATH = (firmwareName) => `${FIRMWARE_PATH(firmwareName)}/${firmwareName.endsWith('zcz')?'Configs':'Configs/Permanent'}`
-const SCHEMAS_PATH = (firmwareName) => `${FIRMWARE_PATH(firmwareName)}/${firmwareName.endsWith('zcz')?'Schema':'Schemas'}`
+const CONFIGS_PATH = (firmwareName) => {
+  if(firmwareName.endsWith('zcz')) {
+    return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs`
+  } else if(firmwareName.endsWith('aes')) {
+    return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Permanent`
+  } else {
+    return firmwareName.replace(/:/g, '/')
+  }
+}
+const SCHEMAS_PATH = (firmwareName) => {
+  if(firmwareName.endsWith('zcz')) {
+    return `${homedir}/mks/configurator/unpacked/${firmwareName}/Schema`
+  } else if(firmwareName.endsWith('aes')) {
+    return `${homedir}/mks/configurator/unpacked/${firmwareName}/Schemas`
+  } else {
+    return `${homedir}/mks/configurator/unpacked/${firmwareName}/Schemas`//firmwareName.replace(/:/g, '/')
+  }
+}
 
 module.exports = {
   CONFIGURATOR_PATH,

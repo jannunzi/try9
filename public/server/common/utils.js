@@ -23,7 +23,7 @@ const UNZIP = `unzip  INPUT_FILE  -d OUTPUT_FILE`
 const jsonDiff = require('json-diff')
 const homedir = require('os').homedir();
 
-const {TMP_PATH, DOWNLOADS_PATH, UPLOAD_PATH} = require('./paths');
+const {TMP_PATH, DOWNLOADS_PATH, UPLOAD_PATH, UPLOADS_PATH, UNPACKED_PATH, FIRMWARE_PATH} = require('./paths');
 
 const cleanFolders = () => {
     fs.emptyDirSync(TMP_PATH);
@@ -253,40 +253,44 @@ const unpackZczFile2 = (configuratorBasePath, zczFileName) => {
     /* gunzip uploaded zcz file to a tar file in tmp
      * uploads/XYZ.zcz --> tmp/XYZ.zcz.tar
      */
+    const zczPath = `${UPLOADS_PATH}/${zczFileName}`
+    const tarPath = `${UPLOADS_PATH}/${zczFileName}.tar`
+    const unpackedFirmwarePath = `${FIRMWARE_PATH(zczFileName)}`
     gunzip(
-      `${configuratorBasePath}/uploads/${zczFileName}`,
-      `${configuratorBasePath}/tmp/${zczFileName}.tar`,
+      zczPath,
+      tarPath,
       () => {
           /* untar zcz file to a directory in tmp, e.g.,
            * tmp/XYZ.zcz.tar --> unpacked/image35-2
            * NOTE: "image35-2" is a token related to the product model
            */
           untar2(
-            `${configuratorBasePath}/tmp/${zczFileName}.tar`,
-            `${configuratorBasePath}/unpacked`)
+            tarPath,
+            UNPACKED_PATH)
             .then(() => {
                 /* rename unpacked zcz image35-2 to original zcz file name
                  * unpacked/image35-2 --> unpacked/XYZ.zcz
                  */
+                fs.removeSync(tarPath)
                 fs.renameSync(
-                  `${configuratorBasePath}/unpacked/image35-2`,
-                  `${configuratorBasePath}/unpacked/${zczFileName}`
+                  `${UNPACKED_PATH}/image35-2`,
+                  `${unpackedFirmwarePath}`
                 )
                 /* gunzip Configs.tar.gz to Configs.tar, e.g.,
                  * unpacked/XYZ.zcz/Configs.tar.gz --> unpacked/XYZ.zcz/Configs.tar
                  */
                 gunzip(
-                  `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar.gz`,
-                  `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar`,
+                  `${unpackedFirmwarePath}/Configs.tar.gz`,
+                  `${unpackedFirmwarePath}/Configs.tar`,
                   () => {
                       /* gunzip Schema.tar.gz to Schema.tar, e.g.,
                        * unpacked/XYZ.zcz/Schema.tar.gz --> unpacked/XYZ.zcz/Schema.tar
                        */
 
                       // jga
-                      myGunzip(
-                        `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar.gz`,
-                        `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`,
+                      gunzip(
+                        `${unpackedFirmwarePath}/Schema.tar.gz`,
+                        `${unpackedFirmwarePath}/Schema.tar`,
                         () => {
                             /* untar Configs.tar and Schema.tar to directories, e.g.,
                              * unpacked/XYZ.zcz/Configs.tar --> unpacked/XYZ.zcz/Configs
@@ -294,30 +298,30 @@ const unpackZczFile2 = (configuratorBasePath, zczFileName) => {
                              * [DONE] TODO: should be Schema (singular)
                              */
                             untar2(
-                              `${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar`,
-                              `${configuratorBasePath}/unpacked/${zczFileName}/Configs`).then(() =>
+                              `${unpackedFirmwarePath}/Configs.tar`,
+                              `${unpackedFirmwarePath}/Configs`).then(() =>
                               // untar Schema.tar to schemas directory
                               untar2(
-                                `${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`,
-                                `${configuratorBasePath}/unpacked/${zczFileName}/Schema`)).then(() => {
+                                `${unpackedFirmwarePath}/Schema.tar`,
+                                `${unpackedFirmwarePath}/Schema`)).then(() => {
 
-                                chmodSyncDir(`${configuratorBasePath}/unpacked/${zczFileName}/Configs`, '777')
-                                chmodSyncDir(`${configuratorBasePath}/unpacked/${zczFileName}/Schema`, '777')
+                                chmodSyncDir(`${unpackedFirmwarePath}/Configs`, '777')
+                                chmodSyncDir(`${unpackedFirmwarePath}/Schema`, '777')
                                 /* remove content in tmp
                                  * remove unpacked Configs.tar
                                  * remove unpacked Schema.tar
                                  * TODO: should I always remove these tar files especially when I repackage?
                                  */
-                                fs.emptyDirSync(`${configuratorBasePath}/tmp`)
-                                fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}/Configs.tar`)
-                                fs.removeSync(`${configuratorBasePath}/unpacked/${zczFileName}/Schema.tar`)
+                                fs.emptyDirSync(`${TMP_PATH}/tmp`)
+                                fs.removeSync(`${unpackedFirmwarePath}/Configs.tar`)
+                                fs.removeSync(`${unpackedFirmwarePath}/Schema.tar`)
                                 const now = Date.now()
                                 const timeStampFile = `__IGNORE__${now}.txt`
 
                                 // TODO: dont show these files in client
 
-                                fs.writeFileSync(`${configuratorBasePath}/unpacked/${zczFileName}/Configs/${timeStampFile}`, now)
-                                fs.writeFileSync(`${configuratorBasePath}/unpacked/${zczFileName}/Schema/${timeStampFile}`, now)
+                                fs.writeFileSync(`${unpackedFirmwarePath}/Configs/${timeStampFile}`, now)
+                                fs.writeFileSync(`${unpackedFirmwarePath}/Schema/${timeStampFile}`, now)
                             })
                         })
                   })

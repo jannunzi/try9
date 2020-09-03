@@ -14,7 +14,7 @@ const {
 
 const readFirmwareList = () =>
   fs.readdirSync(`${homedir}/mks/configurator/uploads`)
-    .filter(file => file.endsWith('.zcz') || file.endsWith('.aes'))
+    .filter(file => !file.startsWith('.'))
 
 const readDetailedFirmwareList = (callback) => {
   const settings = settingsService.loadSettings()
@@ -28,12 +28,13 @@ const readDetailedFirmwareList = (callback) => {
           (settings.firmwares[firmwareFileName] &&
           settings.firmwares[firmwareFileName].allowSchemaUpload === true) ||
           false
-        if(firmwareFileName.endsWith('.zcz') || firmwareFileName.endsWith('.aes')) {
+        if(!firmwareFileName.startsWith('.')) {
           const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
           stat.fileName = firmwareFileName
           let configurationFileNames = [], schemaFileNames = []
           try {
-            configurationFileNames = fs.readdirSync(CONFIGS_PATH(firmwareFileName))
+            const configPath = CONFIGS_PATH(firmwareFileName)
+            configurationFileNames = fs.readdirSync(configPath)
               .filter(configurationFileName => configurationFileName.endsWith('.json'))
               .sort((a, b) => a > b)
           } catch (e) {
