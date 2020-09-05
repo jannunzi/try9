@@ -27,7 +27,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
         configuration: ''
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         let schema = ''
 
         let firmwares = []
@@ -38,6 +38,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
             .then(_firmwares => {
                 firmwares = _firmwares
                 this.setState({
+                  firmwares,
                   firmwareFile: firmwares[0]
                 })
 
@@ -45,17 +46,25 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                 return schemaService.fetchSchemaFiles(firmwares[0])
             })
             .then(_schemas => {
-              schemas = _schemas
+              schemas = _schemas || []
 
-              if(this.props.history) {
-                this.props.history.push(`/configurations/${firmwares[0]}/${schemas[0].file}`)
-              }
+              this.setState({
+                schemas: schemas
+              })
 
+              if(schemas && schemas.length > 0 && this.props.history) {
+                // this.props.history.push(`/configurations/${firmwares[0]}/${schemas[0].file}`)
                 // fetch schema and configuration files for first schema file
                 return this.fetchSchemaAndConfiguration(schemas[0].file)
+              } else {
+                this.setState({
+                  schemas: []
+                })
+                return Promise.resolve([])
+              }
             })
-            .then(() => this.setState({
-                firmwares, schemas
+            .then((schemas) => this.setState({
+                schemas
             }))
     }
 
@@ -65,10 +74,6 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                 this.setState({firmwareFile, schemas})
                 if(schemas && schemas.length > 0 && this.state.schemaFile)
                 {
-                  if(this.props.history) {
-                    this.props.history.push(`/configurations/${firmwareFile}/${this.state.schemaFile}`)
-                  }
-
                   return this.fetchSchemaAndConfiguration(this.state.schemaFile)
                 }
               })
@@ -128,7 +133,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                             className="form-control">
                             {this.state.firmwares.map(firmware =>
                               <option key={firmware} value={firmware}>
-                                {firmware.replace(/:/g, '/')}
+                                {firmware.replace(/\+/g, '/')}
                               </option> )}
                         </select>
                     </div>
@@ -162,25 +167,27 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                                     schema={this.state.schema}
                                     configuration={this.state.configuration}/>
                                 }
-                              {
-                                this.state.schemas.length === 0 &&
-                                  <div className="alert alert-danger">
-                                    This configuration file or folder does not have
-                                    schemas associated.
-                                    Please upload schema files to edit configuration files.
-                                    NOTE: Configuration files are assumed to have the same
-                                    name as their corresponding schema files
-                                    <br/>
-                                    <br/>
-                                    <NavLink className="btn btn-primary" to={`/firmwares/${this.state.firmwareFile}`}>
-                                      Upload Schema Files
-                                    </NavLink>
-                                  </div>
-                              }
                             </div>
                         }
                     </div>
-                    {/*<div className="col-xs-4 position-absolute left-50pc top-0px bottom-0px overflow-scroll">*/}
+                    <div className="col-xs-12 position-absolute top-0px bottom-0px">
+                      {
+                        this.state.schemas.length === 0 &&
+                        <div className="alert alert-danger">
+                          This configuration file or folder does not have
+                          schemas associated.
+                          Please upload schema files to edit configuration files.
+                          NOTE: Configuration files are assumed to have the same
+                          name as their corresponding schema files
+                          <br/>
+                          <br/>
+                          <NavLink className="btn btn-primary" to={`/firmwares/${this.state.firmwareFile}`}>
+                            Upload Schema Files
+                          </NavLink>
+                        </div>
+                      }
+                    </div>
+                  {/*<div className="col-xs-4 position-absolute left-50pc top-0px bottom-0px overflow-scroll">*/}
                     {/*    <h2>*/}
                     {/*        Schema*/}
                     {/*        <button className="btn btn-warning pull-right">Edit</button>*/}
