@@ -20,7 +20,7 @@ export default class StringArraySelectComponent extends React.Component {
             <option
               value={index}
               key={index}>
-              {item}
+              {item.replace(/\+/g, '/')}
             </option>
           )
         }

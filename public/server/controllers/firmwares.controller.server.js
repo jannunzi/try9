@@ -1,4 +1,4 @@
-const {UPLOAD_PATH, FIRMWARE_PATH, SCHEMAS_PATH} = require('../common/paths')
+const {UPLOAD_PATH, FIRMWARE_PATH, SCHEMAS_PATH, UPLOADS_PATH, UNPACKED_PATH} = require('../common/paths')
 
 const fs = require('fs-extra')
 const utils = require('../common/utils')
@@ -48,16 +48,24 @@ module.exports = (app, upload) => {
         }
     })
 
-    app.post('/api/folders', (req, res) => {
-        console.log(req.params.path)
+    app.post('/api/folders/:path', (req, res) => {
+        const path = req.params.path
+
+        fs.ensureDirSync(`${UPLOADS_PATH}/TMP_FOLDER`)
+        fs.renameSync(
+          `${UPLOADS_PATH}/TMP_FOLDER`,
+          `${UPLOADS_PATH}/${path}`)
+
+        fs.ensureDirSync(`${UNPACKED_PATH}/TMP_FOLDER`)
+        fs.ensureDirSync(`${UNPACKED_PATH}/TMP_FOLDER/Schemas`)
+        fs.renameSync(
+          `${UNPACKED_PATH}/TMP_FOLDER`,
+          `${UNPACKED_PATH}/${path}`)
+
         res.send(req.params.path)
     })
 
     app.post('/api/firmwares', upload, (req, res, next) => {
-        console.log('post firmware')
-
-        // fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
-        // fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
 
         upload(req, res, function (err, ddd) {
             let firmwareName = 'UNDEFINED'

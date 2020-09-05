@@ -2,7 +2,7 @@ import React from "react";
 import {NavLink} from "react-router-dom";
 import {API_BASE_URL} from "../config";
 import firmwareService from '../services/firmware.service.client'
-import schemService from '../services/schema.service.client'
+import schemaService from '../services/schema.service.client'
 import Moment from 'moment'
 
 export default class Firmwares extends React.Component {
@@ -14,12 +14,14 @@ export default class Firmwares extends React.Component {
     },
     uploadingSchemaFileName: "",
     uploads: [],
-    downloading: {}
+    downloading: {},
+    schemas: []
   }
 
   downloadLinks = {}
   addFirmwareBtn = null
   addSchemaBtn = null
+  addFolderBtn = null
 
   componentDidMount() {
     this.fetchFirmwares()
@@ -36,30 +38,7 @@ export default class Firmwares extends React.Component {
 
   addFirmware = () => this.addFirmwareBtn.click()
   addSchema = () => this.addSchemaBtn.click()
-
-  deleteFirmware = (firmwareName) => {
-    fetch(`${API_BASE_URL}/api/firmwares/${firmwareName}`, {
-      method: 'DELETE'
-    })
-      .then(() => {
-        this.setState(prevState => {
-          return {
-            firmwares: prevState.firmwares.filter(firmware => firmware.fileName !== firmwareName),
-            selectedFirmware: {
-              fileName: ""
-            },
-            configurations: [],
-            schemas: []
-          }
-        })
-
-        this.props.history.push("/firmwares")
-      })
-  }
-  deleteSchemaFile = (firmware, schema) => {
-    schemService.deleteSchemaFile(firmware, schema)
-      .then(this.fetchFirmwares)
-  }
+  addFolder = () => this.addFolderBtn.click()
 
   uploadFirmwareFile = (e) => {
     var fd = new FormData();
@@ -126,6 +105,66 @@ export default class Firmwares extends React.Component {
       setTimeout(this.fetchFirmwares, 500)
     })
   }
+  uploadConfigurationFolder = (e) => {
+    const files = [...e.target.files]
+    let path = ""
+    for (var x = 0; x < e.target.files.length; x++) {
+      path = files[x].path
+    }
+
+    const pathParts = path.split('/')
+    path = pathParts.slice(0, -1).join('/')
+    path = path.replace(/\//g,'+')
+
+    this.setState(prevStatus => {
+      return {
+        firmwares: [
+          {
+            fileName: path,
+            uploading: true,
+          },
+          ...prevStatus.firmwares
+        ],
+        selectedFirmware: {
+          fileName: ""
+        },
+        configurations: [],
+        schemas: []
+      }
+    })
+
+    fetch(`${API_BASE_URL}/api/folders/${path}`, {
+      method: "POST",
+      // body: fd
+    }).then(response => {
+      setTimeout(() => {
+        this.fetchFirmwares()
+        this.setState({
+          uploadingSchemaFileName: false
+        })
+      }, 2000)
+    })
+  }
+
+  deleteFirmware = (firmwareName) => {
+    fetch(`${API_BASE_URL}/api/firmwares/${firmwareName}`, {
+      method: 'DELETE'
+    })
+      .then(() => {
+        this.setState(prevState => {
+          return {
+            firmwares: prevState.firmwares.filter(firmware => firmware.fileName !== firmwareName),
+            selectedFirmware: {
+              fileName: ""
+            },
+            configurations: [],
+            schemas: []
+          }
+        })
+
+        this.props.history.push("/firmwares")
+      })
+  }
 
   fetchFirmwares = () =>
     fetch(`${API_BASE_URL}/api/firmwares/details`)
@@ -142,20 +181,19 @@ export default class Firmwares extends React.Component {
         })
       })
 
-  packageFirmware = (firmwareName) => {
+  showDownloading = (firmwareName, downloading) =>
     this.setState(prevState => {
       let nextState = {...prevState}
-      nextState.downloading[firmwareName] = true
+      nextState.downloading[firmwareName] = downloading
       return nextState
     })
+
+  packageFirmware = (firmwareName) => {
+    this.showDownloading(firmwareName, true)
     firmwareService.packageFirmware(firmwareName)
       .then((response) => {
         setTimeout(() => {
-          this.setState(prevState => {
-            let nextState = {...prevState}
-            nextState.downloading[firmwareName] = false
-            return nextState
-          })
+          this.showDownloading(firmwareName, false)
           this.downloadLinks[firmwareName].click()
         }, 3000)
       })
@@ -174,7 +212,8 @@ export default class Firmwares extends React.Component {
                         className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px mks-margin-left-5px">
                   Add File
                 </button>
-                <button className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
+                <button onClick={this.addFolder}
+                        className="btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px">
                   Add Folder
                 </button>
               </a>
@@ -188,7 +227,7 @@ export default class Firmwares extends React.Component {
                              'list-group-item-info' : ''}`}>
                     <div className="row">
                       <div className="col-xs-7">
-                        {firmware.fileName.replace(/:/g, '/')}
+                        {firmware.fileName.replace(/\+/g, '/')}
                       </div>
                       <div className="col-xs-3">
                         {Moment(firmware.birthtime).format('MM/DD/YYYY HH:mm:SS')}
@@ -199,8 +238,11 @@ export default class Firmwares extends React.Component {
                           <span>
                             <i onClick={(e) => {e.preventDefault(); this.deleteFirmware(firmware.fileName)}}
                                className="mks-cursor-pointer fa fa-trash pull-right mks-color-red"/>
-                            <i onClick={() => this.packageFirmware(firmware.fileName)}
-                               className="mks-cursor-pointer fa fa-download pull-right mks-color-green"/>
+                            {
+                              firmware.fileName.indexOf('+') === -1 &&
+                              <i onClick={() => this.packageFirmware(firmware.fileName)}
+                                 className="mks-cursor-pointer fa fa-download pull-right mks-color-green"/>
+                            }
                             {
                               this.state.downloading[firmware.fileName] &&
                               <i className="fa fa-spin fa-spinner pull-right"/>
@@ -266,11 +308,25 @@ export default class Firmwares extends React.Component {
         <input
           className="btn btn-primary pull-right mks-invisible"
           type="file"
+          id="filepicker"
+          name="fileList"
+          webkitdirectory="true"
+          ref={input => {
+            this.addFolderBtn = input
+          }}
+          multiple
+          encType="multipart/form-data"
+          onChange={this.uploadConfigurationFolder}/>
+
+        <input
+          className="btn btn-primary pull-right mks-invisible"
+          type="file"
           title="Add Firmware"
           multiple
           ref={input => {
             this.addFirmwareBtn = input
           }}
+          accept=".aes,.zcz"
           encType="multipart/form-data"
           onChange={this.uploadFirmwareFile}
         />
@@ -279,6 +335,7 @@ export default class Firmwares extends React.Component {
           type="file"
           title="Add Schema"
           multiple
+          accept=".json"
           ref={input => {
             this.addSchemaBtn = input
           }}
