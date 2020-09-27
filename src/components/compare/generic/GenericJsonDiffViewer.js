@@ -88,13 +88,13 @@ export default class GenericJsonDiffViewer extends React.Component {
                             <i className="fa fa-remove"/>
                             &nbsp;
                             <span className="mks-text-decoration-overline">
-                            { this.props.diff[key]["__old"].toString()}
+                            { this.props.diff[key]["__old"] && this.props.diff[key]["__old"].toString()}
                             </span>
                           </div>
                           <div className="col-xs-4">
                             <i className="fa fa-plus"/>
                             &nbsp;
-                            {this.props.diff[key]["__new"].toString()}
+                            { this.props.diff[key]["__new"] && this.props.diff[key]["__new"].toString()}
                           </div>
                         </div>
                       </li>
@@ -177,7 +177,7 @@ export default class GenericJsonDiffViewer extends React.Component {
                               <i className="fa fa-remove"/>
                               &nbsp;
                               <span className="mks-text-decoration-overline">
-                                <b>{typeof item[1]}</b>
+                                <b>{typeof item[1]} !!!!</b>
                               </span>
                             </span>
                           }

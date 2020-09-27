@@ -1,6 +1,6 @@
 import React from "react";
 import '../styling/dashboard.css'
-import {NavLink, Route} from "react-router-dom";
+import {NavLink, Redirect, Route} from "react-router-dom";
 import FirmwareComparisonComponent from "./compare/FirmwareComparisonComponent";
 import Firmwares from "./Firmwares";
 import logo from "../images/mks-logo.png"
@@ -77,6 +77,10 @@ export default class Dashboard extends React.Component {
               </ul>
             </div>
             <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main height-100pc">
+              <Route path="/"
+                     exact={true}
+                     render={() => {
+                       return(<Redirect to="/firmwares"/>)}}/>
               <Route path={[`/firmwares`, `/firmwares/:fileName`]}
                      exact={true}
                      render={(props) => <Firmwares contrast={false} {...props}/>}/>

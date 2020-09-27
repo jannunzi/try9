@@ -8,6 +8,10 @@ import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
 import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
 import ToggleSwitch from "../widgets/ToggleSwitch";
+import diff1 from "./diff1"
+import diff2 from "./diff2"
+// import {Differ} from "./Differ";
+import {Tree} from "./Tree"
 
 export default class FirmwareComparisonComponent extends React.Component {
 
@@ -22,7 +26,9 @@ export default class FirmwareComparisonComponent extends React.Component {
     schemaFilesDiffs: [],
     diff: null,
     selectedJsonFile: null,
-    contrast: this.props.contrast
+    contrast: this.props.contrast,
+    diff1: diff1,
+    diff2: diff2
   }
 
   componentDidMount() {
@@ -134,7 +140,9 @@ export default class FirmwareComparisonComponent extends React.Component {
               results.forEach((diff, index) => {
                 if(diff && diff.fileName) {
                   const fileName = diff.fileName
+                  const diffString = diff.diffString
                   delete diff.fileName
+                  delete diff.diffString
 
                   nextState.configurationFilesDiffs =
                     nextState.configurationFilesDiffs.map(file => {
@@ -319,30 +327,16 @@ export default class FirmwareComparisonComponent extends React.Component {
             }
           </div>
           <div className="col-xs-6">
-
-            {/*<ul className="nav nav-pills">*/}
-            {/*  <li className="active">*/}
-            {/*    <a href="#">*/}
-            {/*      Difference*/}
-            {/*    </a>*/}
-            {/*  </li>*/}
-            {/*</ul>*/}
-            {/*<GenericJsonDiffViewer diff={this.state.diff}/>*/}
-            {/*<JsonDiffViewer diff={diff}/>*/}
-            {/*<JsonDiffViewer diff={this.state.diff}/>*/}
             {
               this.state.diff &&
               <div>
-                {/*<button className="btn btn-primary pull-right margin-left-15px">Merge Left</button>*/}
-                {/*<button className="btn btn-primary pull-right margin-left-15px">Merge Right</button>*/}
-                {/*<br/>*/}
                 <DeletedAddedChangedLabels/>
-
-                <GenericJsonDiffViewer
-                  contrast={this.state.contrast}
-                  diff={this.state.diff}/>
+                <Tree contrast={this.state.contrast}
+                      diff={this.state.diff}/>
               </div>
             }
+          </div>
+          <div className="col-xs-3">
           </div>
           {
             this.state.configurationFilesDiffs &&

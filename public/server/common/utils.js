@@ -335,6 +335,8 @@ const repackageZczFile = (configuratorBasePath, zczFileName) => {
     fs.emptyDirSync(`${configuratorBasePath}/tmp`)
     fs.emptyDirSync(`${configuratorBasePath}/downloads`)
 
+    const modifiedConfigsFileName = zczFileName.replace('.zcz', '_modified_configs.zcz')
+
     /* tar and gzip Configs and Schemas folders in unpacked ZCZ file into *.tar.gz files, e.g.,
      * unpacked/XYZ.zcz/Configs --> unpacked/Configs.tar.gz
      * unpacked/XYZ.zcz/Schemas --> unpacked/Schemas.tar.gz
@@ -381,7 +383,7 @@ const repackageZczFile = (configuratorBasePath, zczFileName) => {
           return tarNgzip(
             `${configuratorBasePath}/unpacked`,
             'image35-2',
-            `${configuratorBasePath}/downloads/${zczFileName}`
+            `${configuratorBasePath}/downloads/${modifiedConfigsFileName}`
           )
       })
       .then(() => {

@@ -49,18 +49,25 @@ module.exports = (app, upload) => {
     })
 
     app.post('/api/folders/:path', (req, res) => {
-        const path = req.params.path
+        const ESCAPED_PATH = req.params.path
+        const ORIGINAL_PATH = ESCAPED_PATH.replace(/\+/g, '/')
 
-        fs.ensureDirSync(`${UPLOADS_PATH}/TMP_FOLDER`)
-        fs.renameSync(
-          `${UPLOADS_PATH}/TMP_FOLDER`,
-          `${UPLOADS_PATH}/${path}`)
+        const NOW = Date.now()
+        const TIME_STAMP_FILE = `__IGNORE__${NOW}.txt`
 
-        fs.ensureDirSync(`${UNPACKED_PATH}/TMP_FOLDER`)
-        fs.ensureDirSync(`${UNPACKED_PATH}/TMP_FOLDER/Schemas`)
-        fs.renameSync(
-          `${UNPACKED_PATH}/TMP_FOLDER`,
-          `${UNPACKED_PATH}/${path}`)
+        fs.ensureDirSync(`${UPLOADS_PATH}/${ESCAPED_PATH}`)
+        // fs.renameSync(
+        //   `${UPLOADS_PATH}/TMP_FOLDER`,
+        //   `${UPLOADS_PATH}/${path}`)
+
+        fs.ensureDirSync(`${UNPACKED_PATH}/${ESCAPED_PATH}`)
+        fs.ensureDirSync(`${UNPACKED_PATH}/${ESCAPED_PATH}/Schemas`)
+        // fs.renameSync(
+        //   `${UNPACKED_PATH}/TMP_FOLDER`,
+        //   `${UNPACKED_PATH}/${path}`)
+
+        fs.writeFileSync(`${ORIGINAL_PATH}/${TIME_STAMP_FILE}`, NOW)
+        fs.writeFileSync(`${UNPACKED_PATH}/${ESCAPED_PATH}/Schemas/${TIME_STAMP_FILE}`, NOW)
 
         res.send(req.params.path)
     })

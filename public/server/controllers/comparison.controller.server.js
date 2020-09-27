@@ -1,18 +1,40 @@
 const fs = require('fs')
 const jsonDiff = require('json-diff')
 const homedir = require('os').homedir();
+const {CONFIGS_PATH, SCHEMAS_PATH} = require('../common/paths');
 
-const comparisonFilePath = (firmwareFileName, configOrSchema, jsonFileName) => {
-  if(firmwareFileName.endsWith('aes')) {
-    if(configOrSchema === 'Schema') {
-      configOrSchema = 'Schemas'
-    }
-    if(configOrSchema === 'Configs') {
-      configOrSchema = 'Configs/Permanent'
-    }
-  }
-  return `${homedir}/mks/configurator/unpacked/${firmwareFileName}/${configOrSchema}/${jsonFileName}`
-}
+const comparisonFilePath = (firmwareFileName, configOrSchema, jsonFileName) =>
+  configOrSchema === 'Schema' ?
+    `${SCHEMAS_PATH(firmwareFileName)}/${jsonFileName}` :
+    `${CONFIGS_PATH(firmwareFileName)}/${jsonFileName}`
+// {
+  // if(configOrSchema === 'Schema') {
+  //   return SCHEMAS_PATH(firmwareFileName)
+  // } else {
+  //   return
+  // const isAesFile = firmwareFileName.endsWith('aes')
+  // const isZczFile = firmwareFileName.endsWith('zcz')
+  // const isAesOrZczFile = isAesFile || isZczFile
+  // if(isAesOrZczFile) {
+  //   if(isAesFile) {
+  //     if(configOrSchema === 'Schema') {
+  //       return SCHEMAS_PATH(firmwareFileName)
+  //     }
+  //     if(configOrSchema === 'Configs') {
+  //       return
+  //     }
+  //   }
+  //   return `${homedir}/mks/configurator/unpacked/${firmwareFileName}/${configOrSchema}/${jsonFileName}`
+  // } else {
+  //   if(configOrSchema === 'Schema') {
+  //     return SCHE
+  //   }
+  //   if(configOrSchema === 'Configs') {
+  //     configOrSchema = 'Configs/Permanent'
+  //   }
+  //   return `${homedir}/mks/configurator/unpacked/${firmwareFileName}/${configOrSchema}/${jsonFileName}`
+  // }
+// }
 
 module.exports = (app) => {
   const compareFirmwares = (req, res) => {
@@ -46,8 +68,10 @@ module.exports = (app) => {
     const json2 = JSON.parse(file2)
 
     const difference = jsonDiff.diff(json1, json2)
+    const diffString = jsonDiff.diffString(json1, json2)
     if(difference) {
       difference.fileName = jsonFile1
+      difference.diffString = diffString
     }
 
     res.json(difference);

@@ -98,6 +98,8 @@ const downloadAes2 = (firmwareName, callback) => {
   fs.emptyDirSync(`${homedir}/mks/configurator/tmp`)
   fs.emptyDirSync(`${homedir}/mks/configurator/downloads`)
 
+  let modifiedConfigsFileName = firmwareName.replace('.zip.aes', '_modified_configs.zip.aes')
+
   // copy aes folder to downloads
   fs.copySync(
     `${homedir}/mks/configurator/unpacked/${firmwareName}`,
@@ -108,7 +110,7 @@ const downloadAes2 = (firmwareName, callback) => {
     `${homedir}/mks/configurator/tmp/${firmwareName}/Configs/Temporary`)
   aesService.packAes2(
     `${homedir}/mks/configurator/tmp/${firmwareName}`,
-    `${homedir}/mks/configurator/downloads/${firmwareName}`)
+    `${homedir}/mks/configurator/downloads/${modifiedConfigsFileName}`)
   if(typeof callback === 'function')
     callback()
 }

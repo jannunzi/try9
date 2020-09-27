@@ -1,16 +1,17 @@
 import React from "react";
 import firmwareService from '../services/firmware.service.client'
-import schemaService from '../services/schema.service.client'
+import schemaService, {fetchSchemaFileContent} from '../services/schema.service.client'
 import configurationService, {fetchConfigurationFileContent, saveConfigurationFileContent} from '../services/configuration.service.client'
 import ConfigurationFormEditor from "./ConfigurationFormEditor/ConfigurationFormEditor";
 import ReactJson from "react-json-view";
 import {NavLink} from "react-router-dom";
+import {API_BASE_URL} from "../config";
 
 export default class ConfigurationFormEditorWrapper extends React.Component {
     state = {
         firmwares: [],
         schemas: [],
-        firmwareFile: null,
+        firmwareFile: '',
         schemaFile: 'mainController.json',
         uiSchema: {
           "Customer" : {
@@ -24,61 +25,92 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
         },
         configurationFile: 'Broadcast.json',
         schema: null,
-        configuration: ''
+        configuration: '',
+        showSpinner: false
     }
 
+    downloadLink = ""
+
     componentDidMount = () => {
+      debugger
         let schema = ''
 
         let firmwares = []
         let schemas = []
-
         // fetch firmware files to populate dropdown
         firmwareService.fetchFirmwares()
             .then(_firmwares => {
                 firmwares = _firmwares
                 this.setState({
                   firmwares,
-                  firmwareFile: firmwares[0]
+                  firmwareFile: firmwares[0],
+                  schemas: []
                 })
 
                 // fetch all schema files for the first firmware
-                return schemaService.fetchSchemaFiles(firmwares[0])
+                // return schemaService.fetchSchemaFiles(firmwares[0])
+              return this.fetchSchemasForFirmware(firmwares[0])
             })
             .then(_schemas => {
+
               schemas = _schemas || []
-
               this.setState({
-                schemas: schemas
+                schemas: schemas.filter(schema => !schema.file.startsWith('__IGNORE') && !schema.file.endsWith('Cal.json')),
               })
-
-              if(schemas && schemas.length > 0 && this.props.history) {
-                // this.props.history.push(`/configurations/${firmwares[0]}/${schemas[0].file}`)
-                // fetch schema and configuration files for first schema file
-                return this.fetchSchemaAndConfiguration(schemas[0].file)
-              } else {
-                this.setState({
-                  schemas: []
-                })
-                return Promise.resolve([])
+              if(schemas && schemas.length > 0) {
+                // return this.fetchSchemaFileContent
+                this.fetchSchemaAndConfiguration(schemas[0].file)
               }
+
+              // schemas = _schemas || []
+              //
+              //
+              // this.setState({
+              //   schemas: schemas//.filter(schema => !schema.file.endsWith("Cal.json") && !schema.file.startsWith('__IGNORE'))
+              // })
+
+              // if(schemas && schemas.length > 0 && this.props.history) {
+              //   // this.props.history.push(`/configurations/${firmwares[0]}/${schemas[0].file}`)
+              //   // fetch schema and configuration files for first schema file
+              //   return this.fetchSchemaAndConfiguration(schemas[0].file)
+              // } else {
+              //   this.setState({
+              //     schemas: []
+              //   })
+              //   return Promise.resolve([])
+              // }
             })
-            .then((schemas) => this.setState({
-                schemas
-            }))
+            // .then((schemas) => this.setState({
+            //     schemas
+            // }))
     }
 
-    fetchSchemasForFirmware = (firmwareFile) =>
-        schemaService.fetchSchemaFiles(firmwareFile)
-            .then(schemas => {
-                this.setState({firmwareFile, schemas})
-                if(schemas && schemas.length > 0 && this.state.schemaFile)
-                {
-                  return this.fetchSchemaAndConfiguration(this.state.schemaFile)
-                }
-              })
+    packageFirmware = (firmwareName) => {
+      // this.showDownloading(firmwareName, true)
+      this.setState({
+        showSpinner: true
+      })
+      firmwareService.packageFirmware(firmwareName)
+        .then((response) => {
+          setTimeout(() => {
+            // this.showDownloading(firmwareName, false)
+            this.setState({
+              showSpinner: false
+            })
+            this.downloadLink.click()
+          }, 3000)
+        })
+        .catch(e => console.log(e))
+    }
+
+    fetchSchemasForFirmware = (firmwareFile) => {
+      debugger
+      return schemaService.fetchSchemaFiles(firmwareFile)
+    }
+
     fetchSchemaAndConfiguration = (schemaFile) => {
-        let schema = {}
+      debugger
+      let schema = {}
 
         // fetch schema file to configure form editor tool
         schemaService.fetchSchemaFileContent(this.state.firmwareFile, schemaFile)
@@ -110,6 +142,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
     }
 
     onSubmit = (formData) => {
+      debugger
       saveConfigurationFileContent(
         this.state.firmwareFile,
         this.state.configurationFile,
@@ -117,11 +150,32 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
       )
     }
     onLoadConfiguration = () => {
+      debugger
       this.fetchSchemaAndConfiguration(this.state.schemaFile)
+    }
+    onFirmwareSelect = (e) => {
+      debugger
+      const firmwareFile = e.target.value
+      this.fetchSchemasForFirmware(firmwareFile)
+        .then(schemas => {
+          schemas = schemas || []
+          this.setState({
+            schemas: schemas.filter(schema => !schema.file.startsWith('__IGNORE') && !schema.file.endsWith('Cal.json')),
+            firmwareFile: firmwareFile
+          })
+          if(schemas && schemas.length > 0) {
+            // return this.fetchSchemaFileContent
+            this.fetchSchemaAndConfiguration(schemas[0].file)
+          }
+        })
     }
 
     render() {
-        return(
+        const modifiedConfigFileName = this.state.firmwareFile.endsWith('aes') ?
+          this.state.firmwareFile.replace('.zip.aes', '_modified_configs.zip.aes') :
+          this.state.firmwareFile.replace('.zcz', '_modified_configs.zcz')
+
+      return(
             <div className="position-relative height-100pc">
                 <br/>
                 <div className="row">
@@ -129,7 +183,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                         Select file or folder
                         <select
                             value={this.state.firmwareFile}
-                            onChange={(e) => this.fetchSchemasForFirmware(e.target.value)}
+                            onChange={this.onFirmwareSelect}
                             className="form-control">
                             {this.state.firmwares.map(firmware =>
                               <option key={firmware} value={firmware}>
@@ -138,12 +192,12 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                         </select>
                     </div>
                     <div className="col-xs-6">
-                        Select configuration for selected file or folder
+                        Select configuration for selected file or folder ({this.state.schemas.length})
                         <select
                             value={this.state.schemaFile}
                             onChange={(e) => this.fetchSchemaAndConfiguration(e.target.value)}
                             className="form-control">
-                            {this.state.schemas.filter(schema => !schema.file.endsWith("Cal.json") && !schema.file.startsWith('__IGNORE')).map(schema =>
+                            {this.state.schemas && this.state.schemas.map(schema =>
                               <option key={schema.file} value={schema.file}>
                                 {schema.title} ({schema.file})
                               </option> )}
@@ -156,6 +210,20 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                   </div>
                 <div className="row position-absolute height-100pc left-0px top-85px right-0px bottom-0px">
                     <div className="col-xs-12 position-absolute top-0px bottom-0px">
+                      <a className="pull-right mks-margin-left-5px mks-invisible"
+                         ref={link => {this.downloadLink = link}}
+                         href={`${API_BASE_URL}/api/firmwares/${modifiedConfigFileName}`}>
+                        Download
+                      </a>
+
+                      <button onClick={() => this.packageFirmware(this.state.firmwareFile)}
+                              className="mks-download-modified-configs-file-btn btn btn-success">
+                        <span className={`${this.state.showSpinner ? '':'mks-display-none'}`}>
+                          <i className={`fa fa-spinner fa-spin`}></i>
+                          &nbsp;
+                        </span>
+                        Download File
+                      </button>
                         {
                             this.state.configuration && this.state.schema &&
                             <div>
@@ -170,9 +238,9 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                             </div>
                         }
                     </div>
-                    <div className="col-xs-12 position-absolute top-0px bottom-0px">
+                    <div className="col-xs-12 position-absolute top-0px bottom-0px mks-z-index-1">
                       {
-                        this.state.schemas.length === 0 &&
+                        this.state.schemas && this.state.schemas.length === 0 &&
                         <div className="alert alert-danger">
                           This configuration file or folder does not have
                           schemas associated.

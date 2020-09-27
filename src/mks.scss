@@ -131,17 +131,16 @@ button.list-group-item-info.mks-active:hover {
   right: 15px;
 }
 
-
 /* color blind */
 
 .list-group-item-success.mks-color-blind {
   color: black;
-  background-color: #1aff1a;
+  background-color: #1aff1a !important;
 }
 
 .list-group-item-danger.mks-color-blind {
   color: white;
-  background-color: #dc3220;
+  background-color: #dc3220 !important;
 }
 
 .list-group-item-info.mks-color-blind {
@@ -158,3 +157,97 @@ button.list-group-item-info.mks-active:hover {
 .mks-color-black {
   color: black;
 }
+
+.mks-download-modified-configs-file-btn {
+  position: absolute;
+  right: 140px;
+  top: 20px;
+}
+
+.mks-z-index-1 {
+  z-index: -1;
+}
+
+.mks-display-none {
+  display: none;
+}
+
+.mks-text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+.mks-color-red {
+  color: red;
+}
+
+.mks-color-green {
+  color: green;
+}
+
+.mks-border-light-gray {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.__old, .deleted {
+  font-weight: bold;
+  color: red;
+  text-decoration: line-through;
+}
+
+.__new, .added {
+  font-weight: bold;
+  color: green;
+}
+
+.mks-lists-no-bullets {
+  padding-left: 20px;
+  list-style-type:none;
+}
+
+.list-group-item.mks.__old {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.mks.__old {
+  background-color: #f2dede;
+  //padding-top: 10px;
+  //padding-bottom: 10px;
+}
+
+.mks.__new {
+  background-color: #dff0d8;
+  //padding-top: 10px;
+  //padding-bottom: 10px;
+}
+
+.list-group-item.mks {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: none;
+}
+
+.list-group.mks {
+  font-family: "Courier New";
+  font-weight: bold;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  border: none;
+  margin-bottom: 0px !important;
+}
+
+//.row.mks {
+//  padding-top: 0px;
+//  padding-bottom: 0px;
+//}
+//
+//.mks.__old.col-xs-6, .mks.__new.col-xs-6 {
+//  padding-top: 10px;
+//  padding-bottom: 10px;
+//}
+//
+//.mks.list-group-item {
+//  padding-top: 0px;
+//  padding-bottom: 0px;
+//}

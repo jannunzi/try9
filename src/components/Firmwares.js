@@ -287,7 +287,7 @@ export default class Firmwares extends React.Component {
                 </li>
               }
               {
-                this.state.selectedFirmware.differences &&
+                typeof this.state.selectedFirmware.differences !== 'undefined' &&
                 this.state.selectedFirmware.differences.map((difference, index) =>
                   (difference[0] !== "+" && <li className="list-group-item" key={index}>
                     {
@@ -301,10 +301,18 @@ export default class Firmwares extends React.Component {
                   </li>)
                 )
               }
+              {
+                typeof this.state.selectedFirmware.differences === 'undefined' &&
+                this.state.selectedFirmware.configurations &&
+                this.state.selectedFirmware.configurations.map(configuration =>
+                  <li className="list-group-item" key={configuration}>
+                    {configuration}
+                  </li>
+                )
+              }
             </ul>
           </div>
         </div>
-
         <input
           className="btn btn-primary pull-right mks-invisible"
           type="file"
