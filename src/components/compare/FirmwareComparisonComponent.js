@@ -3,14 +3,13 @@ import {NavLink} from "react-router-dom";
 import {fetchAllFirmwares, compareFirmwares, compareJsons} from "../../services/firmware.service.client";
 import {fetchSchemaFilesWithContent} from "../../services/schema.service.client";
 import {fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
-import StringArraySelectComponent from "../StringArraySelectComponent";
+import StringArraySelectComponent from "./StringArraySelectComponent";
 import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
 import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
 import ToggleSwitch from "../widgets/ToggleSwitch";
 import diff1 from "./diff1"
 import diff2 from "./diff2"
-// import {Differ} from "./Differ";
 import {Tree} from "./Tree"
 
 export default class FirmwareComparisonComponent extends React.Component {

@@ -13,13 +13,15 @@ const {
   SCHEMAS_PATH} = require('../common/paths')
 
 const readFirmwareList = () =>
-  fs.readdirSync(`${homedir}/mks/configurator/uploads`)
+  // fs.readdirSync(`${homedir}/mks/configurator/uploads`)
+  fs.readdirSync(`${homedir}/mks/configurator/unpacked`)
     .filter(file => !file.startsWith('.'))
 
 const readDetailedFirmwareList = (callback) => {
   const settings = settingsService.loadSettings()
   let details = []
-  fs.readdir(`${homedir}/mks/configurator/uploads`, function(err, firmwareFileNames) {
+  // fs.readdir(`${homedir}/mks/configurator/uploads`, function(err, firmwareFileNames) {
+  fs.readdir(`${homedir}/mks/configurator/unpacked`, function(err, firmwareFileNames) {
     if (err) {
       console.log("Error getting directory information.")
     } else {
@@ -29,7 +31,8 @@ const readDetailedFirmwareList = (callback) => {
           settings.firmwares[firmwareFileName].allowSchemaUpload === true) ||
           false
         if(!firmwareFileName.startsWith('.')) {
-          const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
+          // const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
+          const stat = fs.statSync(`${homedir}/mks/configurator/unpacked/${firmwareFileName}`)
           stat.fileName = firmwareFileName
           let configurationFileNames = [], schemaFileNames = []
           try {

@@ -1,8 +1,8 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
-import {API_BASE_URL} from "../config";
-import firmwareService from '../services/firmware.service.client'
-import schemaService from '../services/schema.service.client'
+import {API_BASE_URL} from "../../config";
+import firmwareService from '../../services/firmware.service.client'
+import schemaService from '../../services/schema.service.client'
 import Moment from 'moment'
 
 export default class Firmwares extends React.Component {

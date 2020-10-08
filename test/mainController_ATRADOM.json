@@ -1,0 +1,204 @@
+{
+    "Product": {
+        "Divisor From Cal Rate To Get Control Rate": 8,
+        "Power Profile CW": [
+            [
+                1,
+                7500
+            ],
+            [
+                1.11,
+                7517
+            ],
+            1.22,
+            1.42,
+            [
+                1.5,
+                6000
+            ],
+            1.55,
+            1.71,
+            [
+                2,
+                4000
+            ],
+            2.34,
+            2.51,
+            [
+                3,
+                2500
+            ],
+            4.15,
+            5.8,
+            8.47,
+            13.93,
+            29.72,
+            [
+                4094,
+                1500
+            ]
+        ],
+        "Power Profile Pulsing": [
+            [
+                1,
+                10500
+            ],
+            1.11,
+            [
+                1.25,
+                10630
+            ],
+            1.42,
+            [
+                1.5,
+                10420
+            ],
+            [
+                2,
+                8440
+            ],
+            2.64,
+            [
+                3,
+                6666
+            ],
+            3.73,
+            5,
+            5.83,
+            7.48,
+            10.17,
+            13.93,
+            23.09,
+            50.49,
+            [
+                4094,
+                2000
+            ]
+        ],
+        "Gain Scheduler": {
+            "Rail I Modifier Coefficients": [
+                {
+                    "A": 3167.943108,
+                    "M": -2.37,
+                    "B": 0,
+                    "N": 0,
+                    "C": 0
+                }
+            ],
+            "Rail P Modifier Coefficients": [
+                {
+                    "A": 3167.943108,
+                    "M": -2.37,
+                    "B": 0,
+                    "N": 0,
+                    "C": 0
+                }
+            ],
+            "Coefficients": {
+                "Gamma": {
+                    "Proportional Coefficients": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "Integral Coefficients": [
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03
+                    ]
+                },
+                "Forward Power": {
+                    "Max Power Threshold": 10500,
+                    "Proportional Coefficients": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "Integral Coefficients": [
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03,
+                        0.03
+                    ]
+                },
+                "Scheduler Based on": "Gamma"
+            }
+        },
+        "Peak Power Table Usage Pulse Duration Limit": 0.0002,
+        "Drive Slew Rate Limit": null,
+        "Power Dissipation": {
+            "Iteration Period": 0.001,
+            "Filter Weight": 0.99,
+            "Bin Parameters": [
+                [
+                    0.1,
+                    99999
+                ],
+                [
+                    0.1,
+                    99999
+                ],
+                [
+                    0.1,
+                    99999
+                ]
+            ]
+        },
+        "Maximum Gamma Blanking Time": 0.00005,
+        "Gamma Value To Use During Blanking": 0,
+        "Power Readback Adjustment": {
+            "Minimum Setpoint": 500,
+            "Integrator": 0.2,
+            "Clamp in Watts": 500,
+            "Delay Time": 0.1,
+            "Final Value Percentage of Filter": 0.95
+        }
+    },
+    "Customer": {
+        "Edge Ramping": {
+            "Value": 0
+        },
+        "Min Setpoint for Load Leveling": 0,
+        "Gamma Blanking Time": [
+            0,
+            0,
+            0,
+            0
+        ],
+        "Power Readback Adjustment Control": true,
+        "Fast Reverse Transient Protection": {
+            "Fast Reverse Transient Enabled": false,
+            "Fast Reverse Transient Duration": 0,
+            "Fast Reverse Transient Threshold": 16383
+        },
+        "Pulse Edge Setpoint Ramp": [
+            0,
+            0,
+            0,
+            0
+        ]
+    }
+}

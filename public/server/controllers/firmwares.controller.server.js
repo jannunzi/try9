@@ -79,9 +79,16 @@ module.exports = (app, upload) => {
 
             const filesInTmp = utils.readDirectoryContent(`${homedir}/mks/configurator/upload`)
             firmwareName = filesInTmp[0]
+
+            if(fs.existsSync(`${homedir}/mks/configurator/uploads/${firmwareName}`)) {
+                fs.removeSync(`${homedir}/mks/configurator/uploads/${firmwareName}`)
+                fs.removeSync(`${homedir}/mks/configurator/unpacked/${firmwareName}`)
+            }
+
             fs.moveSync(
                 `${homedir}/mks/configurator/upload/${firmwareName}`,
-                `${homedir}/mks/configurator/uploads/${firmwareName}`)
+                `${homedir}/mks/configurator/uploads/${firmwareName}`,
+              { overwrite: true })
 
             fs.emptyDirSync(UPLOAD_PATH)
 

@@ -1,10 +1,10 @@
 import React from "react";
-import {API_BASE_URL} from "../config";
+import {API_BASE_URL} from "../../config";
 import {Link} from "react-router-dom";
 import JSONInput from 'react-json-editor-ajrm';
 import locale    from 'react-json-editor-ajrm/locale/en';
-import configurationService from '../services/configuration.service.client'
-import schemaService from '../services/schema.service.client'
+import configurationService from '../../services/configuration.service.client'
+import schemaService from '../../services/schema.service.client'
 
 export default class Firmware extends React.Component {
 

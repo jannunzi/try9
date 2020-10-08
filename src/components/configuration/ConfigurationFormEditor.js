@@ -27,7 +27,7 @@ export default class ConfigurationFormEditor extends React.Component {
         this.arrayItemList = $('#root_Customer > .form-group.field.field-array .row.array-item-list')
 
         $("button[type='submit']")
-          .text("Save Changes")
+          .text("Save Changes*****")
           .removeClass("btn-info")
           .addClass("btn-success")
           .prepend("&nbsp;")

@@ -2,9 +2,9 @@ import React from "react";
 import '../styling/dashboard.css'
 import {NavLink, Redirect, Route} from "react-router-dom";
 import FirmwareComparisonComponent from "./compare/FirmwareComparisonComponent";
-import Firmwares from "./Firmwares";
+import Firmwares from "./firmware/Firmwares";
 import logo from "../images/mks-logo.png"
-import ConfigurationFormEditorWrapper from "./ConfigurationFormEditorWrapper";
+import ConfigurationFormEditorWrapper from "./configuration/ConfigurationFormEditorWrapper";
 import Help from "./Help";
 import SchemaManager from "./schemas/SchemaManager";
 

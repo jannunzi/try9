@@ -1,7 +1,7 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const constants = require('../common/constants')
 const homedir = require('os').homedir();
-const {CONFIGS_PATH, SCHEMAS_PATH} = require('../common/paths')
+const {CONFIGS_PATH, SCHEMAS_PATH, FIRMWARE_PATH} = require('../common/paths')
 
 const SCHEMA2CONFIG = {
     'driveControllerGenesis.json': 'Drive Controller',
@@ -90,6 +90,22 @@ module.exports = (app, upload) => {
         const path = CONFIGS_PATH(firmware)
 
         fs.writeFileSync(`${path}/${configuration}`, newConfigurationFileContent)
+
+        res.send(200)
+    })
+
+    app.put('/api/firmwares/:firmware/configurations/:configuration/cloneto/:saveAs', function (req, res) {
+        const firmware = req.params.firmware
+        const saveAs = req.params.saveAs
+        const configuration = req.params.configuration
+        const newConfigurationFileContent = JSON.stringify(req.body, null, 2)
+
+        const pathFirmware = FIRMWARE_PATH(firmware)
+        const pathSaveAsFirmware = pathFirmware.replace(firmware, saveAs)
+        fs.copySync(pathFirmware, pathSaveAsFirmware)
+
+        const saveAsConfigPath = CONFIGS_PATH(saveAs)
+        fs.writeFileSync(`${saveAsConfigPath}/${configuration}`, newConfigurationFileContent)
 
         res.send(200)
     })

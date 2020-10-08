@@ -251,3 +251,22 @@ button.list-group-item-info.mks-active:hover {
 //  padding-top: 0px;
 //  padding-bottom: 0px;
 //}
+
+.mks-modal-dialog {
+  position: fixed;
+  top: 100px;
+  width: 50%;
+  margin: auto;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 5px 5px 5px 5px #aaaaaa;
+  h3 {
+    margin-top: 0px;
+  }
+}
+
+button[type=submit] {
+  display: none;
+}

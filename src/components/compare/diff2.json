@@ -1,0 +1,402 @@
+{
+  "Product": {
+    "Divisor From Cal Rate To Get Control Rate": {
+      "__old": 8,
+      "__new": 1
+    },
+    "Power Profile CW": [
+      [
+        "-",
+        [
+          1,
+          7500
+        ]
+      ],
+      [
+        "-",
+        [
+          1.11,
+          7517
+        ]
+      ],
+      [
+        "-",
+        1.22
+      ],
+      [
+        "+",
+        [
+          1,
+          10250
+        ]
+      ],
+      [
+        "+",
+        1.11
+      ],
+      [
+        "+",
+        [
+          1.22,
+          10250
+        ]
+      ],
+      [
+        " ",
+        1.42
+      ],
+      [
+        "-",
+        [
+          1.5,
+          6000
+        ]
+      ],
+      [
+        "-",
+        1.55
+      ],
+      [
+        "-",
+        1.71
+      ],
+      [
+        "-",
+        [
+          2,
+          4000
+        ]
+      ],
+      [
+        "-",
+        2.34
+      ],
+      [
+        "-",
+        2.51
+      ],
+      [
+        "-",
+        [
+          3,
+          2500
+        ]
+      ],
+      [
+        "-",
+        4.15
+      ],
+      [
+        "-",
+        5.8
+      ],
+      [
+        "-",
+        8.47
+      ],
+      [
+        "+",
+        [
+          1.5,
+          10417
+        ]
+      ],
+      [
+        "+",
+        [
+          2,
+          8438
+        ]
+      ],
+      [
+        "+",
+        2.64
+      ],
+      [
+        "+",
+        [
+          3,
+          5000
+        ]
+      ],
+      [
+        "+",
+        3.73
+      ],
+      [
+        "+",
+        5
+      ],
+      [
+        "+",
+        5.83
+      ],
+      [
+        "+",
+        7.48
+      ],
+      [
+        "+",
+        10.17
+      ],
+      [
+        " ",
+        13.93
+      ],
+      [
+        "-",
+        29.72
+      ],
+      [
+        "-",
+        [
+          4094,
+          1500
+        ]
+      ],
+      [
+        "+",
+        23.09
+      ],
+      [
+        "+",
+        50.49
+      ],
+      [
+        "+",
+        [
+          4094,
+          1050
+        ]
+      ]
+    ],
+    "Power Profile Pulsing": [
+      [
+        "-",
+        [
+          1,
+          10500
+        ]
+      ],
+      [
+        "+",
+        [
+          1,
+          10250
+        ]
+      ],
+      [
+        " ",
+        1.11
+      ],
+      [
+        "-",
+        [
+          1.25,
+          10630
+        ]
+      ],
+      [
+        "+",
+        [
+          1.22,
+          10250
+        ]
+      ],
+      [
+        " ",
+        1.42
+      ],
+      [
+        "-",
+        [
+          1.5,
+          10420
+        ]
+      ],
+      [
+        "-",
+        [
+          2,
+          8440
+        ]
+      ],
+      [
+        "+",
+        [
+          1.5,
+          10417
+        ]
+      ],
+      [
+        "+",
+        [
+          2,
+          8438
+        ]
+      ],
+      [
+        " ",
+        2.64
+      ],
+      [
+        "-",
+        [
+          3,
+          6666
+        ]
+      ],
+      [
+        "+",
+        [
+          3,
+          5000
+        ]
+      ],
+      [
+        " ",
+        3.73
+      ],
+      [
+        " ",
+        5
+      ],
+      [
+        " ",
+        5.83
+      ],
+      [
+        " ",
+        7.48
+      ],
+      [
+        " ",
+        10.17
+      ],
+      [
+        " ",
+        13.93
+      ],
+      [
+        " ",
+        23.09
+      ],
+      [
+        " ",
+        50.49
+      ],
+      [
+        "-",
+        [
+          4094,
+          2000
+        ]
+      ],
+      [
+        "+",
+        [
+          4094,
+          1250
+        ]
+      ]
+    ],
+    "Gain Scheduler": {
+      "Rail I Modifier Coefficients": [
+        [
+          "~",
+          {
+            "A": {
+              "__old": 3167.943108,
+              "__new": 37.6
+            }
+          }
+        ]
+      ],
+      "Rail P Modifier Coefficients": [
+        [
+          "~",
+          {
+            "A": {
+              "__old": 3167.943108,
+              "__new": 37.6
+            }
+          }
+        ]
+      ],
+      "Coefficients": {
+        "Forward Power": {
+          "Max Power Threshold": {
+            "__old": 10500,
+            "__new": 10250
+          }
+        }
+      }
+    },
+    "Power Readback Adjustment": {
+      "Minimum Setpoint": {
+        "__old": 500,
+        "__new": 0
+      },
+      "Integrator": {
+        "__old": 0.2,
+        "__new": 0
+      },
+      "Clamp in Watts": {
+        "__old": 500,
+        "__new": 0
+      },
+      "Delay Time": {
+        "__old": 0.1,
+        "__new": 0
+      }
+    }
+  },
+  "Customer": {
+    "Edge Ramping": {
+      "Value": {
+        "__old": 0,
+        "__new": 0.00001
+      }
+    },
+    "Power Readback Adjustment Control": {
+      "__old": true,
+      "__new": false
+    },
+    "Pulse Edge Setpoint Ramp": [
+      [
+        "-",
+        0
+      ],
+      [
+        "-",
+        0
+      ],
+      [
+        "-",
+        0
+      ],
+      [
+        "-",
+        0
+      ],
+      [
+        "+",
+        0.00001
+      ],
+      [
+        "+",
+        0.00001
+      ],
+      [
+        "+",
+        0.00001
+      ],
+      [
+        "+",
+        0.00001
+      ]
+    ]
+  },
+  "fileName": "mainController.json",
+  "diffString": " {\n   Product: {\n\u001b[31m-    Divisor From Cal Rate To Get Control Rate: 8\u001b[39m\n\u001b[32m+    Divisor From Cal Rate To Get Control Rate: 1\u001b[39m\n     Power Profile CW: [\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        1\u001b[39m\n\u001b[31m-        7500\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        1.11\u001b[39m\n\u001b[31m-        7517\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[31m-      1.22\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        1\u001b[39m\n\u001b[32m+        10250\u001b[39m\n\u001b[32m+      ]\u001b[39m\n\u001b[32m+      1.11\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        1.22\u001b[39m\n\u001b[32m+        10250\u001b[39m\n\u001b[32m+      ]\u001b[39m\n       1.42\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        1.5\u001b[39m\n\u001b[31m-        6000\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[31m-      1.55\u001b[39m\n\u001b[31m-      1.71\u001b[39m\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        2\u001b[39m\n\u001b[31m-        4000\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[31m-      2.34\u001b[39m\n\u001b[31m-      2.51\u001b[39m\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        3\u001b[39m\n\u001b[31m-        2500\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[31m-      4.15\u001b[39m\n\u001b[31m-      5.8\u001b[39m\n\u001b[31m-      8.47\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        1.5\u001b[39m\n\u001b[32m+        10417\u001b[39m\n\u001b[32m+      ]\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        2\u001b[39m\n\u001b[32m+        8438\u001b[39m\n\u001b[32m+      ]\u001b[39m\n\u001b[32m+      2.64\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        3\u001b[39m\n\u001b[32m+        5000\u001b[39m\n\u001b[32m+      ]\u001b[39m\n\u001b[32m+      3.73\u001b[39m\n\u001b[32m+      5\u001b[39m\n\u001b[32m+      5.83\u001b[39m\n\u001b[32m+      7.48\u001b[39m\n\u001b[32m+      10.17\u001b[39m\n       13.93\n\u001b[31m-      29.72\u001b[39m\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        4094\u001b[39m\n\u001b[31m-        1500\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[32m+      23.09\u001b[39m\n\u001b[32m+      50.49\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        4094\u001b[39m\n\u001b[32m+        1050\u001b[39m\n\u001b[32m+      ]\u001b[39m\n     ]\n     Power Profile Pulsing: [\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        1\u001b[39m\n\u001b[31m-        10500\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        1\u001b[39m\n\u001b[32m+        10250\u001b[39m\n\u001b[32m+      ]\u001b[39m\n       1.11\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        1.25\u001b[39m\n\u001b[31m-        10630\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        1.22\u001b[39m\n\u001b[32m+        10250\u001b[39m\n\u001b[32m+      ]\u001b[39m\n       1.42\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        1.5\u001b[39m\n\u001b[31m-        10420\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        2\u001b[39m\n\u001b[31m-        8440\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        1.5\u001b[39m\n\u001b[32m+        10417\u001b[39m\n\u001b[32m+      ]\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        2\u001b[39m\n\u001b[32m+        8438\u001b[39m\n\u001b[32m+      ]\u001b[39m\n       2.64\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        3\u001b[39m\n\u001b[31m-        6666\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        3\u001b[39m\n\u001b[32m+        5000\u001b[39m\n\u001b[32m+      ]\u001b[39m\n       3.73\n       5\n       5.83\n       7.48\n       10.17\n       13.93\n       23.09\n       50.49\n\u001b[31m-      [\u001b[39m\n\u001b[31m-        4094\u001b[39m\n\u001b[31m-        2000\u001b[39m\n\u001b[31m-      ]\u001b[39m\n\u001b[32m+      [\u001b[39m\n\u001b[32m+        4094\u001b[39m\n\u001b[32m+        1250\u001b[39m\n\u001b[32m+      ]\u001b[39m\n     ]\n     Gain Scheduler: {\n       Rail I Modifier Coefficients: [\n         {\n\u001b[31m-          A: 3167.943108\u001b[39m\n\u001b[32m+          A: 37.6\u001b[39m\n         }\n       ]\n       Rail P Modifier Coefficients: [\n         {\n\u001b[31m-          A: 3167.943108\u001b[39m\n\u001b[32m+          A: 37.6\u001b[39m\n         }\n       ]\n       Coefficients: {\n         Forward Power: {\n\u001b[31m-          Max Power Threshold: 10500\u001b[39m\n\u001b[32m+          Max Power Threshold: 10250\u001b[39m\n         }\n       }\n     }\n     Power Readback Adjustment: {\n\u001b[31m-      Minimum Setpoint: 500\u001b[39m\n\u001b[32m+      Minimum Setpoint: 0\u001b[39m\n\u001b[31m-      Integrator: 0.2\u001b[39m\n\u001b[32m+      Integrator: 0\u001b[39m\n\u001b[31m-      Clamp in Watts: 500\u001b[39m\n\u001b[32m+      Clamp in Watts: 0\u001b[39m\n\u001b[31m-      Delay Time: 0.1\u001b[39m\n\u001b[32m+      Delay Time: 0\u001b[39m\n     }\n   }\n   Customer: {\n     Edge Ramping: {\n\u001b[31m-      Value: 0\u001b[39m\n\u001b[32m+      Value: 0.00001\u001b[39m\n     }\n\u001b[31m-    Power Readback Adjustment Control: true\u001b[39m\n\u001b[32m+    Power Readback Adjustment Control: false\u001b[39m\n     Pulse Edge Setpoint Ramp: [\n\u001b[31m-      0\u001b[39m\n\u001b[31m-      0\u001b[39m\n\u001b[31m-      0\u001b[39m\n\u001b[31m-      0\u001b[39m\n\u001b[32m+      0.00001\u001b[39m\n\u001b[32m+      0.00001\u001b[39m\n\u001b[32m+      0.00001\u001b[39m\n\u001b[32m+      0.00001\u001b[39m\n     ]\n   }\n }\n"
+}

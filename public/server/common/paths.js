@@ -1,4 +1,5 @@
 const homedir = require('os').homedir();
+const fs = require('fs-extra')
 
 const CONFIGURATOR_PATH = `${homedir}/mks/configurator`
 const TMP_PATH = `${CONFIGURATOR_PATH}/tmp`
@@ -20,7 +21,11 @@ const CONFIGS_PATH = (firmwareName) => {
     return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs`
   } else if(firmwareName.endsWith('aes')) {
     // return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Permanent`
-    return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Apply`
+    if(fs.existsSync(`${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Apply`)) {
+      return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Apply`
+    } else if(fs.existsSync(`${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Apply`)) {
+      return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Permanent`
+    }
   } else {
     return firmwareName.replace(/\+/g,'/')
   }
