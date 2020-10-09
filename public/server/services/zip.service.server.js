@@ -1,11 +1,28 @@
 const fs = require("fs-extra")
 const unzipper = require("unzipper")
 const JSZip = require('jszip');
+const utils = require('../common/utils')
 
-const unzip = (inputFile, outputFile, callback) => {
-  const stream = fs.createReadStream(inputFile)
-    .pipe(unzipper.Extract({ path: outputFile }))
-  stream.on('close', callback)
+const unzip = (inputFile, outputFolder, callback) => {
+  console.log("[111]====================")
+  console.log(inputFile)
+  console.log(outputFolder)
+  utils.nativeUnzip(inputFile, outputFolder, callback)
+  // utils.nativeUnzip()
+  // callback()
+  // fs.createReadStream(inputFile)
+  //   .pipe(unzipper.Extract({ path: outputFile }))
+  //   .on('entry', (entry) => {
+  //     const fileName = entry.path;
+  //     const type = entry.type; // 'Directory' or 'File'
+  //     const size = entry.vars.uncompressedSize; // There is also compressedSize;
+  //     if (fileName === "this IS the file I'm looking for") {
+  //       entry.pipe(fs.createWriteStream('output/path'));
+  //     } else {
+  //       entry.autodrain();
+  //     }
+  //   })
+  //   .on('close', callback)
 }
 
 const zip = (inputFolder, outputFile, jsZip) => {
