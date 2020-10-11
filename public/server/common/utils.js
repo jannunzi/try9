@@ -10,6 +10,7 @@ const gunzip = require('gunzip-file')
 const tar = require('tar')
 const openssl = require('openssl-nodejs')
 const glob = require("glob")
+const Shell = require('node-powershell');
 
 const UNTAR = "tar -xzf SOURCE_FILE -C TARGET_DIRECTORY"
 const TAR   = "tar -czf TARGET_FILE -C SOURCE_DIRECTORY ."
@@ -26,7 +27,7 @@ const homedir = require('os').homedir();
 const {TMP_PATH, DOWNLOADS_PATH, UPLOAD_PATH, UPLOADS_PATH, UNPACKED_PATH, FIRMWARE_PATH} = require('./paths');
 
 const UNZIP_OS_MAP = (inputFile, outputFolder) => ({
-    win32:  `unzip ${inputFile} -d ${outputFolder}`,
+    win32:  `Expand-Archive -LiteralPath '${inputFile}' -DestinationPath ${outputFolder}`,
     darwin: `unzip ${inputFile} -d ${outputFolder}`,
     linux:  `unzip ${inputFile} -d ${outputFolder}`
 })
@@ -55,10 +56,21 @@ const execShellCommandCallback = (cmd, callback) => {
 const nativeUnzip = (inputFile, outputFolder, callback) => {
     const platform = process.platform
     const cmd = UNZIP_OS_MAP(inputFile, outputFolder)[platform]
-    // console.log(cmd)
-    exec(cmd)
-    if(typeof callback === "function")
+    switch(platform) {
+      case 'win32':
+        const ps = new Shell({
+          executionPolicy: 'Bypass',
+          noProfile: true
+        });
+        ps.addCommand(cmd);
+        ps.invoke()
+          .then(callback)
+        break;
+      default:
+        exec(cmd)
+        if(typeof callback === "function")
         callback()
+      }
 }
 
 const openSslEncrypt2 = (inputFile, outputFile, callback) => {

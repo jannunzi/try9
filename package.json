@@ -29,6 +29,7 @@
     "multer": "^1.4.2",
     "ncp": "^2.0.0",
     "nedb": "^1.8.0",
+    "node-powershell": "^4.0.0",
     "node-sass": "^4.14.1",
     "openssl-nodejs": "^1.0.5",
     "openssl.js": "^1.2.0",
