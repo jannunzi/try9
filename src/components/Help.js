@@ -195,7 +195,7 @@ const Help = () =>
 
     On windows, download the &nbsp;
 
-    <a href="/windows/Win64OpenSSL_Light-1_1_1g.msi">
+    <a href="http://openssl.org" target="_blank">
       Win64 OpenSSL v1.1.1g
     </a>
 

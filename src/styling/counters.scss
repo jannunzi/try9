@@ -1,0 +1,31 @@
+@mixin input-field-state-counter($counter) {
+  .row.array-item-list
+  .array-item {
+    .col-xs-9
+    .form-group.field {
+      label.control-label
+      span::before {
+        counter-increment: $counter;
+        content: " " counter($counter);
+      }
+    }
+  }
+}
+
+body {
+  counter-reset:
+    /* BIN SYNCED READBACKS */
+  Pulse-Edge-Holdoff-counter 0
+  Pulse-Capture-Window-Time-counter 0
+}
+
+fieldset#root {
+  // BIN SYNCED READBACKS
+  #root_Product_Pulse\ Edge\ Holdoff {
+    @include input-field-state-counter(Pulse-Edge-Holdoff-counter)
+  }
+
+  #root_Product_Pulse\ Capture\ Window\ Time {
+    @include input-field-state-counter(Pulse-Capture-Window-Time-counter)
+  }
+}

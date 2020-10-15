@@ -1,0 +1,190 @@
+#root_Power\ Profile\ Pulsing,
+#root_Product_Power\ Profile\ CW
+#root_Product_Power\ Profile\ CW__title {
+  > .row.array-item-list::before {
+    content: url("mainController.svg");
+  }
+
+  > .row.array-item-list {
+    //border-bottom: none;
+
+    > .array-item::before {
+      counter-increment: main-controller-power-profile-entry;
+      content: counter(main-controller-power-profile-entry);
+    }
+
+    > .array-item {
+
+      .form-group {
+        margin-bottom: 0px;
+      }
+
+      width: 100%;
+      height: 40px;
+      position: relative;
+      left: 15px;
+
+      > .col-xs-9 {
+        position: relative;
+        left: 60px;
+        top: -30px;
+
+        > .form-group.field.field-undefined {
+          margin-bottom: 0px;
+
+          > .panel.panel-default.panel-body {
+            > .form-group {
+              margin-bottom: 0px;
+            }
+
+            > .form-group:nth-child(1) {
+              width: 200px;
+              float: left;
+              padding-right: 2px;
+            }
+
+            > .form-group.field.field-array {
+              margin-top: 0px;
+              border: none;
+
+              legend {
+                display: none;
+              }
+
+              > .field.field-array.field-array-of-number
+              > .row.array-item-list {
+                border-bottom: none;
+                display: block;
+
+                > .array-item {
+                  width: 300px !important;
+                  padding-top: 0px;
+                  float: left;
+
+                  > .col-xs-9
+                  > .form-group.field.field-number {
+                    padding-right: 2px;
+
+                    > .form-control {
+                      width: 100%;
+                    }
+                  }
+                }
+              }
+            }
+
+            /* single number field */
+            > .form-group.field.field-number {
+              label {
+                display: none;
+              }
+
+              > .form-control {
+                width: 298px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#root_Power\ Dissipation
+> div.form-group.field.field-array {
+  //border: none;
+  > fieldset#root_Power\ Dissipation_Bin\ Parameters {
+
+    > .row.array-item-list::before {
+      content: url("mainControllerPowerDissipationBinParameters.svg");
+    }
+
+    > div.row.array-item-list {
+      border: none !important;
+
+      > div.array-item::before {
+        counter-increment: main-controller-power-disipation;
+        content: counter(main-controller-power-disipation);
+      }
+
+      > div.array-item {
+        padding: 0px;
+        height: 42px;
+        position: relative;
+        left: 40px;
+
+        > div.col-xs-9 {
+          position: relative;
+          left: 60px;
+          bottom: 25px;
+
+          > div.form-group.field.field-undefined {
+            margin: 0px;
+
+            > div.panel.panel-default.panel-body {
+              > div.form-group {
+                float: left;
+                width: 250px;
+                margin: 0px;
+              }
+
+              > div.form-group.field.field-number {
+                width: 240px;
+                padding-left: 5px;
+
+                > label.control-label {
+                  display: none;
+                }
+
+                > input.form-control {
+                  width: 100%;
+                }
+              }
+
+              > div.form-group.field.field-array {
+                border: none;
+                width: 500px;
+                margin: 0px;
+
+                > fieldset.field.field-array.field-array-of-number {
+                  legend {
+                    display: none;
+                  }
+
+                  > div.row.array-item-list {
+                    border: none;
+
+                    > div.array-item {
+                      float: left;
+                      width: 240px !important;
+                      padding: 0px;
+                      padding-left: 5px;
+
+                      > div.col-xs-9
+                      > div.form-group.field.field-number {
+                        margin: 0px;
+
+                        > input.form-control {
+                          width: 100%;
+                        }
+                      }
+
+                      > div.col-xs-3.array-item-toolbox {
+                        display: none;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        > div.col-xs-3.array-item-toolbox {
+          display: none;
+        }
+      }
+    }
+  }
+}
+

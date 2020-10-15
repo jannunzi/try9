@@ -107,6 +107,6 @@ body {
     content: "Preset " counter(preset);
 }
 
-#root_Customer > .form-group.field.field-array {
-    height: 900px;
-}
+/*#root_Customer > .form-group.field.field-array {*/
+/*    height: 900px;*/
+/*}*/

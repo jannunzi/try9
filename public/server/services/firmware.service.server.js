@@ -220,10 +220,12 @@ const repackageZczFile = (firmware) =>
 const unpackZczFile = (firmware) =>
   utils.unpackZczFile2(`${homedir}/mks/configurator`, firmware)
 
-const unpackAesFile = (firmwareFileName) => {
+const unpackAesFile = (firmwareFileName, callback) => {
+  // jga
   aesService.unpackAes2(
     `${homedir}/mks/configurator/uploads/${firmwareFileName}`,
-    `${homedir}/mks/configurator/unpacked/${firmwareFileName}`)
+    `${homedir}/mks/configurator/unpacked/${firmwareFileName}`,
+    callback)
 }
 
 const packAesFile = (firmwareFileName) => {

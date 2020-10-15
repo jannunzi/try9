@@ -99,9 +99,11 @@ module.exports = (app, upload) => {
                 utils.cleanFolders()
                 return res.sendStatus(200)
             } else if(firmwareName.endsWith('aes')) {
-                firmwareService.unpackAesFile(firmwareName)
-                utils.cleanFolders()
-                return res.sendStatus(200)
+                //jga
+                firmwareService.unpackAesFile(firmwareName, () => {
+                    utils.cleanFolders()
+                    return res.sendStatus(200)
+                })
             }
         })
     })

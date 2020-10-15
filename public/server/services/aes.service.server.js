@@ -79,7 +79,8 @@ const unpackAes = (sourceAesFilePath) => {
   )
 }
 
-const unpackAes2 = (inputFilePath, outputFolder) => {
+const unpackAes2 = (inputFilePath, outputFolder, callback) => {
+  // jga
   const inputFilePathParts = inputFilePath.split('/')
   const inputFileName = inputFilePathParts[inputFilePathParts.length - 1]
   openSslService.openSslDecrypt(
@@ -97,6 +98,10 @@ const unpackAes2 = (inputFilePath, outputFolder) => {
       utils.writeTimestampFile(`${SCHEMAS_PATH(inputFileName)}`, '__IGNORE__')
 
       fs.removeSync(`${TMP_PATH}/__tmp.zip`)
+
+      if(typeof callback === "function") {
+        callback()
+      }
     })
 }
 

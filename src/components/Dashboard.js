@@ -22,9 +22,9 @@ export default class Dashboard extends React.Component {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a className="navbar-brand" href="/">
+              <span className="navbar-brand">
                 <img alt="" src={logo} className="mks-width-5em"/>
-              </a>
+              </span>
             </div>
             <div id="navbar" className="navbar-collapse collapse mks-invisible">
               <ul className="nav navbar-nav navbar-right">
@@ -83,7 +83,7 @@ export default class Dashboard extends React.Component {
                        return(<Redirect to="/firmwares"/>)}}/>
               <Route path={[`/firmwares`, `/firmwares/:fileName`]}
                      exact={true}
-                     render={(props) => <Firmwares contrast={false} {...props}/>}/>
+                     render={(props) => <Firmwares {...props}/>}/>
               <Route path="/configurations" exact={true}
                      component={ConfigurationFormEditorWrapper}/>
               <Route path="/schemas" exact={true}

@@ -1,0 +1,13 @@
+<svg width="1000px" height="30px" xmlns="http://www.w3.org/2000/svg">
+        <foreignObject
+                width="100%" height="100%" x="0" y="0">
+                <div xmlns="http://www.w3.org/1999/xhtml"
+                     class="mks-font-family-oswald"
+                     style="font-family: 'arial'; font-size: 18px; color: rgb(010,087,164);">
+                        <div class="mks-entry" style="float: left; width: 100px;">Data point</div>
+                        <div class="mks-entry" style="float: left; width: 255px">Dissipation and/or interval</div>
+                        <div class="mks-entry" style="float: left; width: 240px">Dissipation (Watts)</div>
+                        <div class="mks-entry" style="float: left; width: 300px">Time interval (seconds)</div>
+                </div>
+        </foreignObject>
+</svg>

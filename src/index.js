@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+// import './styling/counters.scss';
+import './styling/stateCounter.scss';
+import './styling/compact-labeled-arraylist-item.scss';
+import './styling/mainController.scss';
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,0 +1,123 @@
+@mixin add-label-array-item-list-children($nth-child, $content) {
+  .row.array-item-list
+  .array-item:nth-child(#{$nth-child})
+  .col-xs-9
+  .form-group.field {
+    .control-label::before {
+      content: $content
+    }
+  }
+}
+
+// FREQUENCY CONFIGURATION
+// PRODUCT
+// Absolute Limits
+#root_Product_Basic\ Settings_Absolute\ Limits {
+  @include add-label-array-item-list-children(1, "Lower Limit");
+  @include add-label-array-item-list-children(2, "Upper Limit");
+}
+// IMD Reduction Active - High Pass Filter Coefficients
+#root_Product_IMD\ Reduction\ Active_High\ Pass\ Filter\ Coefficients {
+  @include add-label-array-item-list-children(1, "B0");
+  @include add-label-array-item-list-children(2, "B1");
+  @include add-label-array-item-list-children(3, "B2");
+  @include add-label-array-item-list-children(4, "A1");
+  @include add-label-array-item-list-children(5, "A2");
+}
+// Normal Operation - High Pass Filter Coefficients*
+#root_Product_Normal\ Operation_High\ Pass\ Filter\ Coefficients {
+  @include add-label-array-item-list-children(1, "B0");
+  @include add-label-array-item-list-children(2, "B1");
+  @include add-label-array-item-list-children(3, "B2");
+  @include add-label-array-item-list-children(4, "A1");
+  @include add-label-array-item-list-children(5, "A2");
+}
+// CUSTOMER
+// Operating Range
+
+// DRIVE CONTROLLER
+// PRODUCT
+#root_Product_Basic\ Settings_Operating\ Range {
+  @include add-label-array-item-list-children(1, "Lower Limit");
+  @include add-label-array-item-list-children(2, "Upper Limit");
+}
+#root_Product_Basic\ Settings_Phase\ Operating\ Range {
+  @include add-label-array-item-list-children(1, "Lower Limit");
+  @include add-label-array-item-list-children(2, "Upper Limit");
+}
+// CUSTOMER
+#root_Customer_Basic\ Settings_Operating\ Range {
+  @include add-label-array-item-list-children(1, "Lower Limit");
+  @include add-label-array-item-list-children(2, "Upper Limit");
+}
+
+// CEX PERIOD ANALYZER SENSOR SCHEMA
+// CUSTOMER
+#root > {
+  @include add-label-array-item-list-children(1, "Lower Limit");
+  @include add-label-array-item-list-children(2, "Upper Limit");
+}
+
+// MAIN CONTROLLER CONFIGURATION
+// PRODUCT
+#root_Product_Gain\ Scheduler_Coefficients_Gamma_Proportional\ Coefficients,
+#root_Product_Gain\ Scheduler_Coefficients_Gamma_Integral\ Coefficients,
+#root_Product_Gain\ Scheduler_Coefficients_Forward\ Power_Proportional\ Coefficients,
+#root_Product_Gain\ Scheduler_Coefficients_Forward\ Power_Integral\ Coefficients {
+  @include add-label-array-item-list-children(1, "Coefficient 1");
+  @include add-label-array-item-list-children(2, "Coefficient 2");
+  @include add-label-array-item-list-children(3, "Coefficient 3");
+  @include add-label-array-item-list-children(4, "Coefficient 4");
+  @include add-label-array-item-list-children(5, "Coefficient 5");
+  @include add-label-array-item-list-children(6, "Coefficient 6");
+  @include add-label-array-item-list-children(7, "Coefficient 7");
+  @include add-label-array-item-list-children(8, "Coefficient 8");
+  @include add-label-array-item-list-children(9, "Coefficient 9");
+}
+// CUSTOMER
+#root_Customer_Pulse\ Edge\ Setpoint\ Ramp {
+  @include add-label-array-item-list-children(1, "Setpoint 1");
+  @include add-label-array-item-list-children(2, "Setpoint 2");
+  @include add-label-array-item-list-children(3, "Setpoint 3");
+  @include add-label-array-item-list-children(4, "Setpoint 4");
+}
+// METER CONFIGURATION
+#root_0_Fault\ Bounds,
+#root_0_Warning\ Bounds,
+#root_1_Fault\ Bounds,
+#root_1_Warning\ Bounds,
+#root_2_Fault\ Bounds,
+#root_2_Warning\ Bounds,
+#root_3_Fault\ Bounds,
+#root_3_Warning\ Bounds {
+  @include add-label-array-item-list-children(1, "-HUGE_VALF");
+  @include add-label-array-item-list-children(2, "HUGE_VALF");
+}
+
+// RAIL CONTROLLER
+#root_Control\ Coefficients {
+  @include add-label-array-item-list-children(1, "Proportional Gain");
+  @include add-label-array-item-list-children(2, "Integrator Gain");
+  @include add-label-array-item-list-children(3, "Drive Threshold");
+  @include add-label-array-item-list-children(4, "Negative Clamp (Creep)");
+}
+
+// TIMBERS CONFIGURATION
+// PRODUCT
+#root_Probe\ Amplitude\ Coefficients {
+  @include add-label-array-item-list-children(1, "A");
+  @include add-label-array-item-list-children(2, "B");
+  @include add-label-array-item-list-children(3, "C");
+}
+
+#root_Cost\ Function\ Weights {
+  @include add-label-array-item-list-children(1, "Average/Max");
+  @include add-label-array-item-list-children(2, "Zero-Crossing");
+  @include add-label-array-item-list-children(3, "Actuator Smoothness");
+  @include add-label-array-item-list-children(4, "Readback Smoothness");
+}
+
+#root_Expected\ Bias\ Frequency\ Range {
+  @include add-label-array-item-list-children(1, "Min");
+  @include add-label-array-item-list-children(2, "Max");
+}

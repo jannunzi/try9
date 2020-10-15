@@ -5,8 +5,9 @@ import firmwareService from '../../services/firmware.service.client'
 import schemaService from '../../services/schema.service.client'
 import Moment from 'moment'
 import {connect} from "react-redux";
+import {fetchFirmwares} from "../actions/firwareActions"
 
-export default class Firmwares extends React.Component {
+class Firmwares extends React.Component {
 
   state = {
     firmwares: [],
@@ -25,7 +26,8 @@ export default class Firmwares extends React.Component {
   addFolderBtn = null
 
   componentDidMount() {
-    this.fetchFirmwares()
+    this.props.fetchFirmwares(this.props.match.params.fileName)
+    // this.fetchFirmwares()
     Moment.locale('en');
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -218,8 +220,8 @@ export default class Firmwares extends React.Component {
                   Add Folder
                 </button>
               </a>
-              {this.state.firmwares &&
-              this.state.firmwares.map((firmware, index) =>
+              {this.props.state.firmwares &&
+              this.props.state.firmwares.map((firmware, index) =>
                 <span key={index}>
                   <NavLink to={`/firmwares/${firmware.fileName}`}
                            className={`list-group-item 
@@ -355,3 +357,16 @@ export default class Firmwares extends React.Component {
     )
   }
 }
+
+const stateToPropertyMapper = (state) => ({
+  state: state.firmwareReducer
+})
+
+const propertyToDispatchMapper = (dispatch) => ({
+  fetchFirmwares: (fileNameParameter) =>
+    fetchFirmwares(dispatch, fileNameParameter)
+})
+
+export default connect
+(stateToPropertyMapper, propertyToDispatchMapper)
+(Firmwares)

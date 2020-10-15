@@ -1,0 +1,230 @@
+@mixin select-state-counter($counter) {
+  .row.array-item-list
+  .array-item {
+    .col-xs-9
+    .form-group.field {
+      label.control-label
+      span::before {
+        counter-increment: $counter;
+        content: " " counter($counter);
+      }
+
+      label.control-label {
+        float: left;
+        margin-right: 15px;
+        margin-top: 4px !important;
+      }
+
+      select {
+        width: 30%;
+      }
+    }
+  }
+}
+
+@mixin check-box-state-counter($counter) {
+  .row.array-item-list
+  .array-item {
+    .col-xs-9
+    .form-group.field.field-boolean {
+      .checkbox
+      label {
+        input[type=checkbox] {
+          width: 20px;
+          height: 20px;
+          position: relative;
+          top: 2px;
+          margin-right: 5px;
+          border: 1px solid lightgray;
+        }
+
+        span::after {
+          counter-increment: $counter;
+          content: " " counter($counter);
+        }
+      }
+    }
+  }
+}
+
+@mixin input-field-state-counter($counter) {
+  .row.array-item-list
+  .array-item {
+    .col-xs-9
+    .form-group.field {
+      label.control-label
+      span::before {
+        counter-increment: $counter;
+        content: " " counter($counter);
+      }
+    }
+  }
+}
+
+body {
+  counter-reset: bin -1 preset 0
+  entry 0
+  main-controller-power-profile-entry 0
+  state 0
+  edge-ramping-state-counter 0
+  pid-restore-state-counter 0
+  tuning-allowed-counter 0
+  resume-delay-state-counter 0
+  recall-mode-when-tuning-not-allowed-counter 0
+  recall-mode-counter 0
+  control-mode-couter 0
+  convergence-threshold-counter 0
+  convergence-samples-counter 0
+  default-tuners-when-boot-counter 0
+  dft-gains-counter 0
+  DFT-Rotation-Angles-counter 0
+    /* BIN SYNCED READBACKS */
+  Pulse-Edge-Holdoff-counter 0
+  Pulse-Capture-Window-Time-counter 0
+    /* MAIN CONTROLLER CONFIGURATION - CUSTOMER */
+  Gamma-Blanking-Time-counter 0
+    /* PULSING CONFIGURATION - CUSTOMER */
+  Pulse-Edge-Delay-counter 0
+  IMD-Reduction-Active-Perturbation-Frequency 0
+  IMD-Reduction-Active_Perturbation-Amplitude 0
+  IMD-Reduction-Active_Integrator-Gain 0
+  Normal-Operation_Perturbation-Frequency 0
+  Normal-Operation_Perturbation-Amplitude 0
+  Normal-Operation_Integrator-Gain 0
+  Control-Coefficients-counter 0
+  Phase-Control-Coefficients-counter 0
+  Edge-Holdoff-counter 0
+    /* TIMBERS CONFIGURATION - PRODUCT */
+  Tune-Thresholds-counter 0
+
+  Voltage-Setpoints-counter 0
+  Phase-Setpoints-counter 0;
+}
+
+
+fieldset#root {
+  //BFT DFT Tuner Configuration
+  // PRODUCT
+  #root_Product_IMD\ Reduction\ Active_Perturbation\ Frequency {
+    @include input-field-state-counter(IMD-Reduction-Active-Perturbation-Frequency)
+  }
+
+  #root_Product_IMD\ Reduction\ Active_Perturbation\ Amplitude {
+    @include input-field-state-counter(IMD-Reduction-Active_Perturbation-Amplitude)
+  }
+
+  #root_Product_IMD\ Reduction\ Active_Integrator\ Gain {
+    @include input-field-state-counter(IMD-Reduction-Active_Integrator-Gain)
+  }
+
+  #root_Product_Normal\ Operation_Perturbation\ Frequency {
+    @include input-field-state-counter(Normal-Operation_Perturbation-Frequency)
+  }
+
+  #root_Product_Normal\ Operation_Perturbation\ Amplitude {
+    @include input-field-state-counter(Normal-Operation_Perturbation-Amplitude)
+  }
+
+  #root_Product_Normal\ Operation_Integrator\ Gain {
+    @include input-field-state-counter(Normal-Operation_Integrator-Gain)
+  }
+
+  // CUSTOMER
+  #root_Customer_Basic\ Settings_Recall\ Mode {
+    @include select-state-counter(recall-mode-counter);
+  }
+
+  #root_Customer_Basic\ Settings_Recall\ Mode\ When\ Tuning\ NotAllowed {
+    @include select-state-counter(recall-mode-when-tuning-not-allowed-counter);
+  }
+
+  #root_Customer_Basic\ Settings_Resume\ Delay {
+    @include input-field-state-counter(resume-delay-state-counter)
+  }
+
+  #root_Customer_Basic\ Settings_Tuning\ Allowed {
+    @include check-box-state-counter(tuning-allowed-counter)
+  }
+
+  #root_Customer_Basic\ Settings_Control\ Mode {
+    @include select-state-counter(control-mode-couter);
+  }
+
+  #root_Customer_Convergence\ Threshold {
+    @include input-field-state-counter(convergence-threshold-counter)
+  }
+
+  #root_Customer_Convergence\ Samples {
+    @include input-field-state-counter(convergence-samples-counter)
+  }
+
+  #root_Customer_Default\ Tuners\ When\ Boot {
+    @include select-state-counter(default-tuners-when-boot-counter);
+  }
+
+  #root_Customer_DFT\ Gains {
+    @include input-field-state-counter(dft-gains-counter)
+  }
+
+  #root_Customer_DFT\ Rotation\ Angles {
+    @include input-field-state-counter(DFT-Rotation-Angles-counter)
+  }
+
+  // BIN SYNCED READBACKS
+  #root_Product_Pulse\ Edge\ Holdoff {
+    @include input-field-state-counter(Pulse-Edge-Holdoff-counter)
+  }
+
+  #root_Product_Pulse\ Capture\ Window\ Time {
+    @include input-field-state-counter(Pulse-Capture-Window-Time-counter)
+  }
+
+  // MAIN CONTROLLER CONFIGURATION - CUSTOMER
+  #root_Customer_Gamma\ Blanking\ Time {
+    @include input-field-state-counter(Gamma-Blanking-Time-counter)
+  }
+
+  #root_Time {
+    @include input-field-state-counter(Gamma-Blanking-Time-counter)
+  }
+
+  // PULSING CONFIGURATION - CUSTOMER
+  #root_Pulse\ Edge\ Delay {
+    @include input-field-state-counter(Pulse-Edge-Delay-counter)
+  }
+
+  #root_Voltage\ Setpoints {
+    @include input-field-state-counter(Voltage-Setpoints-counter)
+  }
+  #root_Phase\ Setpoints {
+    @include input-field-state-counter(Phase-Setpoints-counter)
+  }
+
+  // Drive Controller
+  // PRODUCT
+  #root_Product_Control\ Coefficients {
+    @include input-field-state-counter(Control-Coefficients-counter)
+  }
+
+  #root_Product_Phase\ Control\ Coefficients {
+    @include input-field-state-counter(Phase-Control-Coefficients-counter)
+  }
+
+  #root_Product_Edge\ Holdoff {
+    @include input-field-state-counter(Edge-Holdoff-counter)
+  }
+
+  // CUSTOMER
+  #root_Customer_Edge\ Ramping {
+    @include input-field-state-counter(edge-ramping-state-counter)
+  }
+
+  #root_Customer_PID\ Restore_Enable {
+    @include check-box-state-counter(pid-restore-state-counter)
+  }
+
+  // TIMBERS CONFIGURATION - PRODUCT
+  #root_Tune\ Thresholds {
+    @include input-field-state-counter(Tune-Thresholds-counter)
+  }
+}
