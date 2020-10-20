@@ -8,12 +8,12 @@ export default class GenericArrayDiffList extends React.Component {
         {
           this.props.side === "left" &&
           this.props.arrayDifferences.filter(diff => !diff[1].startsWith('__IGNORE')).map(diff =>
-            <li key={diff[1]}
+            <li key={diff[1]} title={diff[1]}
                 onClick={() => {
               if(diff[0] === "~") this.props.onSelectItem(diff[1])
             }}
               className={`
-                  list-group-item mks-white-space-nowrap
+                  list-group-item mks-white-space-nowrap mks-overflow-hidden
                    ${this.props.contrast ? "mks-color-blind" : ""}
                    ${diff[1] === this.props.selectedJsonFile ? "mks-selected" : ""}
                    ${diff[0] === "~" ? "list-group-item-info" : ""}
@@ -25,7 +25,7 @@ export default class GenericArrayDiffList extends React.Component {
               {diff[1]}
               {
                 diff[0] === "~" &&
-                <i className="fa fa-eye mks-position-absolute-top-right-15px"/>
+                <i className="fa mks-position-absolute-top-right-15px"/>
               }
               {
                 diff[0] === "+" &&
@@ -41,12 +41,12 @@ export default class GenericArrayDiffList extends React.Component {
         {
           this.props.side === "right" &&
           this.props.arrayDifferences.filter(diff => !diff[1].startsWith('__IGNORE')).map(diff =>
-            <li key={diff[1]}
+            <li key={diff[1]} title={diff[1]}
               onClick={() => {
               if(diff[0] === "~") this.props.onSelectItem(diff[1])
             }}
                 className={`
-                  list-group-item mks-white-space-nowrap
+                  list-group-item mks-white-space-nowrap mks-overflow-hidden
                    ${this.props.contrast ? "mks-color-blind" : ""}
                    ${diff[1] === this.props.selectedJsonFile ? "mks-selected" : ""}
                    ${diff[0] === "~" ? "list-group-item-info" : ""}
@@ -58,7 +58,7 @@ export default class GenericArrayDiffList extends React.Component {
               {diff[1]}
               {
                 diff[0] === "~" &&
-                <i className="fa fa-eye mks-position-absolute-top-right-15px"/>
+                <i className="fa mks-position-absolute-top-right-15px"/>
               }
               {
                 diff[0] === "+" &&

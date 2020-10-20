@@ -6,6 +6,10 @@
   visibility: hidden;
 }
 
+.mks-overflow-hidden {
+  overflow: hidden;
+}
+
 .mks-background-color {
   background-color: rgb(010, 087, 164);
 }
@@ -71,6 +75,11 @@ button[type='submit'] {
 .mks-position-absolute-right-15px {
   position: absolute;
   right: 15px;
+}
+
+.mks-position-absolute-bottom-15px {
+  position: absolute;
+  bottom: 15px;
 }
 
 .mks-bottom-5px {

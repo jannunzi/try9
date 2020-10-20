@@ -5,7 +5,7 @@ import firmwareService from '../../services/firmware.service.client'
 import schemaService from '../../services/schema.service.client'
 import Moment from 'moment'
 import {connect} from "react-redux";
-import {fetchFirmwares} from "../actions/firwareActions"
+import {fetchFirmwares} from "../../actions/firwareActions"
 
 class Firmwares extends React.Component {
 

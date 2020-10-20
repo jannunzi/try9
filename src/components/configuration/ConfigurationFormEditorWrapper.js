@@ -13,6 +13,7 @@ import {API_BASE_URL} from "../../config";
 import {getCurrentDateTime} from "../common/utils";
 import $ from 'jquery'
 import SaveAsDialog from "./SaveAsDialog";
+import {connect} from "react-redux";
 
 export default class ConfigurationFormEditorWrapper extends React.Component {
   saveChangesBtn = null
@@ -284,3 +285,15 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
     )
   }
 }
+
+// const stateToPropertyMapper = (state) => ({
+//
+// })
+//
+// const propertyToDispatchMapper = (dispatch) => ({
+//
+// })
+//
+// export default connect
+// (stateToPropertyMapper())
+// (ConfigurationFormEditorWrapper)

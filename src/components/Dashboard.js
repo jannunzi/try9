@@ -7,8 +7,14 @@ import logo from "../images/mks-logo.png"
 import ConfigurationFormEditorWrapper from "./configuration/ConfigurationFormEditorWrapper";
 import Help from "./Help";
 import SchemaManager from "./schemas/SchemaManager";
+import {findAllSettings} from "../actions/applicationActions";
+import {connect} from "react-redux"
 
-export default class Dashboard extends React.Component {
+class Dashboard extends React.Component {
+  componentDidMount() {
+    this.props.findAllSettings()
+  }
+
   render() {
     return (
       <div className="height-100pc">
@@ -52,7 +58,7 @@ export default class Dashboard extends React.Component {
         </nav>
         <div className="container-fluid height-100pc">
           <div className="row height-100pc">
-            <div className="col-sm-3 col-md-2 sidebar">
+            <div className="col-md-2 sidebar hidden-sm">
               <ul className="nav nav-sidebar">
                 <li>
                   <NavLink to={`/firmwares`} activeClassName={`active`}>
@@ -75,8 +81,11 @@ export default class Dashboard extends React.Component {
                   </NavLink>
                 </li>
               </ul>
+              <div className="mks-position-absolute-bottom-15px">
+                version {this.props.settings.version}
+              </div>
             </div>
-            <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main height-100pc">
+            <div className="col-sm-12 col-md-10 col-md-offset-2 main height-100pc">
               <Route path="/"
                      exact={true}
                      render={() => {
@@ -102,3 +111,18 @@ export default class Dashboard extends React.Component {
     )
   }
 }
+
+const stateToPropertyMapper = (state) => ({
+  settings: state.applicationReducer.settings
+})
+
+const dispatchToPropertyMapper = (dispatch) => ({
+  findAllSettings: () => {
+    debugger
+    findAllSettings(dispatch)
+  }
+})
+
+export default connect
+(stateToPropertyMapper, dispatchToPropertyMapper)
+(Dashboard)

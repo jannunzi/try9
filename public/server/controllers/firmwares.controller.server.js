@@ -8,23 +8,19 @@ const settingsService = require('../services/settings.service.server')
 
 module.exports = (app, upload) => {
 
-    app.get('/api/firmwares/details', (req, res) => {
+    const findFirmwareDetails = (req, res) =>
         firmwareService.readDetailedFirmwareList(
-          details => res.send(details)
-        )
-    })
+          details => res.send(details))
 
-    app.get('/api/firmwares/:firmware', (req, res) => {
+    const downloadFirmware = (req, res) =>
         res.sendFile(`${homedir}/mks/configurator/downloads/${req.params.firmware}`, () => {
             utils.cleanFolders()
         })
-    })
 
-    app.get('/api/firmwares', (req, res) => {
+    const findFirmwareList = (req, res) =>
         res.send(firmwareService.readFirmwareList())
-    })
 
-    app.delete('/api/firmwares/:firmwareName', function (req, res) {
+    const deleteFirmware = (req, res) => {
         const firmwareName = req.params.firmwareName
         fs.removeSync(`${homedir}/mks/configurator/uploads/${firmwareName}`)
         fs.removeSync(`${homedir}/mks/configurator/unpacked/${firmwareName}`)
@@ -34,9 +30,9 @@ module.exports = (app, upload) => {
         settingsService.saveSettings(settings)
 
         res.sendStatus(200)
-    })
+    }
 
-    app.get('/api/firmwares/:firmware/package', (req, res) => {
+    const packageFirmware = (req, res) => {
         if(req.params.firmware.endsWith('.zcz')) {
             // firmwareService.downloadFirmware(req.params.firmware)
             firmwareService.repackageZczFile(req.params.firmware)
@@ -46,9 +42,9 @@ module.exports = (app, upload) => {
                 res.sendStatus(200)
             })
         }
-    })
+    }
 
-    app.post('/api/folders/:path', (req, res) => {
+    const uploadPath = (req, res) => {
         const ESCAPED_PATH = req.params.path
         const ORIGINAL_PATH = ESCAPED_PATH.replace(/\+/g, '/')
 
@@ -70,9 +66,9 @@ module.exports = (app, upload) => {
         fs.writeFileSync(`${UNPACKED_PATH}/${ESCAPED_PATH}/Schemas/${TIME_STAMP_FILE}`, NOW)
 
         res.send(req.params.path)
-    })
+    }
 
-    app.post('/api/firmwares', upload, (req, res, next) => {
+    const uploadFirmware = (req, res, next) => {
 
         upload(req, res, function (err, ddd) {
             let firmwareName = 'UNDEFINED'
@@ -106,5 +102,14 @@ module.exports = (app, upload) => {
                 })
             }
         })
-    })
+    }
+
+    app.delete('/api/firmwares/:firmwareName', deleteFirmware)
+    app.get('/api/firmwares/:firmware/package', packageFirmware)
+    app.get('/api/firmwares/details', findFirmwareDetails)
+    app.get('/api/firmwares/:firmware', downloadFirmware)
+    app.get('/api/firmwares', findFirmwareList)
+    app.post('/api/firmwares', upload, uploadFirmware)
+    app.post('/api/folders/:path', uploadPath)
+
 }

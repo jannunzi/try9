@@ -7,6 +7,8 @@ body {
     left: 15px;
     right: 0px;
     overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 15px;
 }
 
 #root_Customer_Hopping\ Presets .array-item:nth-child(odd) .col-xs-9,
@@ -105,6 +107,10 @@ body {
 #root_Customer_Hopping\ Presets > .row.array-item-list > .array-item > .col-xs-9 > .form-group.field.field-array > fieldset > legend::after {
     counter-increment: preset;
     content: "Preset " counter(preset);
+}
+
+.fa-1-5x {
+    font-size: 1.5em;
 }
 
 /*#root_Customer > .form-group.field.field-array {*/

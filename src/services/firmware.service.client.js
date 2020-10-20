@@ -1,5 +1,9 @@
 import {API_BASE_URL} from "../config";
-// import utils from '../'
+
+export const deleteFirmware = (firmwareName) =>
+  fetch(`${API_BASE_URL}/api/firmwares/${firmwareName}`, {
+    method: 'DELETE'
+  })
 
 export const fetchFirmwareFileDetails = () =>
   fetch(`${API_BASE_URL}/api/firmwares/details`)
@@ -35,5 +39,5 @@ export const compareJsons = (json1, json2) =>
     .then(response => response.json())
 
 export default {
-    fetchFirmwares, packageFirmware
+  deleteFirmware, fetchFirmwareFileDetails, fetchFirmwares, packageFirmware
 }

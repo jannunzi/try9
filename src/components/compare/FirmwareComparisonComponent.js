@@ -272,7 +272,7 @@ export default class FirmwareComparisonComponent extends React.Component {
         </ul>
         <br/>
         <div className="row">
-          <div className="col-xs-3">
+          <div className="col-xs-4">
             Select left firmware
             <StringArraySelectComponent
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareLeft")}
@@ -284,6 +284,8 @@ export default class FirmwareComparisonComponent extends React.Component {
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
                 side="left"
+                leftFirmware={this.state.firmwareLeft.firmware}
+                rightFirmware={this.state.firmwareLeft.firmware}
                 contrast={this.state.contrast}
                 selectedJsonFile={this.state.selectedJsonFile}
                 arrayDifferences={this.state.configurationFilesDiffs}/>
@@ -298,7 +300,7 @@ export default class FirmwareComparisonComponent extends React.Component {
                 arrayDifferences={this.state.schemaFilesDiffs}/>
             }
           </div>
-          <div className="col-xs-3">
+          <div className="col-xs-4">
             Select right firmware
             <StringArraySelectComponent
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareRight")}
@@ -325,17 +327,21 @@ export default class FirmwareComparisonComponent extends React.Component {
                 arrayDifferences={this.state.schemaFilesDiffs}/>
             }
           </div>
-          <div className="col-xs-6">
+          <div className="col-xs-4">
             {
               this.state.diff &&
               <div>
-                <DeletedAddedChangedLabels/>
+                <span className="hide">
+                Comparing<br/>
+                {this.state.firmwareLeft.firmware}<br/>
+                with<br/>
+                {this.state.firmwareRight.firmware}<br/>
+                </span>
                 <Tree contrast={this.state.contrast}
                       diff={this.state.diff}/>
+                <DeletedAddedChangedLabels/>
               </div>
             }
-          </div>
-          <div className="col-xs-3">
           </div>
           {
             this.state.configurationFilesDiffs &&

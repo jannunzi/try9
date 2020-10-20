@@ -15,7 +15,7 @@ export default class StringArrayDivListGroupComponent extends React.Component {
                      this.props.onSelectItem(item[this.props.field])
                      this.props.onSelectIndex(index)
                    }}
-                   className={`list-group-item mks-white-space-nowrap ${item.selected ? 'list-group-item-info' : ''}`}
+                   className={`list-group-item mks-white-space-nowrap mks-overflow-hidden ${item.selected ? 'list-group-item-info' : ''}`}
                    key={item}>
                   <i className="fa fa-file-text"/>
                   &nbsp;
@@ -37,7 +37,7 @@ export default class StringArrayDivListGroupComponent extends React.Component {
                      this.props.onSelectItem(item[this.props.field])
                      this.props.onSelectIndex(index)
                    }}
-                   className={`list-group-item mks-white-space-nowrap ${item.selected ? 'list-group-item-info' : ''}`}
+                   className={`list-group-item mks-white-space-nowrap mks-overflow-hidden ${item.selected ? 'list-group-item-info' : ''}`}
                    key={item[this.props.field]}>
                   <i className="fa fa-file-text"/>
                   &nbsp;
