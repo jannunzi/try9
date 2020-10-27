@@ -154,7 +154,7 @@ class Firmwares extends React.Component {
                   <div className="col-xs-12">
                     Configurations
                     <button onClick={this.addSchema}
-                            className={`${this.props.state.selectedFirmware.allowSchemaUpload !== true ? 'mks-invisible':''}
+                            className={`${this.props.state.selectedFirmware.allowSchemaUpload ? 'mks-invisible':''}
                                btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px`}>
                       Add Schema
                     </button>

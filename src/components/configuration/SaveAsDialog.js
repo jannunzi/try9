@@ -18,7 +18,7 @@ export default class SaveAsDialog extends React.Component {
 
             <label htmlFor="mks-overwrite-file">
               <input
-                checked="true"
+                checked={true}
                 name="mks-save-file"
                 id="mks-overwrite-file"
                 type="radio"/>
