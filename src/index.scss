@@ -34,7 +34,8 @@ code {
 .form-group.field.field-string > .form-control,
 .form-group.field.field-number > .form-control,
 .form-group.field.field-integer > .form-control {
-  width: 70%;
+  width: 100%;
+  padding-right: 10px;
 }
 
 .position-relative {
@@ -155,6 +156,7 @@ code {
   position: relative;
   top:  7px;
   left: 7px;
+  padding-right: 15px;
 }
 
 legend {
@@ -338,4 +340,46 @@ ul.list-group > ul.list-group {
 .col-xs-3.array-item-toolbox,
 .col-xs-3.col-xs-offset-9.text-right.array-item-add {
   display: none;
+}
+
+.modal {
+  display: block;
+}
+
+.mks-z-index-1 {
+  z-index: -1;
+}
+
+.navbar-toggle.collapsed {
+  display: none;
+}
+
+.main {
+  //z-index: -2;
+}
+
+
+#root .col-xs-9 {
+  width: 100%;
+}
+
+.mks.row {
+  clear: both;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.mks.col-6 {
+  float: left;
+  width: 50%;
+}
+
+.mks-font-size-15 {
+  font-size: 1.3em;
+  font-weight: bolder;
+}
+
+.mks-diff-background,
+.mks-diff-background * {
+  background-color: lightgrey;
 }

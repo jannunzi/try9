@@ -27,18 +27,8 @@
   .array-item {
     .col-xs-9
     .form-group.field.field-boolean {
-      .checkbox
       label {
-        input[type=checkbox] {
-          width: 20px;
-          height: 20px;
-          position: relative;
-          top: 2px;
-          margin-right: 5px;
-          border: 1px solid lightgray;
-        }
-
-        span::after {
+        span.position-relative::after {
           counter-increment: $counter;
           content: " " counter($counter);
         }
