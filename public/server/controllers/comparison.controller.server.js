@@ -1,5 +1,7 @@
 const fs = require('fs')
 const jsonDiff = require('json-diff')
+const diffJson = require('diff-json');
+
 const homedir = require('os').homedir();
 const {CONFIGS_PATH, SCHEMAS_PATH} = require('../common/paths');
 
@@ -7,34 +9,6 @@ const comparisonFilePath = (firmwareFileName, configOrSchema, jsonFileName) =>
   configOrSchema === 'Schema' ?
     `${SCHEMAS_PATH(firmwareFileName)}/${jsonFileName}` :
     `${CONFIGS_PATH(firmwareFileName)}/${jsonFileName}`
-// {
-  // if(configOrSchema === 'Schema') {
-  //   return SCHEMAS_PATH(firmwareFileName)
-  // } else {
-  //   return
-  // const isAesFile = firmwareFileName.endsWith('aes')
-  // const isZczFile = firmwareFileName.endsWith('zcz')
-  // const isAesOrZczFile = isAesFile || isZczFile
-  // if(isAesOrZczFile) {
-  //   if(isAesFile) {
-  //     if(configOrSchema === 'Schema') {
-  //       return SCHEMAS_PATH(firmwareFileName)
-  //     }
-  //     if(configOrSchema === 'Configs') {
-  //       return
-  //     }
-  //   }
-  //   return `${homedir}/mks/configurator/unpacked/${firmwareFileName}/${configOrSchema}/${jsonFileName}`
-  // } else {
-  //   if(configOrSchema === 'Schema') {
-  //     return SCHE
-  //   }
-  //   if(configOrSchema === 'Configs') {
-  //     configOrSchema = 'Configs/Permanent'
-  //   }
-  //   return `${homedir}/mks/configurator/unpacked/${firmwareFileName}/${configOrSchema}/${jsonFileName}`
-  // }
-// }
 
 module.exports = (app) => {
   const compareFirmwares = (req, res) => {
@@ -48,15 +22,12 @@ module.exports = (app) => {
       res.json({})
       return
     }
-
-    // const file1 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware1}/${what1}`)
-    // const file2 = fs.readFileSync(`${homedir}/mks/configurator/${what}/${firmware2}/${what2}`)
     let file1 = '{}'
     let file2 = '{}'
 
     try {
       const path1 = comparisonFilePath(firmware1, configOrSchema, jsonFile1)
-      const path2 = comparisonFilePath(firmware2, configOrSchema, jsonFile1)
+      const path2 = comparisonFilePath(firmware2, configOrSchema, jsonFile2)
       file1 = fs.readFileSync(path1)
       file2 = fs.readFileSync(path2)
     }
@@ -72,6 +43,7 @@ module.exports = (app) => {
     if(difference) {
       difference.fileName = jsonFile1
       difference.diffString = diffString
+      difference.diffJson = diffJson.diff(json1, json2);
     }
 
     res.json(difference);

@@ -10,7 +10,7 @@ import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
 import ToggleSwitch from "../widgets/ToggleSwitch";
 import diff1 from "./diff1"
 import diff2 from "./diff2"
-import {Tree} from "./Tree"
+import DiffJson from "./DiffJson";
 
 export default class FirmwareComparisonComponent extends React.Component {
 
@@ -47,15 +47,6 @@ export default class FirmwareComparisonComponent extends React.Component {
     }
   }
 
-  // [5,10,15,20]
-  // [  10,15   ] ==> [0,10,15,0]
-
-  // [5,15,10,20]
-  // [  10,15   ] ==> [0,15,10,0]
-
-  // [5,15,10,20     ] ==> [5,15,10,20, 0, 0]
-  // [  10,15,  25,30] ==> [0,15,10, 0,25,30]
-
   selectFirmware = (firmwareIndex, leftOrRight) => {
     const firmware = this.state.firmwares[firmwareIndex]
     fetchSchemaFilesWithContent(firmware)
@@ -84,15 +75,6 @@ export default class FirmwareComparisonComponent extends React.Component {
         })
       })
   }
-
-  //[1,2,3,4] ==> [1,2,3,4,0]
-  //[1,2,3,5] ==> [1,2,3,0,5]
-  //
-  //[2,4,6]   ==> [0,2,0,4,0,6]
-  //[1,3,5]   ==> [1,0,3,0,5,0]
-  //
-  //[2,4,6,8] ==> [0,2,0,4,0,6,8]
-  //[1,3,5]   ==> [1,0,3,0,5,0,0]
 
   compare = () => {
     this.compareSchemas()
@@ -140,6 +122,7 @@ export default class FirmwareComparisonComponent extends React.Component {
                 if(diff && diff.fileName) {
                   const fileName = diff.fileName
                   const diffString = diff.diffString
+                  const diffJson = diff.diffJson
                   delete diff.fileName
                   delete diff.diffString
 
@@ -155,6 +138,7 @@ export default class FirmwareComparisonComponent extends React.Component {
                   this.state.firmwareLeft.configurationFiles.forEach((configurationLeft, i) => {
                     if (configurationLeft.file === fileName) {
                       nextState.firmwareLeft.configurationFiles[i]['diff'] = diff
+                      nextState.firmwareLeft.configurationFiles[i]['diffJson'] = diffJson
                       nextState.firmwareLeft.configurationFiles[i]['selected'] = diff ? true : false
                     }
                   })
@@ -230,6 +214,7 @@ export default class FirmwareComparisonComponent extends React.Component {
         if(schemaFile.diff) {
           this.setState(prevState => ({
             diff: schemaFile.diff,
+            diffJson: schemaFile.diffJson,
             selectedJsonFile: selected
           }))
         }
@@ -337,8 +322,11 @@ export default class FirmwareComparisonComponent extends React.Component {
                 with<br/>
                 {this.state.firmwareRight.firmware}<br/>
                 </span>
-                <Tree contrast={this.state.contrast}
-                      diff={this.state.diff}/>
+                <div className="mks-font-size-15">
+                  {"{"}
+                  <DiffJson diff={this.state.diffJson}/>
+                  {"}"}
+                </div>
                 <DeletedAddedChangedLabels/>
               </div>
             }
