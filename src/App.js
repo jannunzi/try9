@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router} from "react-router-dom";
+import {HashRouter as Router} from "react-router-dom";
 import './mks.scss'
 import Dashboard from "./components/Dashboard";
 import {createStore, combineReducers} from "redux";
