@@ -9,3 +9,7 @@ function createWindow () {
     `file://${path.join(__dirname, '../build/index.html')}`)
 }
 app.on('ready', createWindow)
+
+process.on('uncaughtException', function (error) {
+  console.log("error: " + error)
+})

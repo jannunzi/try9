@@ -9,10 +9,17 @@ import Help from "./Help";
 import SchemaManager from "./schemas/SchemaManager";
 import {findAllSettings} from "../actions/applicationActions";
 import {connect} from "react-redux"
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from "react-notifications";
+import ErrorBoundary from "./ErrorBoundary";
 
 class Dashboard extends React.Component {
   componentDidMount() {
     this.props.findAllSettings()
+  }
+
+  componentDidCatch(error, errorInfo) {
+    NotificationManager.error(error, "", 100000);
   }
 
   render() {
@@ -59,6 +66,7 @@ class Dashboard extends React.Component {
         <div className="container-fluid height-100pc">
           <div className="row height-100pc">
             <div className="col-md-2 sidebar hidden-sm">
+              <ErrorBoundary/>
               <ul className="nav nav-sidebar">
                 <li>
                   <NavLink to={`/firmwares`} activeClassName={`active`}>
@@ -86,11 +94,12 @@ class Dashboard extends React.Component {
               </div>
             </div>
             <div className="col-sm-12 col-md-10 col-md-offset-2 main height-100pc">
-              <Route path="/"
-                     exact={true}
-                     render={() => {
-                       return(<Redirect to="/firmwares"/>)}}/>
-              <Route path={[`/firmwares`, `/firmwares/:fileName`]}
+              <NotificationContainer/>
+              {/*<Route path="/"*/}
+              {/*       exact={true}*/}
+              {/*       render={() => {*/}
+              {/*         return(<Redirect to="/firmwares"/>)}}/>*/}
+              <Route path={['/', '/firmwares', '/firmwares/:fileName']}
                      exact={true}
                      render={(props) => <Firmwares {...props}/>}/>
               <Route path="/configurations" exact={true}
@@ -117,10 +126,7 @@ const stateToPropertyMapper = (state) => ({
 })
 
 const dispatchToPropertyMapper = (dispatch) => ({
-  findAllSettings: () => {
-    debugger
-    findAllSettings(dispatch)
-  }
+  findAllSettings: () => findAllSettings(dispatch)
 })
 
 export default connect
