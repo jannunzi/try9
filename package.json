@@ -1,6 +1,6 @@
 {
   "name": "Novina-Configurator",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "homepage": "./",
   "main": "public/main.js",
   "private": true,
@@ -60,6 +60,7 @@
     "electron-start": "electron .",
     "preelectron-pack": "npm run build",
     "electron-pack": "electron-builder --win --macos -c.extraMetadata.main=build/main.js",
+    "electron-win": "electron-builder --win -c.extraMetadata.main=build/main.js",
     "electron-pack2": "electron-builder --linux --win --macos -c.extraMetadata.main=build/main.js",
     "electron-build": "electron-builder"
   },
