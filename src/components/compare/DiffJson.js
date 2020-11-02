@@ -38,7 +38,7 @@ const DiffJson = ({diff=[]}) =>
         <li key={index} className="list-group-item mks">
           {
             isNaN(d.key)?
-              <span>{d.key} {d.type}&nbsp;:&nbsp;</span>:
+              <span>{d.key}&nbsp;:&nbsp;</span>:
               ""
           }
           {
@@ -59,13 +59,13 @@ const DiffJson = ({diff=[]}) =>
           {
             typeOf(d.value) && d.type === "remove" &&
             <div className="mks row">
-              <div className="__old mks col-6">{typeOf(d.value)}</div>
+              <div className="__old mks col-12">{typeOf(d.value)}</div>
             </div>
           }
           {
             typeOf(d.value) && d.type === "add" &&
             <div className="mks row">
-              <div className="__new mks col-6">{typeOf(d.value)}</div>
+              <div className="__new mks col-12">{typeOf(d.value)}</div>
             </div>
           }
           <DiffJson diff={d.changes}/>
