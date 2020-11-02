@@ -20,10 +20,9 @@ const CONFIGS_PATH = (firmwareName) => {
   if(firmwareName.endsWith('zcz')) {
     return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs`
   } else if(firmwareName.endsWith('aes')) {
-    // return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Permanent`
     if(fs.existsSync(`${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Apply`)) {
       return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Apply`
-    } else if(fs.existsSync(`${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Apply`)) {
+    } else if(fs.existsSync(`${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Permanent`)) {
       return `${homedir}/mks/configurator/unpacked/${firmwareName}/Configs/Permanent`
     }
   } else {
