@@ -18,5 +18,8 @@ export const deleteSchemaFile = (firmware, schema) =>
   })
 
 export default {
-    deleteSchemaFile, fetchSchemaFiles, fetchSchemaFileContent
+  deleteSchemaFile,
+  fetchSchemaFiles,
+  fetchSchemaFileContent,
+  fetchSchemaFilesWithContent
 }

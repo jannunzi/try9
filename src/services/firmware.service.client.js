@@ -39,5 +39,11 @@ export const compareJsons = (json1, json2) =>
     .then(response => response.json())
 
 export default {
-  deleteFirmware, fetchFirmwareFileDetails, fetchFirmwares, packageFirmware
+  fetchFirmwares,
+  fetchAllFirmwares,
+  fetchFirmwareFileDetails,
+  compareJsons,
+  compareFirmwares,
+  deleteFirmware,
+  packageFirmware
 }

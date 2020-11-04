@@ -1,8 +1,9 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
-import {fetchAllFirmwares, compareFirmwares, compareJsons} from "../../services/firmware.service.client";
-import {fetchSchemaFilesWithContent} from "../../services/schema.service.client";
-import {fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
+import firmwareService, {fetchAllFirmwares, compareFirmwares, compareJsons} from "../../services/firmware.service.client";
+import firmwareActions from "../../actions/firwareActions"
+import schemaService, {fetchSchemaFilesWithContent} from "../../services/schema.service.client";
+import configurationService, {fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
 import StringArraySelectComponent from "./StringArraySelectComponent";
 import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
 import GenericArrayDiffList from "./generic/GenericArrayDiffList";
@@ -11,16 +12,20 @@ import ToggleSwitch from "../widgets/ToggleSwitch";
 import diff1 from "./diff1"
 import diff2 from "./diff2"
 import DiffJson from "./DiffJson";
+import {connect} from "react-redux";
+import configurationActions from "../../actions/configurationActions"
 import { JsonEditor as Editor } from 'jsoneditor-react';
+import ReactJson from 'react-json-view'
+
 import 'jsoneditor-react/es/editor.min.css';
 
-export default class FirmwareComparisonComponent extends React.Component {
+class FirmwareComparisonComponent extends React.Component {
 
   state = {
     what: "configurations",
     selectedLeftFirmwareIndex: 0,
     selectedRightFirmwareIndex: 0,
-    firmwares: [],
+    // firmwares: [],
     firmwareLeft: {firmware: '', index: 0, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
     firmwareRight: {firmware: '', index: 0, title: '', schemaFiles: [], configurationFiles: [], schemas: {}},
     configurationFilesDiffs: [],
@@ -29,16 +34,12 @@ export default class FirmwareComparisonComponent extends React.Component {
     selectedJsonFile: null,
     contrast: this.props.contrast,
     diff1: diff1,
-    diff2: diff2
+    diff2: diff2,
+    props: this.props
   }
 
   componentDidMount() {
-    fetchAllFirmwares()
-      .then(firmwares => {
-        this.setState({firmwares})
-        this.selectFirmware(this.state.firmwareLeft.index, "firmwareLeft")
-        this.selectFirmware(this.state.firmwareRight.index, "firmwareRight")
-      })
+    this.props.fetchAllFirmwares()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -47,46 +48,61 @@ export default class FirmwareComparisonComponent extends React.Component {
         contrast: this.props.contrast
       })
     }
+    if(prevProps.firmwares !== this.props.firmwares) {
+      this.selectFirmware(0, "firmwareLeft")
+      this.selectFirmware(0, "firmwareRight")
+    }
+    if(prevProps !== this.props) {
+      this.setState({props: this.props})
+    }
   }
 
   selectFirmware = (firmwareIndex, leftOrRight) => {
-    const firmware = this.state.firmwares[firmwareIndex]
-    fetchSchemaFilesWithContent(firmware)
-      .then(schemaFiles => {
-        this.setState(prevState => {
-          let nextState = {...prevState}
-          nextState[leftOrRight].schemaFiles = schemaFiles
-          nextState[leftOrRight].firmware = firmware
-          nextState[leftOrRight].index = firmwareIndex
-          nextState.configurationFilesDiffs = []
-          nextState.schemaFilesDiffs = []
-          nextState.diff = null
-          nextState.selectedJsonFile = null
+    const firmware = this.props.firmwares[firmwareIndex]
 
-          return nextState
-        })
-      })
-    fetchConfigurationFilesWithContent(firmware)
-      .then(configurationFiles => {
-        this.setState(prevState => {
-          let nextState = {...prevState}
-          nextState[leftOrRight].configurationFiles = configurationFiles
-          nextState[leftOrRight].firmware = firmware
-          nextState[leftOrRight].index = firmwareIndex
-          return nextState
-        })
-      })
+    this.props.fetchConfigurationAndSchemaFilesWithContent(firmware, firmwareIndex, leftOrRight)
+
+    // schemaService.fetchSchemaFilesWithContent(firmware)
+    //   .then(schemaFiles => {
+    //     this.setState(prevState => {
+    //       let nextState = {...prevState}
+    //       nextState[leftOrRight].schemaFiles = schemaFiles
+    //       nextState[leftOrRight].firmware = firmware
+    //       nextState[leftOrRight].index = firmwareIndex
+    //       nextState.configurationFilesDiffs = []
+    //       nextState.schemaFilesDiffs = []
+    //       nextState.diff = null
+    //       nextState.selectedJsonFile = null
+    //
+    //       return nextState
+    //     })
+    //   })
+    // configurationService.fetchConfigurationFilesWithContent(firmware)
+    //   .then(configurationFiles => {
+    //     this.setState(prevState => {
+    //       let nextState = {...prevState}
+    //       nextState[leftOrRight].configurationFiles = configurationFiles
+    //       nextState[leftOrRight].firmware = firmware
+    //       nextState[leftOrRight].index = firmwareIndex
+    //       return nextState
+    //     })
+    //   })
   }
 
   compare = () => {
-    this.compareSchemas()
+    // this.compareSchemas()
     this.compareConfigurations()
   }
 
   compareConfigurations = () => {
+    this.props.compareConfigurations(this.props.firmwareLeft, this.props.firmwareRight)
+  }
 
-    const leftConfigurationFiles  = this.state.firmwareLeft.configurationFiles.map(file => file.file)
-    const rightConfigurationFiles = this.state.firmwareRight.configurationFiles.map(file => file.file)
+  compareConfigurations2 = () => {
+
+
+    const leftConfigurationFiles  = this.props.firmwareLeft.configurationFiles.map(file => file.file)
+    const rightConfigurationFiles = this.props.firmwareRight.configurationFiles.map(file => file.file)
 
     compareJsons(
       leftConfigurationFiles,
@@ -211,7 +227,9 @@ export default class FirmwareComparisonComponent extends React.Component {
   }
 
   onSelectItem = (selected, what) => {
-    this.state.firmwareLeft[what].forEach(schemaFile => {
+    debugger
+    this.props.firmwareLeft[what].forEach(schemaFile => {
+      debugger
       if(schemaFile.file === selected) {
         if(schemaFile.diff) {
           this.setState(prevState => ({
@@ -263,55 +281,58 @@ export default class FirmwareComparisonComponent extends React.Component {
             Select left firmware
             <StringArraySelectComponent
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareLeft")}
-              array={this.state.firmwares}/>
+              array={this.props.firmwares}/>
 
             <br/>
             {
               this.props.match.params.what === "configurations" &&
+              this.props.firmwareLeft &&
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
                 side="left"
-                leftFirmware={this.state.firmwareLeft.firmware}
-                rightFirmware={this.state.firmwareLeft.firmware}
-                contrast={this.state.contrast}
-                selectedJsonFile={this.state.selectedJsonFile}
-                arrayDifferences={this.state.configurationFilesDiffs}/>
+                leftFirmware={this.props.firmwareLeft.firmware}
+                rightFirmware={this.props.firmwareLeft.firmware}
+                contrast={this.props.contrast}
+                selectedJsonFile={this.props.selectedJsonFile}
+                arrayDifferences={this.props.configurationFilesDiffs}/>
             }
             {
               this.props.match.params.what === "schemas" &&
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "schemaFiles")}
                 side="left"
-                contrast={this.state.contrast}
-                selectedJsonFile={this.state.selectedJsonFile}
-                arrayDifferences={this.state.schemaFilesDiffs}/>
+                contrast={this.props.contrast}
+                selectedJsonFile={this.props.selectedJsonFile}
+                arrayDifferences={this.props.schemaFilesDiffs}/>
             }
           </div>
           <div className="col-xs-4">
             Select right firmware
             <StringArraySelectComponent
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareRight")}
-              array={this.state.firmwares}/>
+              array={this.props.firmwares}/>
 
             <br/>
 
             {
               this.props.match.params.what === "configurations" &&
+              this.props.configurationFilesDiffs &&
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
                 side="right"
-                contrast={this.state.contrast}
-                selectedJsonFile={this.state.selectedJsonFile}
-                arrayDifferences={this.state.configurationFilesDiffs}/>
+                contrast={this.props.contrast}
+                selectedJsonFile={this.props.selectedJsonFile}
+                arrayDifferences={this.props.configurationFilesDiffs}/>
             }
             {
               this.props.match.params.what === "schemas" &&
+              this.props.schemaFilesDiffs &&
               <GenericArrayDiffList
                 onSelectItem={(file) => this.onSelectItem(file, "schemaFiles")}
                 side="right"
-                contrast={this.state.contrast}
-                selectedJsonFile={this.state.selectedJsonFile}
-                arrayDifferences={this.state.schemaFilesDiffs}/>
+                contrast={this.props.contrast}
+                selectedJsonFile={this.props.selectedJsonFile}
+                arrayDifferences={this.props.schemaFilesDiffs}/>
             }
           </div>
           <div className="col-xs-4">
@@ -320,9 +341,9 @@ export default class FirmwareComparisonComponent extends React.Component {
               <div>
                 <span className="hide">
                 Comparing<br/>
-                {this.state.firmwareLeft.firmware}<br/>
+                {this.props.firmwareLeft.firmware}<br/>
                 with<br/>
-                {this.state.firmwareRight.firmware}<br/>
+                {this.props.firmwareRight.firmware}<br/>
                 </span>
                 <div className="mks-font-size-15">
                   {"{"}
@@ -334,9 +355,10 @@ export default class FirmwareComparisonComponent extends React.Component {
             }
           </div>
           {
-            this.state.configurationFilesDiffs &&
-            this.state.configurationFilesDiffs.length > 0 &&
-            this.state.selectedJsonFile === null &&
+            this.props.configurationFilesDiffs &&
+            this.props.configurationFilesDiffs.length &&
+            this.props.configurationFilesDiffs.length > 0 &&
+            !this.props.selectedJsonFile &&
             <div className="col-xs-6">
               <div className="alert alert-info">
                 Select files labeled <i className="fa fa-eye"/> on the left to compare them
@@ -344,19 +366,31 @@ export default class FirmwareComparisonComponent extends React.Component {
             </div>
           }
           {
-            this.state.firmwareLeft.index == this.state.firmwareRight.index &&
+            this.props.firmwareLeft &&
+            this.props.firmwareRight &&
+            typeof this.props.firmwareLeft.index !== "undefined" &&
+            <span>Please choose two different choices from the dropdowns above|
+              {JSON.stringify(this.props.firmwareLeft.index === this.props.firmwareRight.index)}|</span>
+          }
+          {
+            this.props.firmwareLeft &&
+            this.props.firmwareRight &&
+            typeof this.props.firmwareLeft.index !== "undefined" &&
+            typeof this.props.firmwareRight.index !== "undefined" &&
+            this.props.firmwareLeft.index === this.props.firmwareRight.index &&
             <div className="col-xs-12">
               <div className="alert alert-info">
                 Please choose two different choices from the dropdowns above
               </div>
             </div>
           }
-          {/*{this.state.firmwareLeft.index}*/}
-          {/*{this.state.firmwareRight.index}*/}
-          {/*{this.state.configurationFilesDiffs.length}*/}
           {
-            this.state.firmwareLeft.index != this.state.firmwareRight.index &&
-            this.state.configurationFilesDiffs.length === 0 &&
+            this.props.firmwareLeft &&
+            this.props.firmwareRight &&
+            typeof this.props.firmwareLeft.index !== "undefined" &&
+            typeof this.props.firmwareRight.index !== "undefined" &&
+            this.props.firmwareLeft.index !== this.props.firmwareRight.index &&
+            this.props.configurationFilesDiffs.length === 0 &&
             <div className="col-xs-12">
               <div className="alert alert-info">
                 Click on
@@ -372,7 +406,28 @@ export default class FirmwareComparisonComponent extends React.Component {
             </div>
           }
         </div>
+        {/*<Editor value={this.state.props}/>*/}
+        {/*<ReactJson src={this.state.props}/>*/}
+
+          {JSON.stringify(this.props)}
       </div>
     )
   }
 }
+
+const stateToPropertyMapper = (state) => ({
+  ...state.firmwareReducer,
+  ...state.configurationReducer
+})
+
+const dispatchToPropertyMapper = (dispatch) => ({
+  compareConfigurations: (firmwareLeft, firmwareRight) => configurationActions.compareConfigurations(dispatch, firmwareLeft, firmwareRight),
+  fetchAllFirmwares: () => firmwareActions.fetchAllFirmwares(dispatch),
+  fetchConfigurationAndSchemaFilesWithContent:
+    (firmware, firmwareIndex, leftOrRight) =>
+      firmwareActions.fetchConfigurationAndSchemaFilesWithContent(dispatch, firmware, firmwareIndex, leftOrRight)
+})
+
+export default connect
+  (stateToPropertyMapper, dispatchToPropertyMapper)
+  (FirmwareComparisonComponent)

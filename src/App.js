@@ -6,9 +6,12 @@ import {createStore, combineReducers} from "redux";
 import {Provider} from "react-redux"
 import firmwareReducer from "./reducers/firmwareReducer";
 import applicationReducer from "./reducers/applicationReducer";
+import configurationReducer from "./reducers/configurationReducer";
+import schemaReducer from "./reducers/schemaReducer";
 
 const rootReducer = combineReducers({
-  applicationReducer, firmwareReducer
+  applicationReducer, firmwareReducer,
+  configurationReducer, schemaReducer
 })
 
 const store = createStore(rootReducer)

@@ -152,11 +152,30 @@ code {
   bottom: 6px;
 }
 
+
+#root_Customer_Hopping\ Presets
+.row.array-item-list
+.array-item
+.col-xs-9
+.form-group.field.field-array {
+  position: relative;
+  top:  3px;
+  left: 7px;
+  padding-right: 0px;
+}
+
+.row.array-item-list .form-group.field {
+  position: relative;
+  top:  7px;
+  left: 7px;
+  padding-right: 15px;
+}
+
 .row.array-item-list .form-group.field {
   position: relative;
   top:  3px;
   left: 7px;
-  //padding-right: 15px;
+  padding-right: 15px;
 }
 
 legend {

@@ -16,7 +16,7 @@ export default class StringArraySelectComponent extends React.Component {
         }}
         className="form-control">
         {
-          this.props.array.map((item, index) =>
+          this.props.array && this.props.array.map((item, index) =>
             <option
               value={index}
               key={index}>

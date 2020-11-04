@@ -1,13 +1,64 @@
 import {API_BASE_URL} from "../config";
 import firmwareService from "../services/firmware.service.client"
+import {difference} from "underscore";
+import schemaService from "../services/schema.service.client";
+import configurationService from "../services/configuration.service.client";
 
 export const FETCH_FIRMWARES = "FETCH_FIRMWARES"
+export const FETCH_ALL_FIRMWARES = "FETCH_ALL_FIRMWARES"
 export const UPLOAD_FIRMWARE_FILE = "UPLOAD_FIRMWARE_FILE"
 export const UPDATE_FIRMWARE = "UPDATE_FIRMWARE"
 export const SHOW_DOWNLOADING = "SHOW_DOWNLOADING"
 export const DELETE_FIRMWARE = "DELETE_FIRMWARE"
 export const SELECT_FIRMWARE = "SELECT_FIRMWARE"
 export const UPDATE_SCHEMA_FILE = "UPDATE_SCHEMA_FILE"
+export const FETCH_SCHEMA_FILES_WITH_CONTENT = "FETCH_SCHEMA_FILES_WITH_CONTENT"
+export const FETCH_CONFIGURATION_FILES_WITH_CONTENT = "FETCH_CONFIGURATION_FILES_WITH_CONTENT"
+export const FETCH_CONFIGURATION_AND_SCHEMA_FILES_WITH_CONTENT = "FETCH_CONFIGURATION_AND_SCHEMA_FILES_WITH_CONTENT"
+
+export const fetchConfigurationAndSchemaFilesWithContent =
+  (dispatch, firmware, firmwareIndex, leftOrRight) => {
+
+    let nextState = {}
+    //   firmwareLeft: {},
+    //   firmwareRight: {}
+    // }
+
+    schemaService.fetchSchemaFilesWithContent(firmware)
+      .then(schemaFiles => {
+          // debugger
+          nextState[leftOrRight] = {}
+          nextState[leftOrRight].schemaFiles = schemaFiles
+          nextState[leftOrRight].firmware = firmware
+          nextState[leftOrRight].index = firmwareIndex
+          nextState.configurationFilesDiffs = []
+          nextState.schemaFilesDiffs = []
+          nextState.diff = null
+          nextState.selectedJsonFile = null
+          // dispatch({
+          //   type: FETCH_SCHEMA_FILES_WITH_CONTENT,
+          //   ...nextState
+          // })
+        return configurationService.fetchConfigurationFilesWithContent(firmware)
+          .then(configurationFiles => {
+            // debugger
+            nextState[leftOrRight].configurationFiles = configurationFiles
+            nextState[leftOrRight].firmware = firmware
+            nextState[leftOrRight].index = firmwareIndex
+            dispatch({
+              type: FETCH_CONFIGURATION_AND_SCHEMA_FILES_WITH_CONTENT,
+              ...nextState
+            })
+          })
+        })
+}
+
+export const fetchAllFirmwares = (dispatch) =>
+  firmwareService.fetchAllFirmwares()
+    .then(firmwares => dispatch({
+      type: FETCH_ALL_FIRMWARES,
+      firmwares
+    }))
 
 export const uploadSchemaFile = (dispatch, e, firmware, selectedFirmwareFileName) => {
   var fd = new FormData();
@@ -97,3 +148,15 @@ export const fetchFirmwares = (dispatch, fileNameParameter) =>
     .then(firmwares => dispatch({
       type: FETCH_FIRMWARES, firmwares, fileNameParameter
     }))
+
+export default {
+  fetchFirmwares,
+  fetchAllFirmwares,
+  showDownloading,
+  uploadSchemaFile,
+  selectFirmware,
+  uploadFirmwareFile,
+  deleteFirmware,
+  updateFirmware,
+  fetchConfigurationAndSchemaFilesWithContent
+}

@@ -33,5 +33,9 @@ export const fetchConfigurationFileContent = (firmware, configurationFile) =>
         .then(response => response.json())
 
 export default {
-    saveConfigurationFileContent, fetchConfigurationFileContent, fetchConfigurationFiles, cloneConfigurationFileContent
+  fetchConfigurationFiles,
+  fetchConfigurationFileContent,
+  fetchConfigurationFilesWithContent,
+  saveConfigurationFileContent,
+  cloneConfigurationFileContent
 }
