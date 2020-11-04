@@ -11,8 +11,6 @@ import ToggleSwitch from "../widgets/ToggleSwitch";
 import diff1 from "./diff1"
 import diff2 from "./diff2"
 import DiffJson from "./DiffJson";
-import { JsonEditor as Editor } from 'jsoneditor-react';
-import 'jsoneditor-react/es/editor.min.css';
 
 export default class FirmwareComparisonComponent extends React.Component {
 
@@ -337,7 +335,7 @@ export default class FirmwareComparisonComponent extends React.Component {
             this.state.configurationFilesDiffs &&
             this.state.configurationFilesDiffs.length > 0 &&
             this.state.selectedJsonFile === null &&
-            <div className="col-xs-6">
+            <div className="col-xs-4">
               <div className="alert alert-info">
                 Select files labeled <i className="fa fa-eye"/> on the left to compare them
               </div>
@@ -351,9 +349,6 @@ export default class FirmwareComparisonComponent extends React.Component {
               </div>
             </div>
           }
-          {/*{this.state.firmwareLeft.index}*/}
-          {/*{this.state.firmwareRight.index}*/}
-          {/*{this.state.configurationFilesDiffs.length}*/}
           {
             this.state.firmwareLeft.index != this.state.firmwareRight.index &&
             this.state.configurationFilesDiffs.length === 0 &&
