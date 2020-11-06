@@ -13,14 +13,14 @@ const {
   SCHEMAS_PATH} = require('../common/paths')
 
 const readFirmwareList = () =>
-  // fs.readdirSync(`${homedir}/mks/configurator/uploads`)
+  // TODO: use UNPACKED_PATH
   fs.readdirSync(`${homedir}/mks/configurator/unpacked`)
     .filter(file => !file.startsWith('.'))
 
 const readDetailedFirmwareList = (callback) => {
   const settings = settingsService.loadSettings()
   let details = []
-  // fs.readdir(`${homedir}/mks/configurator/uploads`, function(err, firmwareFileNames) {
+  // TODO: use UNPACKED_PATH
   fs.readdir(`${homedir}/mks/configurator/unpacked`, function(err, firmwareFileNames) {
     if (err) {
       console.log("Error getting directory information.")
@@ -28,10 +28,10 @@ const readDetailedFirmwareList = (callback) => {
       firmwareFileNames.forEach(function(firmwareFileName) {
         const allowSchemaUpload =
           (settings.firmwares[firmwareFileName] &&
-          settings.firmwares[firmwareFileName].allowSchemaUpload === true) ||
+           settings.firmwares[firmwareFileName].allowSchemaUpload === true) ||
           false
         if(!firmwareFileName.startsWith('.')) {
-          // const stat = fs.statSync(`${homedir}/mks/configurator/uploads/${firmwareFileName}`)
+          // TODO: use UNPACKED_PATH
           const stat = fs.statSync(`${homedir}/mks/configurator/unpacked/${firmwareFileName}`)
           stat.fileName = firmwareFileName
           let configurationFileNames = [], schemaFileNames = []
@@ -70,6 +70,7 @@ const readDetailedFirmwareList = (callback) => {
 }
 
 const decryptAndUnzipAes = (aesFileName) => {
+  // TODO: use FIRMWARE_PATH & TMP_PATH
   const AES_FILE = `${homedir}/mks/configurator/firmwares/${aesFileName}`
   let   ZIP_FILE = `${homedir}/mks/configurator/tmp/${aesFileName}`
   ZIP_FILE = ZIP_FILE.replace('.zip.aes', '.zip')
@@ -79,6 +80,7 @@ const decryptAndUnzipAes = (aesFileName) => {
 }
 
 const uploadAes = (firmwareName) => {
+  // TODO: use FIRMWARE_PATH & TMP_PATH
   let ZIP_FILE = `${homedir}/mks/configurator/tmp/${firmwareName}`
   ZIP_FILE = ZIP_FILE.replace('.zip.aes', '.zip')
   let UNZIPPED_FILE = ZIP_FILE.replace('.zip', '')
@@ -86,6 +88,7 @@ const uploadAes = (firmwareName) => {
   // decrypt AES file and unzip
   decryptAndUnzipAes(firmwareName)
 
+  // TODO: use CONFIGURATIONS_PATH, SCHEMAS_PATH, & TMP_PATH
   utils.copyFilesRecursively(
     `${UNZIPPED_FILE}/Configs/Permanent`,
     `${homedir}/mks/configurator/configurations/${firmwareName}`)

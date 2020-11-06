@@ -2,10 +2,9 @@ import React from "react";
 import {NavLink} from "react-router-dom";
 import {API_BASE_URL} from "../../config";
 import firmwareService from '../../services/firmware.service.client'
-import schemaService from '../../services/schema.service.client'
 import Moment from 'moment'
 import {connect} from "react-redux";
-import {uploadSchemaFile, selectFirmware, uploadFirmwareFile, fetchFirmwares, updateFirmware, showDownloading, deleteFirmware} from "../../actions/firwareActions"
+import firwareActions from "../../actions/firwareActions";
 
 class Firmwares extends React.Component {
   downloadLinks = {}
@@ -99,8 +98,9 @@ class Firmwares extends React.Component {
                   Add Folder
                 </button>
               </a>
-              {this.props.state.firmwares &&
-               this.props.state.firmwares.map((firmware, index) =>
+              {
+                this.props.state.firmwares &&
+                this.props.state.firmwares.map((firmware, index) =>
                 <span key={index}>
                   <NavLink to={`/firmwares/${firmware.fileName}`}
                            className={`list-group-item 
@@ -246,22 +246,22 @@ const stateToPropertyMapper = (state) => ({
 
 const propertyToDispatchMapper = (dispatch) => ({
   fetchFirmwares: (fileNameParameter) =>
-    fetchFirmwares(dispatch, fileNameParameter),
+    firwareActions.fetchFirmwares(dispatch, fileNameParameter),
   updateFirmware: (firmware) =>
-    updateFirmware(dispatch, firmware),
+    firwareActions.updateFirmware(dispatch, firmware),
   showDownloading: (firmwareName, downloading) =>
-    showDownloading(dispatch, firmwareName, downloading),
+    firwareActions.showDownloading(dispatch, firmwareName, downloading),
   deleteFirmware: (firmwareName) =>
-    deleteFirmware(dispatch, firmwareName),
+    firwareActions.deleteFirmware(dispatch, firmwareName),
   uploadFirmwareFile: (e, firmwareFileName) =>
-    uploadFirmwareFile(dispatch, e, firmwareFileName),
+    firwareActions.uploadFirmwareFile(dispatch, e, firmwareFileName),
   selectFirmware: (firmware) =>
-    selectFirmware(dispatch, firmware),
+    firwareActions.selectFirmware(dispatch, firmware),
   uploadSchemaFile: (e, firmwareFileName, selectedFirmwareFileName) =>
-    uploadSchemaFile(dispatch, e, firmwareFileName, selectedFirmwareFileName),
+    firwareActions.uploadSchemaFile(dispatch, e, firmwareFileName, selectedFirmwareFileName),
 })
 
 export default connect
 ( stateToPropertyMapper,
-  propertyToDispatchMapper)
+  propertyToDispatchMapper )
 (Firmwares)

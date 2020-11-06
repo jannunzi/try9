@@ -60,28 +60,25 @@ export const fetchAllFirmwares = (dispatch) =>
       firmwares
     }))
 
-export const uploadSchemaFile = (dispatch, e, firmware, selectedFirmwareFileName) => {
-  var fd = new FormData();
+export const uploadSchemaFile = (dispatch, event, firmware, selectedFirmwareFileName) => {
+  var formData = new FormData();
 
-  const files = [...e.target.files]
+  const files = [...event.target.files]
 
-  for (var x = 0; x < e.target.files.length; x++) {
-    fd.append("config", files[x]);
+  for (let i = 0; i < event.target.files.length; i++) {
+    formData.append("config", files[i]);
   }
 
   dispatch({
     type: UPDATE_SCHEMA_FILE,
     uploadingSchemaFileName: files[0].name
   })
-  // this.setState({
-  //   uploadingSchemaFileName: files[0].name
-  // })
 
-  e.target.value = null;
+  event.target.value = null;
 
   fetch(`${API_BASE_URL}/api/firmwares/${selectedFirmwareFileName}/schemas`, {
     method: "POST",
-    body: fd
+    body: formData
   }).then(() => {
     setTimeout(() =>
         fetchFirmwares(dispatch, firmware),
@@ -95,32 +92,32 @@ export const selectFirmware = (dispatch, firmware) =>
     selectedFirmware: firmware
   })
 
-export const uploadFirmwareFile = (dispatch, e, fileName) => {
-  var fd = new FormData();
+export const uploadFirmwareFile = (dispatch, event, fileName) => {
+  var formData = new FormData();
 
-  const files = [...e.target.files]
+  const files = [...event.target.files]
   const filesJson = JSON.stringify(files)
 
-  let ff = {}
-  for (var x = 0; x < e.target.files.length; x++) {
-    fd.append("config", files[x]);
-    const f = files[x]
+  let uploads = {}
+  for (let i = 0; i < event.target.files.length; i++) {
+    formData.append("config", files[i]);
+    const file = files[i]
 
-    for (let attribute in f) {
-      ff[attribute] = f[attribute];
+    for (let attribute in file) {
+      uploads[attribute] = file[attribute];
     }
   }
 
   dispatch({
     type: UPLOAD_FIRMWARE_FILE,
-    files, ff
+    files, uploads
   })
 
-  e.target.value = null;
+  event.target.value = null;
 
   fetch(`${API_BASE_URL}/api/firmwares`, {
     method: "POST",
-    body: fd
+    body: formData
   }).then(response => {
     setTimeout(() =>
         fetchFirmwares(dispatch, fileName),

@@ -16,7 +16,8 @@ const firmwareReducer = (
   action) => {
   switch (action.type) {
     case SELECT_FIRMWARE:
-      const firmware = state.firmwares.find(firmware => firmware.fileName === action.selectedFirmware)
+      const firmware = state.firmwares.find(firmware =>
+        firmware.fileName === action.selectedFirmware)
       return {
         ...state,
         selectedFirmware: firmware
@@ -36,7 +37,7 @@ const firmwareReducer = (
         },
         configurations: [],
         schemas: [],
-        uploads: [action.ff]
+        uploads: [action.uploads]
       }
     case SHOW_DOWNLOADING:
       let nextState = {...state}
