@@ -72,6 +72,8 @@ const unpackAes = (sourceAesFilePath) => {
         const now = Date.now()
         const timeStampFile = `__IGNORE__${now}.txt`
 
+        utils.removeTimestampFiles(`${homedir}/mks/configurator/unpacked/${sourceFileName}/Configs/Permanent`)
+        utils.removeTimestampFiles(`${homedir}/mks/configurator/unpacked/${sourceFileName}/Schemas`)
         fs.writeFileSync(`${homedir}/mks/configurator/unpacked/${sourceFileName}/Configs/Permanent/${timeStampFile}`, now)
         fs.writeFileSync(`${homedir}/mks/configurator/unpacked/${sourceFileName}/Schemas/${timeStampFile}`, now)
 
@@ -91,6 +93,7 @@ const unpackAes2 = (inputFilePath, outputFolder, callback) => {
     () => {
 
       const permanent = `${CONFIGS_PATH(inputFileName)}`
+      
       utils.removeTimestampFiles(permanent)
       utils.removeTimestampFiles(`${SCHEMAS_PATH(inputFileName)}`)
 

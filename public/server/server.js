@@ -9,8 +9,6 @@ const settingsService = require('./services/settings.service.server')
 const util = require('./common/utils');
 const electron = require('electron')
 
-console.log(electron)
-
 if(!settingsService.settingsAlreadyExist()) {
    settingsService.createConfiguratorFolderStructure()
 }

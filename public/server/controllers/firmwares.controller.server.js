@@ -45,8 +45,8 @@ module.exports = (app, upload) => {
     }
 
     const uploadPath = (req, res) => {
-        const ESCAPED_PATH = req.params.path
-        const ORIGINAL_PATH = ESCAPED_PATH.replace(/\+/g, '/')
+        const ESCAPED_PATH = req.params.path.replace("C:", "")
+        const ORIGINAL_PATH = ESCAPED_PATH.replace(/\+/g, '\\')
 
         const NOW = Date.now()
         const TIME_STAMP_FILE = `__IGNORE__${NOW}.txt`
@@ -62,6 +62,8 @@ module.exports = (app, upload) => {
         //   `${UNPACKED_PATH}/TMP_FOLDER`,
         //   `${UNPACKED_PATH}/${path}`)
 
+        utils.removeTimestampFiles(`${ORIGINAL_PATH}`)
+        utils.removeTimestampFiles(`${UNPACKED_PATH}/${ESCAPED_PATH}/Schemas`)
         fs.writeFileSync(`${ORIGINAL_PATH}/${TIME_STAMP_FILE}`, NOW)
         fs.writeFileSync(`${UNPACKED_PATH}/${ESCAPED_PATH}/Schemas/${TIME_STAMP_FILE}`, NOW)
 
@@ -69,7 +71,6 @@ module.exports = (app, upload) => {
     }
 
     const uploadFirmware = (req, res, next) => {
-
         upload(req, res, function (err, ddd) {
             let firmwareName = 'UNDEFINED'
 

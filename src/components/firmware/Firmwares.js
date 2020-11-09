@@ -12,10 +12,6 @@ class Firmwares extends React.Component {
   addSchemaBtn = null
   addFolderBtn = null
 
-  state = {
-    path: "this is the path"
-  }
-
   componentDidMount() {
     this.props.fetchFirmwares(this.props.match.params.fileName)
     Moment.locale('en');
@@ -29,51 +25,6 @@ class Firmwares extends React.Component {
   addFirmware = () => this.addFirmwareBtn.click()
   addSchema   = () => this.addSchemaBtn.click()
   addFolder   = () => this.addFolderBtn.click()
-
-  // TODO: move this to action/reducer
-  uploadConfigurationFolder = (e) => {
-    const files = [...e.target.files]
-    let path = ""
-    for (var x = 0; x < e.target.files.length; x++) {
-      path = files[x].path
-    }
-
-    const pathParts = path.split('/')
-    path = pathParts.slice(0, -1).join('/')
-    path = path.replace(/\//g,'+')
-
-    this.setState(prevStatus => {
-      return {
-        firmwares: [
-          {
-            fileName: path,
-            uploading: true,
-          },
-          ...prevStatus.firmwares
-        ],
-        selectedFirmware: {
-          fileName: ""
-        },
-        configurations: [],
-        schemas: []
-      }
-    })
-
-    fetch(`${API_BASE_URL}/api/folders/${path}`, {
-      method: "POST",
-      // body: fd
-    })
-    .then(response => response.text())
-    .then(path => {
-      setTimeout(() => {
-        this.props.fetchFirmwares(this.props.match.params.fileName)
-        this.setState({
-          uploadingSchemaFileName: false,
-          path: path
-        })
-      }, 2000)
-    })
-  }
 
   // TODO: move this to action/reducer
   packageFirmware = (firmwareName) => {
@@ -112,7 +63,7 @@ class Firmwares extends React.Component {
                   <NavLink to={`/firmwares/${firmware.fileName}`}
                            className={`list-group-item 
                            ${firmware.uploading ? 'disabled' : ''}
-                           ${firmware.fileName === this.props.state.selectedFirmware.fileName ?
+                           ${this.props.state.selectedFirmware && firmware.fileName === this.props.state.selectedFirmware.fileName ?
                              'list-group-item-info' : ''}`}>
                     <div className="row">
                       <div className="col-xs-11 col-sm-10 col-lg-9">
@@ -161,7 +112,7 @@ class Firmwares extends React.Component {
                   <div className="col-xs-12">
                     Configurations
                     <button onClick={this.addSchema}
-                            className={`${this.props.state.selectedFirmware.allowSchemaUpload ? 'mks-invisible':''}
+                            className={`${this.props.state.selectedFirmware && this.props.state.selectedFirmware.allowSchemaUpload ? 'mks-invisible':''}
                                btn btn-primary btn-sm pull-right mks-position-relative-bottom-5px`}>
                       Add Schema
                     </button>
@@ -176,6 +127,7 @@ class Firmwares extends React.Component {
                 </li>
               }
               {
+                this.props.state.selectedFirmware &&
                 typeof this.props.state.selectedFirmware.differences !== 'undefined' &&
                 this.props.state.selectedFirmware.differences.map((difference, index) =>
                   (difference[0] !== "+" && <li className="list-group-item" key={index}>
@@ -183,7 +135,7 @@ class Firmwares extends React.Component {
                       difference[0] !== "+" &&
                       <span>
                         {difference[1]}
-                        {difference[0] !== "-" && this.props.state.selectedFirmware.allowSchemaUpload &&
+                        {this.props.state.selectedFirmware && difference[0] !== "-" && this.props.state.selectedFirmware.allowSchemaUpload &&
                         <i className="fa fa-check pull-right" onClick={this.addSchema}/>}
                       </span>
                     }
@@ -191,6 +143,7 @@ class Firmwares extends React.Component {
                 )
               }
               {
+                this.props.state.selectedFirmware &&
                 typeof this.props.state.selectedFirmware.differences === 'undefined' &&
                 this.props.state.selectedFirmware.configurations &&
                 this.props.state.selectedFirmware.configurations.map(configuration =>
@@ -213,7 +166,7 @@ class Firmwares extends React.Component {
           }}
           multiple
           encType="multipart/form-data"
-          onChange={this.uploadConfigurationFolder}/>
+          onChange={this.props.uploadConfigurationFolder}/>
 
         <input
           className="btn btn-primary pull-right mks-invisible"
@@ -242,7 +195,6 @@ class Firmwares extends React.Component {
               this.props.match.params.fileName,
               this.props.state.selectedFirmware.fileName)}
         />
-        <h2>{this.state.path}</h2>
       </div>
     )
   }
@@ -261,8 +213,10 @@ const propertyToDispatchMapper = (dispatch) => ({
     firwareActions.showDownloading(dispatch, firmwareName, downloading),
   deleteFirmware: (firmwareName) =>
     firwareActions.deleteFirmware(dispatch, firmwareName),
-  uploadFirmwareFile: (e, firmwareFileName) =>
-    firwareActions.uploadFirmwareFile(dispatch, e, firmwareFileName),
+  uploadConfigurationFolder: (event) =>
+    firwareActions.uploadConfigurationFolder(dispatch, event),
+  uploadFirmwareFile: (event, firmwareFileName) =>
+    firwareActions.uploadFirmwareFile(dispatch, event, firmwareFileName),
   selectFirmware: (firmware) =>
     firwareActions.selectFirmware(dispatch, firmware),
   uploadSchemaFile: (e, firmwareFileName, selectedFirmwareFileName) =>

@@ -6,6 +6,7 @@ import configurationService from "../services/configuration.service.client";
 
 export const FETCH_FIRMWARES = "FETCH_FIRMWARES"
 export const FETCH_ALL_FIRMWARES = "FETCH_ALL_FIRMWARES"
+export const UPLOAD_CONFIGURATION_FOLDER = "UPLOAD_CONFIGURATION_FOLDER"
 export const UPLOAD_FIRMWARE_FILE = "UPLOAD_FIRMWARE_FILE"
 export const UPDATE_FIRMWARE = "UPDATE_FIRMWARE"
 export const SHOW_DOWNLOADING = "SHOW_DOWNLOADING"
@@ -92,6 +93,34 @@ export const selectFirmware = (dispatch, firmware) =>
     selectedFirmware: firmware
   })
 
+export const uploadConfigurationFolder = (dispatch, event) => {
+  const files = [...event.target.files]
+  let path = ""
+  for (var x = 0; x < event.target.files.length; x++) {
+    if(files[x].path.endsWith(".json")) {
+      path = files[x].path
+      break
+    }
+  }
+
+  const pathParts = path.split('\\')
+  path = pathParts.slice(0, -1).join('\\')
+  path = path.replace(/\\/g,'+')
+
+  dispatch({
+    type: UPLOAD_CONFIGURATION_FOLDER,
+    path
+  })
+
+  fetch(`${API_BASE_URL}/api/folders/${path}`, {
+    method: "POST",
+  }).then(response => {
+    setTimeout(() => {
+      fetchFirmwares(dispatch, path)
+    }, 2000)
+  })
+}
+
 export const uploadFirmwareFile = (dispatch, event, fileName) => {
   var formData = new FormData();
 
@@ -152,6 +181,7 @@ export default {
   showDownloading,
   uploadSchemaFile,
   selectFirmware,
+  uploadConfigurationFolder,
   uploadFirmwareFile,
   deleteFirmware,
   updateFirmware,

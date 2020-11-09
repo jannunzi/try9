@@ -347,6 +347,8 @@ const unpackZczFile2 = (configuratorBasePath, zczFileName) => {
 
                                 // TODO: dont show these files in client
 
+                                removeTimestampFiles(`${unpackedFirmwarePath}/Configs`)
+                                removeTimestampFiles(`${unpackedFirmwarePath}/Schema`)
                                 fs.writeFileSync(`${unpackedFirmwarePath}/Configs/${timeStampFile}`, now)
                                 fs.writeFileSync(`${unpackedFirmwarePath}/Schema/${timeStampFile}`, now)
                             })

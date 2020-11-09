@@ -5,6 +5,7 @@ import {
   SHOW_DOWNLOADING,
   UPDATE_FIRMWARE,
   UPLOAD_FIRMWARE_FILE,
+  UPLOAD_CONFIGURATION_FOLDER,
   FETCH_ALL_FIRMWARES,
   FETCH_SCHEMA_FILES_WITH_CONTENT,
   FETCH_CONFIGURATION_FILES_WITH_CONTENT,
@@ -21,6 +22,20 @@ const firmwareReducer = (
       return {
         ...state,
         selectedFirmware: firmware
+      }
+    case UPLOAD_CONFIGURATION_FOLDER:
+      return {
+        ...state,
+        firmwares: [
+          {
+            fileName: action.path,
+            uploading: true,
+          },
+          ...state.firmwares
+        ],
+        selectedFirmware: {
+          fileName: ""
+        },
       }
     case UPLOAD_FIRMWARE_FILE:
       return {
