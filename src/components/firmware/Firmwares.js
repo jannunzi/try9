@@ -12,6 +12,10 @@ class Firmwares extends React.Component {
   addSchemaBtn = null
   addFolderBtn = null
 
+  state = {
+    path: "this is the path"
+  }
+
   componentDidMount() {
     this.props.fetchFirmwares(this.props.match.params.fileName)
     Moment.locale('en');
@@ -58,11 +62,14 @@ class Firmwares extends React.Component {
     fetch(`${API_BASE_URL}/api/folders/${path}`, {
       method: "POST",
       // body: fd
-    }).then(response => {
+    })
+    .then(response => response.text())
+    .then(path => {
       setTimeout(() => {
         this.props.fetchFirmwares(this.props.match.params.fileName)
         this.setState({
-          uploadingSchemaFileName: false
+          uploadingSchemaFileName: false,
+          path: path
         })
       }, 2000)
     })
@@ -235,6 +242,7 @@ class Firmwares extends React.Component {
               this.props.match.params.fileName,
               this.props.state.selectedFirmware.fileName)}
         />
+        <h2>{this.state.path}</h2>
       </div>
     )
   }
