@@ -260,7 +260,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
               </div>
             }
           </div>
-          <div className="col-xs-12 position-absolute top-0px bottom-0px">
+          <div className="col-xs-12">
             {
               this.state.schemas && this.state.schemas.length === 0 &&
               <div className="alert alert-danger">
