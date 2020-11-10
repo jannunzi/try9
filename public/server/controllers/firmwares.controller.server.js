@@ -46,21 +46,15 @@ module.exports = (app, upload) => {
 
     const uploadPath = (req, res) => {
         const ESCAPED_PATH = req.params.path.replace("C:", "")
-        const ORIGINAL_PATH = ESCAPED_PATH.replace(/\+/g, '\\')
+        const ORIGINAL_PATH = process.platform === 'win32' ?
+          ESCAPED_PATH.replace(/\+/g, '\\') : ESCAPED_PATH.replace(/\+/g, '\/')
 
         const NOW = Date.now()
         const TIME_STAMP_FILE = `__IGNORE__${NOW}.txt`
 
         fs.ensureDirSync(`${UPLOADS_PATH}/${ESCAPED_PATH}`)
-        // fs.renameSync(
-        //   `${UPLOADS_PATH}/TMP_FOLDER`,
-        //   `${UPLOADS_PATH}/${path}`)
-
         fs.ensureDirSync(`${UNPACKED_PATH}/${ESCAPED_PATH}`)
         fs.ensureDirSync(`${UNPACKED_PATH}/${ESCAPED_PATH}/Schemas`)
-        // fs.renameSync(
-        //   `${UNPACKED_PATH}/TMP_FOLDER`,
-        //   `${UNPACKED_PATH}/${path}`)
 
         utils.removeTimestampFiles(`${ORIGINAL_PATH}`)
         utils.removeTimestampFiles(`${UNPACKED_PATH}/${ESCAPED_PATH}/Schemas`)

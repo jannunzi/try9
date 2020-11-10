@@ -260,7 +260,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
               </div>
             }
           </div>
-          <div className="col-xs-12 position-absolute top-0px bottom-0px mks-z-index-1">
+          <div className="col-xs-12 position-absolute top-0px bottom-0px">
             {
               this.state.schemas && this.state.schemas.length === 0 &&
               <div className="alert alert-danger">
@@ -271,7 +271,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
                 name as their corresponding schema files
                 <br/>
                 <br/>
-                <NavLink className="btn btn-primary" to={`/firmwares/${this.state.firmwareFile}`}>
+                <NavLink className="btn btn-primary" to={`/firmwares/${this.state.firmwareFile.replace(/\\+/g, '\\/')}`}>
                   Upload Schema Files
                 </NavLink>
               </div>

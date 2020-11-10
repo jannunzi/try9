@@ -96,16 +96,26 @@ export const selectFirmware = (dispatch, firmware) =>
 export const uploadConfigurationFolder = (dispatch, event) => {
   const files = [...event.target.files]
   let path = ""
+
+  let shortestPath = 1000
   for (var x = 0; x < event.target.files.length; x++) {
-    if(files[x].path.endsWith(".json")) {
-      path = files[x].path
-      break
+    const candidatePath = files[x].path
+    const candidatePathLength = candidatePath.length
+    if(candidatePath.endsWith(".json") && candidatePathLength < shortestPath) {
+      path = candidatePath
+      shortestPath = candidatePathLength
     }
   }
 
-  const pathParts = path.split('\\')
-  path = pathParts.slice(0, -1).join('\\')
+  let pathParts = []
+  let joinOn = "/"
+  if(path.indexOf("\\") > 1) {
+    joinOn = "\\"
+  }
+  pathParts =  path.split(joinOn)
+  path = pathParts.slice(0, -1).join(joinOn)
   path = path.replace(/\\/g,'+')
+  path = path.replace(/\//g,'+')
 
   dispatch({
     type: UPLOAD_CONFIGURATION_FOLDER,
