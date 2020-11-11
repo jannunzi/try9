@@ -7,6 +7,14 @@ export default class SaveAsDialog extends React.Component {
     saveAsFile: this.props.saveAsFile,
     firmwareFile: ""
   }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(prevProps.saveAsFile !== this.props.saveAsFile) {
+      this.setState({
+        saveAsFile: this.props.saveAsFile
+      })
+    }
+  }
+
   render() {
     return(
       <div id="saveAs" className="mks-modal-dialog mks-invisible">
@@ -24,7 +32,7 @@ export default class SaveAsDialog extends React.Component {
                 id="mks-overwrite-file"
                 type="radio"/>
               &nbsp;
-              Save to same file
+              Overwrite original file
             </label>
 
             <br/>
@@ -34,6 +42,7 @@ export default class SaveAsDialog extends React.Component {
                 onChange={() => {}}
                 name="mks-save-file"
                 id="mks-save-as"
+                disabled={this.state.saveAsFile.indexOf('+') >= 0}
                 type="radio"/>
               &nbsp;
               Save to a new file...
@@ -44,7 +53,7 @@ export default class SaveAsDialog extends React.Component {
             <div className="input-group">
               <input
                 id="saveAsFile"
-                disabled={this.state.saveToSameFile}
+                disabled={this.state.saveToSameFile || this.state.saveAsFile.indexOf('+') >= 0}
                 type="text"
                 className="form-control"
                 placeholder="Username"

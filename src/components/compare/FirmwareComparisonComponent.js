@@ -258,12 +258,16 @@ export default class FirmwareComparisonComponent extends React.Component {
         <br/>
         <div className="row">
           <div className="col-xs-4">
-            Select left firmware
+            Select files and/or folders to compare:
             <StringArraySelectComponent
               onChange={(e) => this.selectFirmware(e.target.value, "firmwareLeft")}
               array={this.state.firmwares}/>
 
             <br/>
+            <StringArraySelectComponent
+              onChange={(e) => this.selectFirmware(e.target.value, "firmwareRight")}
+              array={this.state.firmwares}/>
+              <br/>
             {
               this.props.match.params.what === "configurations" &&
               <GenericArrayDiffList
@@ -285,34 +289,7 @@ export default class FirmwareComparisonComponent extends React.Component {
                 arrayDifferences={this.state.schemaFilesDiffs}/>
             }
           </div>
-          <div className="col-xs-4">
-            Select right firmware
-            <StringArraySelectComponent
-              onChange={(e) => this.selectFirmware(e.target.value, "firmwareRight")}
-              array={this.state.firmwares}/>
-
-            <br/>
-
-            {
-              this.props.match.params.what === "configurations" &&
-              <GenericArrayDiffList
-                onSelectItem={(file) => this.onSelectItem(file, "configurationFiles")}
-                side="right"
-                contrast={this.state.contrast}
-                selectedJsonFile={this.state.selectedJsonFile}
-                arrayDifferences={this.state.configurationFilesDiffs}/>
-            }
-            {
-              this.props.match.params.what === "schemas" &&
-              <GenericArrayDiffList
-                onSelectItem={(file) => this.onSelectItem(file, "schemaFiles")}
-                side="right"
-                contrast={this.state.contrast}
-                selectedJsonFile={this.state.selectedJsonFile}
-                arrayDifferences={this.state.schemaFilesDiffs}/>
-            }
-          </div>
-          <div className="col-xs-4">
+          <div className="col-xs-8">
             {
               this.state.diff &&
               <div>
@@ -335,9 +312,9 @@ export default class FirmwareComparisonComponent extends React.Component {
             this.state.configurationFilesDiffs &&
             this.state.configurationFilesDiffs.length > 0 &&
             this.state.selectedJsonFile === null &&
-            <div className="col-xs-4">
+            <div className="col-xs-8">
               <div className="alert alert-info">
-                Select files labeled <i className="fa fa-eye"/> on the left to compare them
+                Select files labeled <span className="mks-difference">~</span> to see differences
               </div>
             </div>
           }
@@ -345,7 +322,7 @@ export default class FirmwareComparisonComponent extends React.Component {
             this.state.firmwareLeft.index == this.state.firmwareRight.index &&
             <div className="col-xs-12">
               <div className="alert alert-info">
-                Please choose two different choices from the dropdowns above
+                Please select two different files and/or folders from the dropdowns above
               </div>
             </div>
           }

@@ -146,8 +146,6 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
     const overwriteFile = $("#mks-overwrite-file").prop("checked")
     const saveAs = $("#mks-save-as").prop("checked")
 
-    console.log(saveAsFile)
-    console.log(this.state.saveToSameFile)
     if (overwriteFile) {
       saveConfigurationFileContent(
         this.state.firmwareFile,
@@ -228,7 +226,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
               }}
               onClick={() => {
                 $("#saveAs").removeClass("mks-invisible")
-                $("#saveAsFile").val(`${this.state.firmwareFile.replace(".zcz", "").replace(".zip.aes", "")}_${getCurrentDateTime()}`)
+                $("#saveAsFile").val(`${this.state.firmwareFile.replace(/\+/g,"/").replace(".zcz", "").replace(".zip.aes", "")}_${getCurrentDateTime()}`)
               }}
               className="btn btn-success pull-right"
               data-toggle="modal"
@@ -280,7 +278,7 @@ export default class ConfigurationFormEditorWrapper extends React.Component {
         </div>
         <SaveAsDialog
           hideSaveAsDialog={() => this.setState({showSaveAsDialog: false})}
-          saveAsFile={this.state.saveAsFile}/>
+          saveAsFile={this.state.firmwareFile}/>
       </div>
     )
   }
