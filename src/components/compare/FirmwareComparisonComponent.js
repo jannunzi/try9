@@ -304,7 +304,6 @@ export default class FirmwareComparisonComponent extends React.Component {
                   <DiffJson diff={this.state.diffJson}/>
                   {"}"}
                 </div>
-                <DeletedAddedChangedLabels/>
               </div>
             }
           </div>
