@@ -1,12 +1,11 @@
 import React from "react";
 import '../styling/dashboard.css'
 import {NavLink, Redirect, Route} from "react-router-dom";
-import FirmwareComparisonComponent from "./compare/FirmwareComparisonComponent";
-import Firmwares from "./firmware/Firmwares";
+import FirmwareComparisonComponent from "./comparisons/FirmwareComparisonComponent";
+import Firmwares from "./firmwares/firmware-manager";
 import logo from "../images/mks-logo.png"
-import ConfigurationFormEditorWrapper from "./configuration/ConfigurationFormEditorWrapper";
+import ConfigurationFormEditorWrapper from "./configurations/ConfigurationFormEditorWrapper";
 import Help from "./Help";
-import SchemaManager from "./schemas/SchemaManager";
 import {findAllSettings} from "../actions/applicationActions";
 import {connect} from "react-redux"
 import 'react-notifications/lib/notifications.css';
@@ -104,8 +103,6 @@ class Dashboard extends React.Component {
                      render={(props) => <Firmwares {...props}/>}/>
               <Route path="/configurations" exact={true}
                      component={ConfigurationFormEditorWrapper}/>
-              <Route path="/schemas" exact={true}
-                     component={SchemaManager}/>
               <Route path="/configurations/:firmware/:configuration" exact={true}
                      render={(props) => <ConfigurationFormEditorWrapper {...props}/>}/>
               <Route path="/help" exact={true} component={Help}/>

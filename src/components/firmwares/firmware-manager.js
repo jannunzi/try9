@@ -6,7 +6,7 @@ import Moment from 'moment'
 import {connect} from "react-redux";
 import firwareActions from "../../actions/firwareActions";
 
-class Firmwares extends React.Component {
+class FirmwareManager extends React.Component {
   downloadLinks = {}
   addFirmwareBtn = null
   addSchemaBtn = null
@@ -61,7 +61,7 @@ class Firmwares extends React.Component {
                 this.props.state.firmwares.map((firmware, index) =>
                 <span key={index}>
                   <NavLink to={`/firmwares/${firmware.fileName}`}
-                           className={`list-group-item 
+                           className={`list-group-item mks-no-radius-border
                            ${firmware.uploading ? 'disabled' : ''}
                            ${this.props.state.selectedFirmware && firmware.fileName === this.props.state.selectedFirmware.fileName ?
                              'list-group-item-info' : ''}`}>
@@ -226,4 +226,4 @@ const propertyToDispatchMapper = (dispatch) => ({
 export default connect
 ( stateToPropertyMapper,
   propertyToDispatchMapper )
-(Firmwares)
+(FirmwareManager)

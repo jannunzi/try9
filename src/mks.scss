@@ -279,3 +279,7 @@ button.list-group-item-info.mks-active:hover {
 button[type=submit] {
   display: none;
 }
+
+.mks-no-radius-border {
+  border-radius: 0px !important;
+}

@@ -1,9 +1,9 @@
 import React from "react";
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import './SchemaEditorComponent.css';
+import './schema-editor.css';
 import {API_BASE_URL} from "../config";
 
-export default class Schema extends React.Component {
+export default class SchemaEditor extends React.Component {
     state = {
         schemas: [
             {

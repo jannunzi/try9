@@ -4,14 +4,13 @@ import firmwareService, {fetchAllFirmwares, compareFirmwares, compareJsons} from
 import firmwareActions from "../../actions/firwareActions"
 import schemaService, {fetchSchemaFilesWithContent} from "../../services/schema.service.client";
 import configurationService, {fetchConfigurationFilesWithContent} from "../../services/configuration.service.client";
-import StringArraySelectComponent from "./StringArraySelectComponent";
-import GenericJsonDiffViewer from "./generic/GenericJsonDiffViewer";
-import GenericArrayDiffList from "./generic/GenericArrayDiffList";
-import DeletedAddedChangedLabels from "./DeletedAddedChangedLabels";
+import StringArraySelectComponent from "./differs/StringArraySelectComponent";
+import GenericArrayDiffList from "./differs/GenericArrayDiffList";
+import DeletedAddedChangedLabels from "./differs/DeletedAddedChangedLabels";
 import ToggleSwitch from "../widgets/ToggleSwitch";
 import diff1 from "./diff1"
 import diff2 from "./diff2"
-import DiffJson from "./DiffJson";
+import DiffJson from "./differs/DiffJson";
 import {connect} from "react-redux";
 import configurationActions from "../../actions/configurationActions"
 import { JsonEditor as Editor } from 'jsoneditor-react';
